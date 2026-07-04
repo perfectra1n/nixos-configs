@@ -1,0 +1,19 @@
+# Hyprland 0.55+ generates a default hyprland.lua, and a .lua config takes
+# PRECEDENCE over our hyprland.conf — silently hijacking the whole config
+# (no DMS/autostart, defaults everywhere). Nuke any stray copy on every apply.
+.config/hypr/hyprland.lua
+
+# Retired: screenshots now go straight through `flameshot gui` (PrintScreen) with the wrapped grim
+# portal + render:keep_unmodified_copy=0 for HDR. Drop the old SDR-flip wrapper from any machine.
+.config/hypr/screenshot-hdr.sh
+
+# nvim moved from the stub init.vim to a LazyVim init.lua. Neovim errors when both
+# init.vim and init.lua exist, so evict the old stub from every machine that had it.
+.config/nvim/init.vim
+
+# zsh retired (2026-07 go-public scrub) — fish is the only maintained shell, and the zsh
+# files carried stale employer config. Evict the previously-managed copies everywhere.
+.zshrc
+.zshaliases
+.zshrc.d/**
+.zshrc.d

@@ -1,0 +1,68 @@
+{
+    "ksops": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "ksops",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": null,
+            "sha256": "sha256-lkHgOjAb8vxLmNDoN6A1HhykQ+zXposl5q8hSfuy7zA=",
+            "type": "url",
+            "url": "https://github.com/viaduct-ai/kustomize-sops/releases/download/v4.5.1/ksops_4.5.1_Linux_x86_64.tar.gz"
+        },
+        "version": "4.5.1"
+    },
+    "kubectl": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "kubectl",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": null,
+            "sha256": "sha256-ahfdg4d4OzFEplU1440Cw1ECfpcY6jSmw2BHbLJtKLs=",
+            "type": "url",
+            "url": "https://dl.k8s.io/release/v1.34.5/bin/linux/amd64/kubectl"
+        },
+        "version": "1.34.5"
+    },
+    "libratbag": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "libratbag",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "perfectra1n",
+            "repo": "libratbag",
+            "rev": "b23167c644d8f78b477a5a12668b9edf22da1616",
+            "sha256": "sha256-MDraqC1iZiKxszM1PZ0TSvJ4lGATGAi9ryExHzESqrM=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "b23167c644d8f78b477a5a12668b9edf22da1616"
+    },
+    "talosctl": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "talosctl",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": null,
+            "sha256": "sha256-yxIglyfAxNV9dMBZXzTUQbpJFCHh08ilFC7ZECiiAjI=",
+            "type": "url",
+            "url": "https://github.com/siderolabs/talos/releases/download/v1.13.5/talosctl-linux-amd64"
+        },
+        "version": "1.13.5"
+    }
+}

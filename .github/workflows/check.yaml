@@ -1,0 +1,42 @@
+---
+name: Check
+
+# Gates Renovate's flake.lock PRs (and direct pushes): evaluates + plans the build
+# of every host. Catches the breakage lock bumps cause — renamed/removed packages,
+# changed options — without realizing the (large) closures. Mark this required in
+# branch protection so Renovate's platformAutomerge waits for it.
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hosts:
+    name: ${{ matrix.host }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [desktop, laptop, server, wsl]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes
+
+      - name: Build-plan ${{ matrix.host }}
+        # --dry-run does full module evaluation + closure resolution (catches eval
+        # errors, removed attrs, broken/insecure pkgs) but doesn't realize the build.
+        # Swap to a plain `nix build` if you add a binary cache + a beefy runner.
+        run: |
+          nix build --dry-run \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"

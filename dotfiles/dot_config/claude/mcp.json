@@ -1,0 +1,36 @@
+{
+  "mcpServers": {
+    "trilium-personal": {
+      "type": "http",
+      "url": "${TRILIUM_PERSONAL_MCP_URL}",
+      "headers": {
+        "Authorization": "Bearer ${TRILIUM_PERSONAL_MCP_BEARER}",
+        "X-Trilium-Url": "${TRILIUM_PERSONAL_URL}",
+        "X-Trilium-Token": "${TRILIUM_PERSONAL_ETAPI_TOKEN}"
+      }
+    },
+    "trilium-atvik": {
+      "type": "http",
+      "url": "${TRILIUM_ATVIK_MCP_URL}",
+      "headers": {
+        "Authorization": "Bearer ${TRILIUM_ATVIK_MCP_BEARER}",
+        "X-Trilium-Url": "${TRILIUM_ATVIK_URL}",
+        "X-Trilium-Token": "${TRILIUM_ATVIK_ETAPI_TOKEN}"
+      }
+    },
+    "kubesearch": {
+      "type": "http",
+      "url": "${KUBESEARCH_MCP_URL}",
+      "headers": {
+        "Authorization": "Bearer ${KUBESEARCH_MCP_BEARER}"
+      }
+    },
+    "protondb": {
+      "type": "http",
+      "url": "${PROTONDB_MCP_URL}",
+      "headers": {
+        "Authorization": "Bearer ${PROTONDB_MCP_BEARER}"
+      }
+    }
+  }
+}

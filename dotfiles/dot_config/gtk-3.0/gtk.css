@@ -1,0 +1,3 @@
+/* Pull in DMS's matugen-generated Material-You palette for GTK3 apps (file-roller, etc.).
+ * DMS rewrites dank-colors.css on every theme change; this static import applies it. */
+@import url("dank-colors.css");

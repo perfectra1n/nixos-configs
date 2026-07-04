@@ -1,0 +1,112 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "spacing": 4,
+    "margin-top": 5,
+    "margin-left": 10,
+    "margin-right": 10,
+    
+    "modules-left": ["hyprland/workspaces"],
+    "modules-center": ["clock"],
+    "modules-right": ["pulseaudio", "network", "cpu", "memory", "battery", "tray"],
+    
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "warp-on-scroll": false,
+        "format": "{id}: {windows}",
+        "format-window-separator": " | ",
+        "window-rewrite-default": "{class}",
+        "window-rewrite": {
+            "class<firefox>": " Firefox",
+            "class<chromium>": " Chromium",
+            "class<google-chrome>": " Chrome",
+            "class<code>": " Code",
+            "class<kitty>": " Terminal",
+            "class<alacritty>": " Terminal",
+            "class<discord>": " Discord",
+            "class<slack>": " Slack",
+            "class<spotify>": " Spotify",
+            "class<thunar>": " Files",
+            "class<nautilus>": " Files",
+            "class<obsidian>": " Obsidian",
+            "class<steam>": " Steam",
+            "title<.*youtube.*>": " YouTube",
+            "title<.*github.*>": " GitHub"
+        },
+        "on-click": "activate"
+    },
+    
+    "cffi/virtual-desktops": {
+        "module_path": "/home/perf3ct/.config/waybar/modules/libwaybar_vd.so",
+        "format": "{name}",
+        "show_empty": false
+    },
+    
+    "hyprland/window": {
+        "format": "{}",
+        "max-length": 50,
+        "separate-outputs": true
+    },
+    
+    "clock": {
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format": " {:%I:%M %p}",
+        "format-alt": " {:%Y-%m-%d}"
+    },
+    
+    "cpu": {
+        "format": " {usage}%",
+        "tooltip": true,
+        "interval": 2
+    },
+    
+    "memory": {
+        "format": " {percentage}%",
+        "tooltip-format": "Memory: {used:0.1f}G/{total:0.1f}G"
+    },
+    
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-alt": "{icon} {time}",
+        "format-icons": ["", "", "", "", ""]
+    },
+    
+    "network": {
+        "format-wifi": " {essid}",
+        "format-ethernet": " Connected",
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
+        "format-linked": " {ifname} (No IP)",
+        "format-disconnected": "⚠ Disconnected",
+        "format-alt": " {ifname}"
+    },
+    
+    "pulseaudio": {
+        "scroll-step": 5,
+        "format": "{icon} {volume}%",
+        "format-bluetooth": "{icon} {volume}% ",
+        "format-bluetooth-muted": " {icon}",
+        "format-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    },
+    
+    "tray": {
+        "spacing": 10
+    }
+}

@@ -1,0 +1,29 @@
+[general]
+# ShareX-like defaults: start with the pen, copy to clipboard on save, and don't
+# leave the window hanging around after an export.
+fullscreen = true
+corner-roundness = 12
+initial-tool = "brush"
+copy-command = "wl-copy"
+# Save into the standard Screenshots dir; %Y… is satty's strftime filename.
+output-filename = "/home/perf3ct/Pictures/Screenshots/satty-%Y%m%d-%H%M%S.png"
+early-exit = true
+# Annotate at full res even when zoomed/fractional-scaled.
+disable-notifications = false
+primary-highlighter = "block"
+
+[font]
+family = "JetBrainsMono Nerd Font"
+style = "Bold"
+
+# Pre-seed the color palette so the toolbar matches typical ShareX markup.
+[color-palette]
+palette = [
+  "#ff0000",
+  "#ffa500",
+  "#ffff00",
+  "#00ff00",
+  "#00bfff",
+  "#ffffff",
+  "#000000",
+]

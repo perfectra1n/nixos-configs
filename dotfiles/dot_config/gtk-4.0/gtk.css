@@ -1,0 +1,4 @@
+/* Pull in DMS's matugen-generated Material-You palette. DMS rewrites dank-colors.css on
+ * every theme change; this static import is what actually applies it to GTK4/libadwaita
+ * apps (Nautilus etc.). Without it they render with stock libadwaita colors. */
+@import url("dank-colors.css");

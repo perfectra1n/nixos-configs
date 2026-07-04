@@ -1,0 +1,37 @@
+# Out-of-tree package pins (not in nixpkgs, or deliberately version-pinned).
+# nvfetcher resolves each `src.manual` version to a prefetched source + SHA in
+# _sources/generated.nix (the "lockfile" for these). Renovate bumps the src.manual
+# versions (via the `# renovate:` comments) and runs `nvfetcher` as a postUpgradeTask
+# to refill the hashes — see renovate.json. Regenerate manually with: nvfetcher
+#
+# src.manual holds the version WITHOUT the leading "v"; the URL adds `v$ver` in the path.
+# Both are static Go binaries — installed as-is in modules/common.nix (no build/patchelf).
+
+[kubectl]
+# renovate: datasource=github-releases depName=kubernetes/kubernetes extractVersion=^v(?<version>.+)$
+src.manual = "1.34.5"
+fetch.url = "https://dl.k8s.io/release/v$ver/bin/linux/amd64/kubectl"
+
+[talosctl]
+# renovate: datasource=github-releases depName=siderolabs/talos extractVersion=^v(?<version>.+)$
+src.manual = "1.13.5"
+fetch.url = "https://github.com/siderolabs/talos/releases/download/v$ver/talosctl-linux-amd64"
+
+# ksops — viaduct-ai/kustomize-sops KRM plugin. A release tarball (NOT a bare binary), so the
+# derivation in modules/common.nix unpacks it; only the version/src/hash live here.
+[ksops]
+# renovate: datasource=github-releases depName=viaduct-ai/kustomize-sops extractVersion=^v(?<version>.+)$
+src.manual = "4.5.1"
+fetch.url = "https://github.com/viaduct-ai/kustomize-sops/releases/download/v$ver/ksops_$ver_Linux_x86_64.tar.gz"
+
+# libratbag — pinned to our fork branch, NOT upstream. Two gaps vs nixpkgs' 0.18 tag: (1) 0.18
+# predates G502 X PLUS support (merged to upstream master after the tag), and (2) even upstream
+# master can't drive the X PLUS's DPI — its single-quirk device file can't carry both the LED
+# quirk and the INDEX_OFFSET fix, so libratbag edits the wrong (1-indexed) profile. Our fork
+# branch adds multi-quirk support + tags the X PLUS with both (submitted upstream as a PR).
+# Repoint to "libratbag/libratbag" master once that PR merges; drop the entry entirely once
+# nixpkgs ships a libratbag release with both. See modules/peripherals.nix for the full WHY.
+[libratbag]
+# renovate: datasource=git-refs depName=https://github.com/perfectra1n/libratbag branch=hidpp20-multi-quirk-g502xplus
+src.manual = "b23167c644d8f78b477a5a12668b9edf22da1616"
+fetch.github = "perfectra1n/libratbag"

@@ -1,0 +1,2 @@
+alias gen='pwgen -s -1 32'
+alias freq='source ~/freqtrade/.env/bin/activate'

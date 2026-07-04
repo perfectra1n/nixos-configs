@@ -1,0 +1,519 @@
+# Task runner for nixos-configs. `mise tasks` to list, `mise run <name>` to run.
+# mise is installed by the flake + shell-hooked via chezmoi, so these autoload on `cd` here.
+#
+# Quiet the per-line `[task] $ …` command-echo (it printed every comment in long scripts like
+# `apply`). `quiet` only drops mise's framing — task stdout/stderr (incl. our `>> …` progress
+# and any errors) still prints. Override for one run with `mise run -o prefix <task>`.
+[settings]
+task_output = "quiet"
+#
+# What's automatable vs not:
+#   - apply / verify / hardware / dirs / update     → fully scripted below.
+#   - secrets:pull / secrets:pull-env               → refresh every Bitwarden-backed secret
+#     (two manifests in scripts/secrets-sync.py) into BOTH channels — sops secrets.yaml and the
+#     age-encrypted fish env vars: re-encrypt + commit. pull = both; pull-env = fish only.
+#   - secrets:key-bootstrap                         → fresh-install: pull the one age key
+#     from Bitwarden into sops-nix + chezmoi (single-key model, see .sops.yaml).
+#   - secrets:init / secrets:edit / secrets:key-install → mise drives them, but YOU supply
+#     the secret/decision (the token, the age key); editing secrets needs the key present.
+
+[tasks.apply]
+description = "Rebuild a host (default: this one), then apply the in-repo dotfiles"
+run = '''
+set -eu
+# Preflight: sops-nix decrypts at ACTIVATION, so its age key must exist BEFORE the
+# rebuild — on a brand-new box it won't, and activation of any sops.secrets.* fails.
+# Fetch it from Bitwarden first (secrets:key-bootstrap is a no-op if the key's already there).
+if [ ! -e /var/lib/sops-nix/key.txt ]; then
+  echo ">> no sops age key yet — fetching from Bitwarden first"
+  mise run secrets:key-bootstrap
+fi
+
+# Auto-detected (root-UUID match → hostname). Override a specific config with HOST=desktop.
+# host.sh prompts you to pick if it can't tell (fresh box's hostname is still "nixos").
+host=$(./scripts/host.sh)
+echo ">> host: $host"
+
+# Preflight: a fresh box ships a PLACEHOLDER hardware-configuration.nix (fake disk UUIDs) —
+# switching on that yields an UNBOOTABLE system. If this machine's real root UUID isn't in
+# the host's hardware config, capture+commit it first. Skipped for wsl (no hardware file)
+# and for any established host whose UUID already matches (normal day-to-day apply).
+hw="hosts/$host/hardware-configuration.nix"
+uuid=$(findmnt -no UUID / 2>/dev/null || true)
+if [ -f "$hw" ] && [ -n "$uuid" ] && ! grep -qiF "$uuid" "$hw"; then
+  echo ">> $hw isn't this machine yet — capturing hardware first"
+  HOST="$host" mise run hardware
+fi
+
+# Preflight: secrets.yaml still the placeholder? Populate ALL Bitwarden-backed secrets
+# (the git/* credential tokens, per the secrets-sync manifest) + commit BEFORE the switch — so
+# this rebuild declares + decrypts them (modules/git-credentials.nix gates on `secretsReady`).
+if grep -q "replace me with" secrets/secrets.yaml; then
+  echo ">> secrets.yaml is the placeholder — initializing secrets from Bitwarden"
+  mise run secrets:init
+fi
+
+# Preflight: did you add manifest rows (e.g. docker/*) that aren't in secrets.yaml yet? On an
+# already-initialized box secrets:init is skipped above, so a NEW manifest key would never get
+# pulled — and the modules gated on it (docker-credentials) would stay silently inert. This is a
+# CHEAP LOCAL check (sops keeps keys in plaintext), so it only unlocks Bitwarden when something's
+# genuinely missing — a normal day-to-day apply never prompts for the vault.
+if ! grep -q "replace me with" secrets/secrets.yaml; then
+  missing=""
+  while IFS="$(printf '\t')" read -r path _; do
+    [ -n "$path" ] || continue
+    key=${path#*/}                                   # manifest keys are unique across groups
+    grep -qE "^[[:space:]]+$key:" secrets/secrets.yaml || missing="$missing $path"
+  done <<MANIFEST
+$(./scripts/secrets-sync.py paths)
+MANIFEST
+  if [ -n "$missing" ]; then
+    echo ">> manifest keys not in secrets.yaml yet —$missing — pulling from Bitwarden first"
+    mise run secrets:pull
+  fi
+fi
+
+sudo nixos-rebuild switch --flake ".#$host"
+
+# Dotfiles now live in THIS repo under ./dotfiles — chezmoi reads them via ./.chezmoiroot, with
+# sourceDir pinned to this checkout by modules/dotfiles.nix. No separate repo to clone/pull; the
+# switch above already updated the source on disk. A missing age key degrades gracefully.
+# NOTE: apply OVERWRITES local uncommitted edits under ./dotfiles — commit WIP first.
+chezmoi apply || echo ">> apply failed — is the age key at ~/.config/age/age.agekey (mode 600)?"
+'''
+
+[tasks.verify]
+description = "Eval the flake + dry-run-build every host (run before committing)"
+run = '''
+set -eu
+git add -A                               # flakes only see tracked files
+nix flake check --no-build
+for h in desktop laptop server wsl; do
+  nix build --dry-run ".#nixosConfigurations.$h.config.system.build.toplevel"
+done
+'''
+
+[tasks.hardware]
+description = "Capture THIS machine's hardware into hosts/<host>/ (auto-detect or prompt), then commit + push"
+run = '''
+set -eu
+# Resolve which config this box is — auto-detected, or prompts you to pick (a fresh box's
+# hostname is the installer default "nixos", which matches no config). Override: HOST=laptop.
+host=$(./scripts/host.sh)
+out="hosts/$host/hardware-configuration.nix"
+echo ">> host: $host → $out"
+sudo nixos-generate-config --show-hardware-config > "$out"
+
+# Commit, not just stage: nixos-rebuild resolves this as a git+file:// flake, which only
+# sees COMMITTED files (an uncommitted hardware-configuration.nix is invisible to the build).
+git add "$out"
+# Set the author identity inline so the commit works on a fresh box with no git config
+# (else: "Please tell me who you are"). Override with GIT_NAME=/GIT_EMAIL=.
+git -c user.name="${GIT_NAME:-perfectra1n}" -c user.email="${GIT_EMAIL:-jonfuller2012@gmail.com}" \
+  commit -m "feat(hosts/$host): capture real hardware-configuration" "$out" \
+  || { echo ">> no change to commit"; exit 0; }
+git push || echo ">> committed locally, but push failed — set up the remote/creds, then: git push"
+echo ">> done — now: mise run apply"
+'''
+
+# ── Secrets: the encrypted VALUES (sops secrets.yaml + the age-encrypted fish env file) ──
+# Both Bitwarden→destination mappings live ONCE, in the two manifests at the top of
+# scripts/secrets-sync.py (SOPS_MANIFEST + FISHENV_MANIFEST). Adding a Bitwarden-backed secret =
+# one manifest line; secrets:pull / secrets:pull-env / secrets:init all use them.
+
+[tasks."secrets:edit"]
+description = "Edit the sops-encrypted secrets file (uses the secrets:key-bootstrap age identity)"
+run = '''
+set -eu
+# sops' default key path is ~/.config/sops/age/keys.txt; the age identity lives at ~/.config/age/age.agekey.
+export SOPS_AGE_KEY_FILE="$HOME/.config/age/age.agekey"
+sops secrets/secrets.yaml
+'''
+
+[tasks."secrets:pull"]
+description = "Refresh EVERY Bitwarden-backed secret — BOTH channels (sops secrets.yaml + the age-encrypted fish env vars) — in ONE vault unlock, then re-encrypt + commit. Run after rotating a token."
+run = '''
+set -eu
+agekey="$HOME/.config/age/age.agekey"
+[ -e "$agekey" ] || { echo ">> no age key at $agekey — run 'mise run secrets:key-bootstrap' first"; exit 1; }
+# Refresh is a surgical `sops set` per key, so it needs an already-encrypted file. A fresh box
+# whose secrets.yaml is still the shipped placeholder must be bootstrapped first.
+grep -q "replace me with" secrets/secrets.yaml \
+  && { echo ">> secrets.yaml is still the placeholder — run 'mise run secrets:init' first"; exit 1; }
+export SOPS_AGE_KEY_FILE="$agekey"
+
+# One source of truth: both manifests + all Bitwarden fetching live in the shared script.
+# sync-all refreshes BOTH channels (sops + the fish env .age) with a SINGLE vault unlock.
+./scripts/secrets-sync.py sync-all
+
+# Commit both files together. A channel that was a no-op leaves its file unchanged and simply
+# drops out of the commit; if BOTH are unchanged the `|| echo` makes this a clean exit 0.
+fishage="dotfiles/dot_config/fish/fishconfig.d/encrypted_private_secrets.fish.age"
+git add secrets/secrets.yaml "$fishage"
+git -c user.name="${GIT_NAME:-perfectra1n}" -c user.email="${GIT_EMAIL:-jonfuller2012@gmail.com}" \
+  commit -m "chore(secrets): refresh from Bitwarden" secrets/secrets.yaml "$fishage" \
+  || { echo ">> no change to commit (secrets already current)"; exit 0; }
+git push || echo ">> committed locally, but push failed — set up creds, then: git push"
+echo ">> secrets refreshed from Bitwarden (sops + fish env) + committed"
+'''
+
+[tasks."secrets:pull-env"]
+description = "Refresh ONLY the fish env-var secrets (MCP tokens etc.) from Bitwarden into the age-encrypted secrets.fish — re-encrypt + commit. Use when you rotated an env secret but no sops secret."
+run = '''
+set -eu
+agekey="$HOME/.config/age/age.agekey"
+[ -e "$agekey" ] || { echo ">> no age key at $agekey — run 'mise run secrets:key-bootstrap' first"; exit 1; }
+# This channel is chezmoi/age, not sops — no SOPS_AGE_KEY_FILE needed.
+./scripts/secrets-sync.py fishenv
+
+fishage="dotfiles/dot_config/fish/fishconfig.d/encrypted_private_secrets.fish.age"
+git add "$fishage"
+git -c user.name="${GIT_NAME:-perfectra1n}" -c user.email="${GIT_EMAIL:-jonfuller2012@gmail.com}" \
+  commit -m "chore(secrets): refresh fish env from Bitwarden" "$fishage" \
+  || { echo ">> no change to commit (fish env already current)"; exit 0; }
+git push || echo ">> committed locally, but push failed — set up creds, then: git push"
+echo ">> fish env secrets refreshed from Bitwarden + committed"
+'''
+
+[tasks."secrets:init"]
+description = "One-time bootstrap: point .sops.yaml at the held age key, populate secrets.yaml from Bitwarden (the secrets-sync manifest) + commit"
+run = '''
+set -eu
+agekey="$HOME/.config/age/age.agekey"
+[ -e "$agekey" ] || { echo ">> no age key at $agekey — run 'mise run secrets:key-bootstrap' first"; exit 1; }
+grep -q "replace me with" secrets/secrets.yaml \
+  || { echo ">> secrets.yaml already initialized — refresh with 'mise run secrets:pull', edit with 'mise run secrets:edit'"; exit 0; }
+export SOPS_AGE_KEY_FILE="$agekey"
+
+# Encrypt to the key we actually hold: set .sops.yaml's &main recipient to this key's public
+# half (replacing the placeholder), so sops encrypts secrets.yaml to a key we can decrypt.
+pub=$(age-keygen -y "$agekey")
+sed -i "s|&main age1[0-9A-Za-z]*|\&main $pub|" .sops.yaml
+
+# Pull every manifest secret from Bitwarden as plaintext YAML, then sops-encrypt in place
+# (values encrypted, keys stay readable). The SAME manifest secrets:pull refreshes later.
+umask 077
+./scripts/secrets-sync.py emit > secrets/secrets.yaml
+sops --encrypt --in-place secrets/secrets.yaml
+
+# Commit (git+file:// flake only sees committed files; and the secret must exist at eval).
+git add .sops.yaml secrets/secrets.yaml
+git -c user.name="${GIT_NAME:-perfectra1n}" -c user.email="${GIT_EMAIL:-jonfuller2012@gmail.com}" \
+  commit -m "feat(secrets): initialize from Bitwarden" .sops.yaml secrets/secrets.yaml
+git push || echo ">> committed locally, but push failed — set up creds, then: git push"
+echo ">> secrets initialized + committed — rebuild to decrypt /run/secrets/*"
+'''
+
+[tasks."secrets:list"]
+description = "List the secret keys in secrets.yaml, marking manifest-managed (secrets:pull) vs hand-set (secrets:edit). Read-only — no decryption."
+run = '''
+set -eu
+# Managed path→Bitwarden-item map straight from the secrets-sync manifest (no vault access).
+managed=$(./scripts/secrets-sync.py paths)
+# Walk the plaintext YAML structure — sops encrypts VALUES, not keys: "group:" then "    key:".
+# Stop at the trailing sops: metadata block (not real secrets).
+group=""
+while IFS= read -r line; do
+  case "$line" in
+    sops:) break ;;
+    [a-z]*:) group=${line%%:*} ;;
+    "    "*:*)
+      key=$(printf '%s' "$line" | sed -E 's/^ +([A-Za-z0-9_]+):.*/\1/')
+      path="$group/$key"
+      item=$(printf '%s\n' "$managed" | awk -F'\t' -v p="$path" '$1==p {print $2}')
+      if [ -n "$item" ]; then printf '  %-26s [manifest: %s]\n' "$path" "$item"
+      else printf '  %-26s [hand-set]\n' "$path"; fi
+      ;;
+  esac
+done < secrets/secrets.yaml
+'''
+
+[tasks."secrets:status"]
+description = "Health check: both age keys present? secrets.yaml real? .sops.yaml recipient matches the key you hold? Read-only."
+run = '''
+set -u
+ok()  { printf '  %-22s \033[32mok\033[0m %s\n' "$1" "${2:-}"; }
+bad() { printf '  %-22s \033[31mMISSING\033[0m %s\n' "$1" "${2:-}"; }
+
+sops_key="/var/lib/sops-nix/key.txt"
+chezmoi_key="$HOME/.config/age/age.agekey"
+[ -e "$sops_key" ]    && ok "age key (sops-nix)" "$sops_key"    || bad "age key (sops-nix)" "$sops_key"
+[ -e "$chezmoi_key" ] && ok "age key (chezmoi)"  "$chezmoi_key" || bad "age key (chezmoi)"  "$chezmoi_key"
+
+if grep -q "replace me with" secrets/secrets.yaml; then
+  bad "secrets.yaml" "still the placeholder — run 'mise run secrets:init'"
+else
+  ok "secrets.yaml" "real (encrypted)"
+fi
+
+# Do we hold the key the secrets are encrypted to? Compare the held key's PUBLIC half to the
+# &main recipient in .sops.yaml (age-keygen -y only derives the public half — no decryption).
+if [ -e "$chezmoi_key" ]; then
+  held=$(age-keygen -y "$chezmoi_key")
+  want=$(grep -oE 'age1[0-9a-z]+' .sops.yaml | head -1)
+  [ "$held" = "$want" ] && ok "recipient match" "$held" || bad "recipient match" "held=$held .sops.yaml=$want"
+fi
+'''
+
+[tasks."secrets:get"]
+description = "Decrypt + print ONE secret value to stdout: KEY=git/github_token mise run secrets:get"
+run = '''
+set -eu
+: "${KEY:?usage: KEY=git/github_token mise run secrets:get}"
+export SOPS_AGE_KEY_FILE="$HOME/.config/age/age.agekey"
+grp=${KEY%%/*}; key=${KEY#*/}
+sops --decrypt --extract "[\"$grp\"][\"$key\"]" secrets/secrets.yaml
+'''
+
+# ── Secrets: the age IDENTITY that decrypts the values (one key, both sops-nix + chezmoi) ──
+
+[tasks."secrets:key-enroll"]
+description = "Print this host's age recipient (add to .sops.yaml on a TRUSTED box, then mise run secrets:updatekeys)"
+run = "ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub"
+
+[tasks."secrets:key-install"]
+description = "Install the chezmoi age identity from a path you supply (KEY=/path mise run secrets:key-install)"
+run = '''
+: "${KEY:?usage: KEY=/path/to/age.agekey mise run secrets:key-install}"
+install -Dm600 "$KEY" "$HOME/.config/age/age.agekey"
+echo ">> installed ~/.config/age/age.agekey"
+'''
+
+[tasks."secrets:key-bootstrap"]
+description = "Fresh-install: pull the one age key from Bitwarden → sops-nix + chezmoi (BW_SERVER=url ITEM='AGE SOPS Key')"
+run = '''
+set -eu
+item="${ITEM:-AGE SOPS Key}"
+sops_key="/var/lib/sops-nix/key.txt"
+chezmoi_key="$HOME/.config/age/age.agekey"
+
+# Brand-new setup only: bail if either identity already exists (FORCE=1 to override).
+# Never clobber a key already on the box — that's how you lose access to old secrets.
+if [ -z "${FORCE:-}" ] && { [ -e "$sops_key" ] || [ -e "$chezmoi_key" ]; }; then
+  echo ">> key already present ($sops_key / $chezmoi_key) — skipping. FORCE=1 to overwrite."
+  exit 0
+fi
+
+# Custom Bitwarden/Vaultwarden endpoint. `bw config server` is REJECTED once you're
+# authenticated ("logout required before server config update"), so only touch it when
+# the configured endpoint actually differs from what we want — log out first if so.
+# Already-correct server (e.g. you ran `bw config server` by hand) → no-op, no logout.
+current=$(bw status | jq -r '.serverUrl // empty')
+if [ -z "${BW_SERVER:-}" ] && [ -z "$current" ]; then
+  printf 'Bitwarden server URL: '
+  read -r BW_SERVER
+fi
+if [ -n "${BW_SERVER:-}" ] && [ "$current" != "$BW_SERVER" ]; then
+  bw logout >/dev/null 2>&1 || true        # changing the endpoint requires being logged out
+  bw config server "$BW_SERVER"
+fi
+
+# Unlock the vault → session token. login if unauthenticated, else just unlock.
+if [ "$(bw status | jq -r .status)" = "unauthenticated" ]; then
+  BW_SESSION=$(bw login --raw)
+else
+  BW_SESSION=$(bw unlock --raw)
+fi
+export BW_SESSION
+
+# The age secret key lives in the custom field named "secret key".
+key=$(bw get item "$item" --session "$BW_SESSION" \
+  | jq -r '.fields[] | select(.name=="secret key") | .value')
+[ -n "$key" ] && [ "$key" != "null" ] || { echo ">> field 'secret key' not found in item '$item'"; exit 1; }
+
+# Stage at mode 600 via umask, then install to both identities (same key for both):
+#   /var/lib/sops-nix/key.txt   → sops-nix (system, root-owned)
+#   ~/.config/age/age.agekey    → chezmoi (user)
+umask 077
+tmp=$(mktemp); trap 'rm -f "$tmp"' EXIT
+printf '%s\n' "$key" > "$tmp"
+sudo install -Dm600 "$tmp" "$sops_key"
+install -Dm600 "$tmp" "$chezmoi_key"
+
+bw lock >/dev/null 2>&1 || true
+echo ">> installed $sops_key + $chezmoi_key — now: mise run apply"
+'''
+
+[tasks.dirs]
+description = "Create the dirs the Hyprland binds write to (screenshots)"
+run = 'mkdir -p "$HOME/Pictures/Screenshots" "$HOME/Nextcloud/Photos/PC Screenshots"'
+
+[tasks.update]
+# Source dir is now this monorepo, so chezmoi's `git pull` pulls the whole repo (Nix + dotfiles)
+# then applies the dotfiles — no rebuild. Pulled Nix changes just sit until the next `mise run apply`.
+description = "Pull latest (whole monorepo) + apply dotfiles, without a system rebuild"
+run = "chezmoi update"
+
+[tasks.diff]
+description = "Preview what a rebuild would change (closure diff vs the running system)"
+run = '''
+set -eu
+host=$(./scripts/host.sh)
+nixos-rebuild build --flake ".#$host"           # builds ./result, does NOT activate
+nix store diff-closures /run/current-system ./result
+'''
+
+[tasks.dots-diff]
+description = "Preview dotfile changes before apply overwrites anything"
+run = "chezmoi diff"
+
+[tasks.dots-cutover]
+# ONE-TIME, after the first post-merge `mise run apply` has regenerated ~/.config/chezmoi/chezmoi.toml
+# with the new sourceDir. Confirms chezmoi now reads ./dotfiles from this repo, then retires the
+# orphaned standalone clone at ~/.local/share/chezmoi. Idempotent + safe to re-run.
+description = "One-time: verify chezmoi reads ./dotfiles here, then remove the old ~/.local/share/chezmoi clone"
+run = '''
+set -eu
+want="$PWD/dotfiles"
+got=$(chezmoi source-path)
+if [ "$got" != "$want" ]; then
+  echo ">> chezmoi still resolves to: $got"
+  echo ">> expected:                 $want"
+  echo ">> Rebuild first (mise run apply) so the generated chezmoi.toml re-points sourceDir, then re-run."
+  exit 1
+fi
+echo ">> chezmoi source-path → $got (via .chezmoiroot) ✓"
+chezmoi diff >/dev/null                       # sanity: the source renders/decrypts from the new location
+echo ">> source renders from the monorepo ✓"
+old="$HOME/.local/share/chezmoi"
+if [ -e "$old" ]; then
+  echo ">> removing orphaned standalone clone: $old"
+  rm -rf "$old"
+  echo ">> done — the monorepo's dotfiles/ is now the sole chezmoi source."
+else
+  echo ">> no old clone at $old — nothing to remove."
+fi
+'''
+
+[tasks.test]
+description = "Apply now WITHOUT touching the bootloader (auto-reverts on reboot) — safe trials"
+run = '''
+set -eu
+host=$(./scripts/host.sh)
+sudo nixos-rebuild test --flake ".#$host"
+'''
+
+[tasks.hosts]
+description = "List host configs in the repo + which one this machine resolves to"
+run = '''
+echo "host configs:"; ls -1 hosts
+echo
+echo "this machine → $(./scripts/host.sh)"
+'''
+
+[tasks.rollback]
+description = "Switch back to the previous system generation"
+run = "sudo nixos-rebuild switch --rollback"
+
+[tasks.generations]
+description = "List system generations + dates (rollback targets)"
+run = "sudo nixos-rebuild list-generations"
+
+[tasks.gc]
+description = "Reclaim disk: delete generations >14d old, then dedup the store"
+run = '''
+set -eu
+sudo nix-collect-garbage --delete-older-than 14d
+sudo nix store optimise
+'''
+
+[tasks.bump]
+description = "Update + relock flake inputs, then dry-build every host"
+run = '''
+set -eu
+nix flake update
+mise run verify
+'''
+
+[tasks."secrets:updatekeys"]
+description = "Re-encrypt secrets for the current .sops.yaml recipients"
+run = '''
+set -eu
+export SOPS_AGE_KEY_FILE="$HOME/.config/age/age.agekey"
+sops updatekeys secrets/secrets.yaml
+'''
+
+[tasks.deploy]
+description = "Build + activate a host's config on a REMOTE box: HOST=server TARGET=user@host mise run deploy"
+run = '''
+set -eu
+: "${HOST:?usage: HOST=<config> TARGET=user@host mise run deploy}"
+: "${TARGET:?usage: HOST=<config> TARGET=user@host mise run deploy}"
+# Builds locally, copies the closure, activates on the target. Same CPU arch assumed.
+nixos-rebuild switch --flake ".#$HOST" --target-host "$TARGET" --use-remote-sudo
+'''
+
+[tasks.new-host]
+description = "Scaffold a new (server-flavoured) host: NAME=<name> mise run new-host"
+run = '''
+set -eu
+: "${NAME:?usage: NAME=<hostname> mise run new-host}"
+dir="hosts/$NAME"
+[ -e "$dir" ] && { echo "$dir already exists — aborting"; exit 1; }
+mkdir -p "$dir"
+
+# Identity/boot — mirrors hosts/server, retargeted to $NAME.
+cat > "$dir/default.nix" <<EOF
+{ config, pkgs, lib, ... }:
+
+# Headless server "$NAME". Composes (from flake.nix): common + facter + server.
+# Plus this host's hardware + identity below. No desktop stack.
+{
+  imports = [ ./hardware-configuration.nix ];
+
+  networking.hostName = "$NAME";
+
+  # UEFI boot. If this box is older/BIOS, replace with:
+  #   boot.loader.grub = { enable = true; device = "/dev/sda"; };
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+}
+EOF
+
+# Placeholder hardware config so the flake evaluates in CI before the box exists.
+cat > "$dir/hardware-configuration.nix" <<'EOF'
+# PLACEHOLDER — replace on the real machine:
+#   mise run hardware     (run ON the box, then commit)
+# This stub only exists so the flake evaluates in CI before the box is installed.
+{ config, lib, pkgs, modulesPath, ... }:
+
+{
+  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+
+  boot.initrd.availableKernelModules = [ "ahci" "xhci_pci" "virtio_pci" "sd_mod" ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ ];
+  boot.extraModulePackages = [ ];
+
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/00000000-0000-0000-0000-000000000000";
+    fsType = "ext4";
+  };
+
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-uuid/0000-0000";
+    fsType = "vfat";
+    options = [ "fmask=0077" "dmask=0077" ];
+  };
+
+  swapDevices = [ ];
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+}
+EOF
+
+# Add to the CI build matrix (append before the closing ]).
+sed -i "s/\(host: \[[^]]*\)\]/\1, $NAME]/" .github/workflows/check.yaml
+
+git add "$dir" .github/workflows/check.yaml
+echo
+echo ">> Scaffolded $dir + added '$NAME' to the CI matrix (both git-added)."
+echo ">> ONE manual step — paste this into flake.nix under nixosConfigurations"
+echo "   (adjust extraModules/homeModules if it's not a plain server):"
+echo
+echo "        $NAME = mkHost \"$NAME\" {"
+echo "          extraModules = [ ./modules/server.nix ];"
+echo "        };"
+echo
+echo ">> Then: mise run verify   (and on the box: mise run hardware)"
+'''

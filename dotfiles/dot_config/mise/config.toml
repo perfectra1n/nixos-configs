@@ -1,0 +1,17 @@
+[settings]
+
+[settings.node]
+
+# NixOS: never source-compile Python (system zlib/openssl headers aren't on the
+# FHS paths python-build expects). Use precompiled python-build-standalone instead.
+[settings.python]
+compile = false
+
+[env]
+# pipx auto-picks uv as its backend when uv is on PATH, but uv rejects the
+# `--uploaded-prior-to` flag mise injects (uv calls it `--exclude-newer`).
+# Force the pip backend so mise's pipx installs (e.g. ansible) work.
+PIPX_DEFAULT_BACKEND = "pip"
+
+[tools]
+pipx = "latest"

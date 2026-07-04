@@ -1,0 +1,24 @@
+# sops-nix key + encryption rules. Used by the `sops` CLI (NOT read by Nix eval).
+#
+# ── Single-key model ──
+# ONE age keypair encrypts/decrypts every secret, on every host. The private key
+# lives in Bitwarden (custom field "secret key" of the "AGE SOPS Key" item) and is
+# pulled onto a fresh box by `mise run secrets:key-bootstrap` — it lands at both
+# /var/lib/sops-nix/key.txt (sops-nix, system) and ~/.config/age/age.agekey (chezmoi).
+# This deliberately trades per-host isolation for "one secret, zero enrollment": a
+# fresh host decrypts on first rebuild with no `secrets:key-enroll`/`secrets:updatekeys` round-trip.
+#
+# To set the public key below:
+#   age-keygen -y /var/lib/sops-nix/key.txt    # prints the age1... public half
+#
+# Adding more recipients later (e.g. a teammate, or back to per-host keys) is just
+# more entries under `keys:` + the key group, then `mise run secrets:updatekeys`.
+keys:
+  - &main age1cmyzv35xnw2kuv3crmta5xkfy06e2fysygwcn8vxq32enqrs0sestp3f7w
+
+creation_rules:
+  # Every secret is readable by the single shared key.
+  - path_regex: ^secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+          - *main

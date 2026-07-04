@@ -1,0 +1,22 @@
+# nixos-rebuild / nix build output symlinks
+result
+result-*
+
+# direnv
+.direnv/
+
+# editor scratch
+*.swp
+
+# Python bytecode cache (scripts/secrets-sync.py)
+__pycache__/
+*.pyc
+
+# secrets-sync fish-env channel: transient repo-local temp dir holding DECRYPTED plaintext
+# mid-run (kept repo-local so the final .age swap is an atomic rename). Trap-cleaned normally;
+# ignored so a crash can't leak it into a commit.
+.fishenv.*
+
+# A bulk `chezmoi add` once swept btop's runtime log in next to btop.conf; a log is
+# state, not config — keep it from ever being re-tracked.
+dotfiles/dot_config/btop/btop.log

@@ -1,0 +1,74 @@
+# ~/.config/starship.toml
+
+# Use custom format
+format = '''
+$python$nodejs\[$username$hostname\] $directory$cmd_duration$git_branch$aws
+$character '''
+
+# Wait 10 milliseconds for starship to check files under the current directory.
+scan_timeout = 10
+
+# Disable the blank line at the start of the prompt
+add_newline = false
+
+# Set 'foo' as custom color palette
+palette = 'rain_custom1'
+
+# Define custom colors
+[palettes.rain_custom1]
+# Overwrite existing color
+#blue = '21'
+# Define new color
+pink = '#FF33E9'
+mustard = '#af8700'
+
+# ~/.config/starship.toml
+
+
+# ~/.config/starship.toml
+
+[username]
+style_user = 'bold blue'
+style_root = 'bold blue'
+format = '[$user]($style)'
+disabled = false
+show_always = true
+
+[directory]
+repo_root_style = 'bold pink'
+truncate_to_repo = false
+fish_style_pwd_dir_length = 1
+
+[hostname]
+ssh_only = false
+format = '[$ssh_symbol](bold blue) on [$hostname](cyan)'
+trim_at = '.'
+disabled = false
+ssh_symbol = '🌐' 
+
+[line_break]
+disabled = false
+
+[status]
+disabled = false
+format = '[\[$symbol$status\]]($style)'
+
+[character]
+success_symbol = ' [❯](bold cyan)'
+error_symbol = ' [❌](bold red)'
+
+[python]
+format = '[${symbol}${pyenv_prefix}(\($virtualenv\) )]($style)'
+
+[git_branch]
+symbol = ''
+always_show_remote = true
+disabled = false
+
+[aws]
+format = '(\[$duration\] )($style)'
+symbol = ''
+
+[nodejs]
+format = '[$symbol\(($version)\)](bold green) '
+symbol = ''

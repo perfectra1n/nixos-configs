@@ -1,0 +1,14 @@
+# pyprland (pypr) — started by `exec-once = pypr` in hyprland.conf.
+# The "term" scratchpad is the Wayland equivalent of the old i3 tdrop dropdown:
+# kitty, full width, ~45% tall, slides in from the top, lazily spawned and
+# respawned automatically if you close it. Toggle: Super+grave -> `pypr toggle term`.
+[pyprland]
+plugins = ["scratchpads"]
+
+[scratchpads.term]
+animation = "fromTop"
+command = "kitty --class kitty-dropterm"
+class = "kitty-dropterm"
+size = "100% 45%"
+margin = 0       # flush to the top edge (no gap — Hyprland has no top bar to clear)
+lazy = true

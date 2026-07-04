@@ -1,0 +1,33 @@
+/* hyprshell launcher tweaks — experimental, live-reloads on save. */
+
+/* 1. Fake-center the launcher. It's a top-anchored layer-shell window (hardcoded in
+ *    launcher-lib/src/root.rs), so this just pads it down by a FIXED amount tuned to the
+ *    main monitor's height — tweak by eye; it won't be centered on a different-height head. */
+.launcher {
+  margin-top: 550px;
+}
+
+/* 2. Banish the empty overview grid box that `ignore = .*` leaves behind (one per monitor).
+ *    ⚠ `.monitor` is SHARED with the Alt+Tab switcher — there's no GTK4 selector to target
+ *    only the empty overview one (no :empty / :has). So this also strips the frame/backdrop
+ *    around the switcher's thumbnails; the thumbnails (.client, their own bg+border) still
+ *    show, just frameless. If you dislike the switcher change, delete this .monitor block. */
+.monitor {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;   /* the real remnant — .monitor has a 16px glow shadow */
+}
+
+/* (overview-only, harmless) collapse any empty per-workspace containers too. */
+.workspace {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+}

@@ -1,0 +1,24 @@
+{
+  "hyprlandSubmapIndicator": {
+    "enabled": true,
+    "clickToReset": true,
+    "defaultIconName": "key"
+  },
+  "linuxWallpaperEngine": {
+    "enabled": true,
+    "monitorPlaylists": {},
+    "monitorScenes": {
+      "DP-1": "897016354",
+      "DP-2": "897016354"
+    },
+    "sceneSettings": {
+      "897016354": {
+        "noAudioProcessing": true,
+        "fps": 60,
+        "scaling": "fill"
+      }
+    },
+    "playlistIntervalMinutes": 10,
+    "generateStaticWallpaper": true
+  }
+}

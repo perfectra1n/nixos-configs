@@ -1,0 +1,54 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard"
+  ],
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
+  "branchConcurrentLimit": 0,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/flake-inputs\\.txt$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>git-refs) depName=(?<depName>\\S+) packageName=(?<packageName>\\S+) branch=(?<currentValue>\\S+)\\s+\\S+ = \"(?<currentDigest>[0-9a-f]+)\""
+      ]
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/nvfetcher\\.toml$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+) extractVersion=(?<extractVersion>\\S+)\\s+src\\.manual = \"(?<currentValue>[^\"]+)\""
+      ]
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/nvfetcher\\.toml$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>git-refs) depName=(?<depName>\\S+) branch=(?<currentValue>\\S+)\\s+src\\.manual = \"(?<currentDigest>[0-9a-f]+)\""
+      ]
+    }
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["custom.regex"],
+      "matchFileNames": ["flake-inputs.txt"],
+      "commitMessageTopic": "flake input {{depName}}",
+      "postUpgradeTasks": {
+        "commands": ["nix flake update {{{depName}}}"],
+        "fileFilters": ["flake.lock", "flake-inputs.txt"],
+        "executionMode": "update"
+      }
+    },
+    {
+      "matchManagers": ["custom.regex"],
+      "matchFileNames": ["nvfetcher.toml"],
+      "postUpgradeTasks": {
+        "commands": ["nvfetcher"],
+        "fileFilters": ["nvfetcher.toml", "_sources/**"],
+        "executionMode": "branch"
+      }
+    }
+  ]
+}

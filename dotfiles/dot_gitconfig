@@ -1,0 +1,14 @@
+[credential]
+	# Managed creds (GitHub + both Gitea) come from the sops-rendered, read-only tmpfs file
+	# (flake: modules/git-credentials.nix → `mise run git-creds-init`), so no token ever lands
+	# in a plaintext dotfile. READ-ONLY ON PURPOSE: git-credential-store insists on taking a
+	# write lock for store/erase, which always fails on the root-owned 0400 rendered path
+	# ("unable to get credential storage lock"). So this wrapper delegates only `get` to it and
+	# silently drops store/erase — no lock noise, and the tokens are never re-copied to plaintext.
+	# Trade-off: non-managed hosts aren't cached; add them to sops or `git config` if you want them.
+	helper = "!f() { test \"$1\" = get && git credential-store --file=/run/secrets/rendered/git-credentials get; }; f"
+[user]
+	name = perfectra1n
+	email = jonfuller2012@gmail.com
+[push]
+	autoSetupRemote = true

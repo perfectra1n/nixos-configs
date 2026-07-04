@@ -1,0 +1,34 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "model": "fable",
+  "enabledPlugins": {
+    "explanatory-output-style@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "datadog@claude-plugins-official": true,
+    "custom-claude-skills@custom-claude-skills": true
+  },
+  "extraKnownMarketplaces": {
+    "custom-claude-skills": {
+      "source": {
+        "source": "directory",
+        "path": "/home/perf3ct/repos/custom-claude-skills"
+      }
+    }
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "autoCompactEnabled": true,
+  "agentPushNotifEnabled": true
+}

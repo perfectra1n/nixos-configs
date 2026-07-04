@@ -1,0 +1,77 @@
+# The repo's own README — not a dotfile to deploy into $HOME
+README.md
+
+# Caches, tool state, and build/runtime dirs — never manage these
+.cache
+.config/btop/btop.log
+.local/share/Trash
+.npm
+.cargo
+.bun
+.docker
+.gnupg
+.krew
+.aws
+.azure
+.ipython
+.jupyter
+
+# Shell / REPL histories
+.bash_history
+.zsh_history
+.node_repl_history
+
+# Credentials — must never be committed
+.git-credentials
+
+# Machine-generated fish state; also holds live secrets (handled via encrypted secrets.fish)
+.config/fish/fish_variables
+
+# Browser profiles (huge machine state)
+.config/google-chrome
+.config/chromium
+
+# Credential-bearing tool state — regenerate via each tool's own login command,
+# do NOT sync (gh auth login / tea login add / argocd login / kopia repo connect)
+.config/gh/hosts.yml
+.config/tea
+.config/argocd
+.config/kopia
+.config/rclone
+
+# Auto-generated install receipt / lock files — not meaningful config
+.config/talos-pilot
+.config/helm/repositories.lock
+
+# DankMaterialShell (DMS) state — app-owned and rewritten live by DMS (incl. matugen output).
+# Ignore the whole dir EXCEPT settings.json + plugin_settings.json, which we snapshot via
+# chezmoi: DMS stays the live writer (0644), `chezmoi add` captures changes, `chezmoi apply`
+# reseeds a fresh box. NOT readonly_ — DMS must keep writing them.
+# Scoped to host=desktop ONLY: both files embed per-machine monitor names (barConfigs[].
+# screenPreferences, plugin monitorScenes keys, lockScreenActiveMonitor), so applying them to
+# another box would pin its bar/lock/wallpaper to displays it doesn't have. Other hosts keep
+# their own. To go multi-host, list every output in screenPreferences/monitorScenes and set
+# lockScreenActiveMonitor="all", then drop the hostname guard.
+.config/DankMaterialShell/**
+{{- if eq .chezmoi.hostname "desktop" }}
+!.config/DankMaterialShell
+!.config/DankMaterialShell/settings.json
+!.config/DankMaterialShell/plugin_settings.json
+{{- end }}
+
+# ~/.kube is cache/state EXCEPT the kubeconfig itself, which we manage age-encrypted
+# (same live-snapshot rules as DMS above: kubectl keeps writing it, `chezmoi add
+# --encrypt` re-captures). The talosconfig peer lives at .talos/config — no carve-out
+# needed there since .talos was never ignored.
+.kube/**
+!.kube
+!.kube/config
+
+# homelab-ops expects a gitignored ./kubeconfig at its root — managed as a symlink to
+# the encrypted ~/.kube/config so context switches and cert refreshes stay in one file.
+# Skipped until the repo is actually cloned: creating the link first would leave a
+# non-empty dir that breaks `git clone`. Re-evaluated every apply, so it appears on
+# its own once the repo exists.
+{{- if not (stat (joinPath .chezmoi.homeDir "repos/homelab-ops/.git")) }}
+repos/homelab-ops/kubeconfig
+{{- end }}

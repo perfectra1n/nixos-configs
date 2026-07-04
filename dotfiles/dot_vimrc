@@ -1,0 +1,8 @@
+" Sets the default vim settings. 
+source $VIMRUNTIME/defaults.vim
+
+" Enable syntax highlighting.
+syntax on
+
+" Stop it from changing my freaking cursor
+set guicursor=
