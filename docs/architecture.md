@@ -75,8 +75,9 @@ key lives in Bitwarden and a fresh box pulls it down via `mise run secrets:key-b
 zero-enrollment bootstrap — see the comment at the top of `.sops.yaml`. (`sshKeyPaths` stays
 configured as a fallback.) Wiring lives in `modules/common.nix` but is **inert until you
 declare a `sops.secrets.*` entry**, so a fresh checkout still evaluates (CI stays green). The
-shipped `secrets/secrets.yaml` is an unencrypted placeholder with `validateSopsFiles = false`;
-flip validation back on once it holds real content. `.sops.yaml` is CLI-only (for the `sops`
+shipped `secrets/secrets.yaml` holds real sops-encrypted values (keys visible, values
+ciphertext — safe in the public repo), and `validateSopsFiles = true` checks its sops
+structure at every eval without needing the key. `.sops.yaml` is CLI-only (for the `sops`
 tool), not read by Nix.
 
 ## Hardware detection — facter
@@ -98,10 +99,12 @@ refills hashes. Static Go binaries (`kubectl`, `talosctl`) are installed as-is v
 
 ## CI-green on a fresh checkout
 
-`hardware-configuration.nix` and `secrets/secrets.yaml` are placeholders so
-`nix build --dry-run` evaluates before any real machine exists. The rule: don't add anything
-that hard-requires a real secret or hardware report at **eval** time. (Build time is fine —
-e.g. the CachyOS kernel and DMS's quickshell only build on a real switch.)
+Eval must never hard-require a decrypted secret or a real machine: not-yet-installed
+hosts ship a placeholder `hardware-configuration.nix` (currently `server`), and
+secret-consuming modules gate on key *presence* in `secrets.yaml` (sops keeps YAML keys
+plaintext), so `nix build --dry-run` works on a fresh checkout. The rule: don't add
+anything that hard-requires a real secret or hardware report at **eval** time. (Build
+time is fine — e.g. the CachyOS kernel and DMS's quickshell only build on a real switch.)
 
 ## Flake inputs and why each exists
 

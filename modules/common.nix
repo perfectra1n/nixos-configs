@@ -109,9 +109,10 @@ in
   sops.defaultSopsFile = ../secrets/secrets.yaml;
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
   sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-  # The shipped secrets/secrets.yaml is an unencrypted placeholder. Re-enable
-  # validation (the default) once it holds real sops-encrypted content.
-  sops.validateSopsFiles = false;
+  # secrets.yaml holds real sops-encrypted content now, so eval-time validation is back
+  # on (the default) — it catches a malformed/hand-mangled secrets file at eval instead
+  # of at activation. Validation checks sops STRUCTURE only, no key needed: CI stays green.
+  sops.validateSopsFiles = true;
 
   # ── Docker (all hosts; works under WSL too) ──
   virtualisation.docker.enable = true;

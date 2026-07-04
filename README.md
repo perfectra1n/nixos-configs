@@ -41,11 +41,11 @@ home/
   common.nix           # CLI/dev home — every host
   gui.nix              # GUI apps — graphical hosts only
 hosts/
-  desktop/{default.nix, hardware-configuration.nix}   # NVIDIA — hardware is a PLACEHOLDER
-  laptop/{default.nix, hardware-configuration.nix}    # AMD    — hardware is a PLACEHOLDER
+  desktop/{default.nix, hardware-configuration.nix}   # NVIDIA — real captured hardware
+  laptop/{default.nix, hardware-configuration.nix}    # AMD    — real captured hardware
   server/{default.nix, hardware-configuration.nix}    #        — hardware is a PLACEHOLDER
   wsl/default.nix      # NixOS-WSL; no hardware-configuration.nix needed
-secrets/secrets.yaml   # sops-encrypted (PLACEHOLDER stub)
+secrets/secrets.yaml   # sops-encrypted (real values; ciphertext is safe to publish)
 .sops.yaml             # sops keys + creation rules
 ```
 
@@ -74,8 +74,8 @@ The heavy flake build happens *after* reboot on the real disk. (`wsl` differs �
    Bootstrap clone — the repo is public, so no token dance is needed (pushes later ride
    the sops-rendered `~/.git-credentials`):
    ```sh
-   git clone https://github.com/perfectra1n/nixos-configs.git ~/nixos-configs
-   cd ~/nixos-configs
+   git clone https://github.com/perfectra1n/nixos-configs.git ~/repos/nixos-configs
+   cd ~/repos/nixos-configs
    ```
 3. **Confirm the `boot.loader` block** in `hosts/<HOST>/default.nix` matches the
    firmware (UEFI systemd-boot vs BIOS GRUB) — `apply` is about to switch.
@@ -89,8 +89,9 @@ The heavy flake build happens *after* reboot on the real disk. (`wsl` differs �
      prompts for the vault server URL; no-op if the key is already present),
    - **prompts you to pick the host** — the installer hostname is still `nixos`, which
      matches no config (override non-interactively with `HOST=laptop mise run apply`),
-   - **captures + commits** this machine's real `hardware-configuration.nix` (the shipped
-     one is a placeholder with fake disk UUIDs — switching on it would be unbootable),
+   - **captures + commits** this machine's real `hardware-configuration.nix` if it differs
+     from the shipped one (desktop/laptop ship theirs; a NEW machine or the server's
+     placeholder stub would be unbootable without this step),
    - runs `nixos-rebuild switch --flake .#<HOST>`, then
    - `chezmoi apply`s your dotfiles — they live in this repo under `dotfiles/` (no separate clone),
      and the `secrets:key-bootstrap` step above wrote the chezmoi age key so `secrets.fish` etc. decrypt.
@@ -102,7 +103,7 @@ The heavy flake build happens *after* reboot on the real disk. (`wsl` differs �
 
 Install the NixOS-WSL rootfs tarball on Windows, then from inside it:
 ```sh
-sudo nixos-rebuild switch --flake git+<this-repo-url>#wsl
+sudo nixos-rebuild switch --flake github:perfectra1n/nixos-configs#wsl
 ```
 
 ## Facter (hardware detection)
@@ -163,14 +164,15 @@ experiments only; `secrets:pull` overwrites manifest-backed keys), `secrets:list
    ```sh
    mise run secrets:init               # encrypts + commits secrets/secrets.yaml
    ```
-   Then set `sops.validateSopsFiles = true;` back in `modules/common.nix`.
+   (`sops.validateSopsFiles = true` in `modules/common.nix` then verifies the file's sops
+   structure at every eval — no key needed.)
 4. To manage the user password declaratively: store a hash under `passwords/<username>`,
    uncomment `hashedPasswordFile` + `users.mutableUsers = false` in `modules/common.nix`.
 
 ## Applying changes / day-to-day
 
 ```sh
-cd ~/nixos-configs
+cd ~/repos/nixos-configs
 # …edit…
 git add -A                              # flakes only see git-TRACKED files
 sudo nixos-rebuild switch --flake .#<HOST>
@@ -200,5 +202,5 @@ Verbs: `switch` (now + boot default) · `test` (now, not persisted) · `boot` (n
 ## CI
 
 `.github/workflows/check.yaml` dry-run-builds every host on push/PR (and gates Renovate's
-`flake.lock` bumps). It evaluates with the placeholder hardware stubs, so it stays green
-before any machine is installed.
+`flake.lock` bumps). Eval never needs a decrypted secret or a real machine (the server's
+hardware config is still a placeholder stub), so it stays green on a fresh checkout.

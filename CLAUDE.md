@@ -43,9 +43,11 @@ Hosts: `desktop` (NVIDIA), `laptop` (AMD), `server` (headless), `wsl`.
 - **`username` is a single `let` binding in `flake.nix`.** Never hardcode the login name
   elsewhere — modules/home receive it via `specialArgs`/`extraSpecialArgs`. Use
   `users.users.${username}` / `home.username = username`.
-- **Keep the build CI-green on a fresh checkout.** `hardware-configuration.nix` and
-  `secrets/secrets.yaml` are placeholders so `nix build --dry-run` evaluates before any
-  real machine exists. Don't add anything that hard-requires a real secret/report at eval.
+- **Keep the build CI-green on a fresh checkout.** Eval never needs a decrypted secret or
+  a real machine: not-yet-installed hosts ship a placeholder `hardware-configuration.nix`
+  (currently `server`), and secret-consuming modules gate on key *presence* in
+  `secrets.yaml` (sops keeps YAML keys plaintext). Don't add anything that hard-requires
+  a real secret/report at eval.
 
 ## Layout & conventions
 
@@ -55,7 +57,7 @@ modules/*.nix        # NixOS system modules — ONE concern each, flat dir, no g
 home/{common,gui}.nix# home-manager: common = CLI/dev (every host), gui = graphical only
 hosts/<name>/        # per-machine: default.nix (identity/boot/services) +
                      #   hardware-configuration.nix (+ optional facter.json)
-secrets/secrets.yaml # sops-encrypted (placeholder stub for now)
+secrets/secrets.yaml # sops-encrypted (real values as ciphertext — publishable by design)
 .sops.yaml           # sops keys + creation rules (CLI-only; not read by Nix)
 _sources/            # nvfetcher output (kubectl/talosctl/ksops/libratbag pins) — generated, don't hand-edit
 docs/                # design decisions, package inventory, host×module matrix
