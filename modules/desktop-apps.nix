@@ -302,6 +302,15 @@ in
   # volumes. Not pulled in automatically since we're not running full GNOME.
   services.gvfs.enable = true;
 
+  # KDE Connect — phone↔desktop pairing (notifications, clipboard, file transfer, media
+  # control). The NixOS module rather than a bare package because pairing needs firewall
+  # ports 1714-1764 TCP+UDP open, which the module does; a plain home.packages entry
+  # would install a client that can never discover the phone. Works fine outside Plasma
+  # (it's Qt, not plasmashell-bound). The kdeconnectd daemon itself is exec-once'd in
+  # autostart.conf below — Hyprland runs no XDG autostart, and D-Bus activation alone
+  # would leave the daemon (and thus discovery) dormant until something first talked to it.
+  programs.kdeconnect.enable = true;
+
   # OBS Virtual Camera output. The obs-backgroundremoval filter (above) blurs the webcam
   # *inside* OBS, but Teams/Zoom/Chromium can only consume that blurred feed through a real
   # v4l2 capture node — OBS's "Start Virtual Camera" writes to a v4l2loopback device, and
@@ -494,6 +503,12 @@ in
 
       # ownCloud sync client, minimized to tray.
       exec-once = owncloud --background
+
+      # KDE Connect daemon (programs.kdeconnect in this module) — must run persistently for
+      # the phone to discover/stay paired with this host; D-Bus activation would only start
+      # it on first use. kdeconnect-indicator (tray UI) is intentionally NOT autostarted —
+      # launch it (or kdeconnect-app) on demand; the daemon alone handles sync/notifications.
+      exec-once = kdeconnectd
 
       # NOTE: no OBS autostart — the blurred webcam is launched on demand with the `blurcam` command
       # (let-binding above), not a background daemon (see that comment for why on-demand-automatic

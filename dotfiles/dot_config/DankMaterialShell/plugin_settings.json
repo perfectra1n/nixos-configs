@@ -20,5 +20,11 @@
     },
     "playlistIntervalMinutes": 10,
     "generateStaticWallpaper": true
+  },
+  "dankKDEConnect": {
+    "enabled": true
+  },
+  "dankNotepadModule": {
+    "enabled": true
   }
 }

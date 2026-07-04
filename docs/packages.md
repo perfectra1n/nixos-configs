@@ -79,6 +79,7 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 ## Desktop apps — `modules/desktop-apps.nix` (graphical: D L)
 
 - `hardware.logitech.wireless` (+ Solaar GUI).
+- `programs.kdeconnect` (opens firewall 1714-1764; `kdeconnectd` runs via exec-once).
 - Home packages: `slack`, `discord`, `signal-desktop`, `spotify`, `kdePackages.dolphin`,
   `owncloud-client`, `obs-studio`, `vlc`, `plex-desktop`, `imv`,
   `linux-wallpaperengine` (Steam WE workshop renderer; binary dep of the DMS `linuxWallpaperEngine`
