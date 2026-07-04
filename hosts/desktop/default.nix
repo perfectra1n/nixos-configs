@@ -32,6 +32,34 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # 4TB 990 PRO — bulk data (Steam library at /data/steam + repos). One-time formatted
+  # ext4 (uniform with root; xfs/btrfs perf is a wash on NVMe for Steam+git, and ext4
+  # keeps shrink/repartition open). nofail: a dead DATA drive must not drop boot to
+  # emergency mode — the box still boots, just without /data. The Steam library is added
+  # in Steam's own UI (libraryfolders.vdf is Steam-owned), so the flake's job ends here.
+  fileSystems."/data" = {
+    device = "/dev/disk/by-uuid/7e81b681-268c-47e6-99dc-93b2535c59c4";
+    fsType = "ext4";
+    options = [ "nofail" ];
+  };
+
+  # ~/repos lives on /data but must APPEAR at its canonical home path — chezmoi's
+  # sourceDir (modules/dotfiles.nix) bakes /home/<user>/repos/nixos-configs, and a bind
+  # mount (unlike a symlink) is invisible to path-resolving tools. systemd orders this
+  # after /data automatically (RequiresMountsFor on the bind source).
+  fileSystems."/home/${username}/repos" = {
+    device = "/data/repos";
+    fsType = "none";
+    options = [ "bind" "nofail" ];
+  };
+
+  # Belt-and-braces: recreate the /data skeleton if it's ever lost (fresh disk, restore) —
+  # the repos bind and Steam both need their dirs to exist before they can populate them.
+  systemd.tmpfiles.rules = [
+    "d /data/repos 0755 ${username} users -"
+    "d /data/steam 0755 ${username} users -"
+  ];
+
   # VMware Workstation host (builds vmmon/vmnet kernel modules against the running kernel —
   # here the CachyOS one). unfree. Provides `vmware` + the networking/USB-arbitrator services.
   virtualisation.vmware.host.enable = true;
