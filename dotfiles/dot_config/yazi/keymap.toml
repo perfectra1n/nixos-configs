@@ -1,0 +1,27 @@
+# Plugin bindings only — everything else is yazi's stock keymap ("~" shows it all).
+# prepend_keymap wins over defaults, so "l" here shadows the builtin enter-dir-only.
+
+[[mgr.prepend_keymap]]
+on   = "l"
+run  = "plugin smart-enter"
+desc = "Enter the child directory, or open the file"
+
+[[mgr.prepend_keymap]]
+on   = [ "c", "m" ]
+run  = "plugin chmod"
+desc = "Chmod on selected files"
+
+[[mgr.prepend_keymap]]
+on   = "M"
+run  = "plugin mount"
+desc = "Mount manager (m=mount, u=unmount, e=eject)"
+
+[[mgr.prepend_keymap]]
+on   = [ "g", "i" ]
+run  = "plugin lazygit"
+desc = "Open lazygit here"
+
+[[mgr.prepend_keymap]]
+on   = "C"
+run  = "plugin ouch"
+desc = "Compress selection with ouch (zip default; output name picks the format)"

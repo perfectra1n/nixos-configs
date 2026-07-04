@@ -1,0 +1,26 @@
+# Plugin wiring only — yazi's defaults are good as-is. Theme stays stock on purpose:
+# colors belong to DMS/matugen, which has no yazi template yet, and we don't hardcode
+# palettes in chezmoi (see CLAUDE.md ownership tree).
+
+# git.yazi — per-file VCS status signs in the listing
+[[plugin.prepend_fetchers]]
+url   = "*"
+run   = "git"
+group = "git"
+
+[[plugin.prepend_fetchers]]
+url   = "*/"
+run   = "git"
+group = "git"
+
+# ouch.yazi — archive contents in the preview pane (J/K scrolls the preview)
+[[plugin.prepend_previewers]]
+mime = "application/{*zip,tar,bzip2,7z*,rar,xz,zstd,java-archive}"
+run  = "ouch"
+
+# Extract via ouch instead of yazi's builtin — one tool for both directions, and
+# ouch's format auto-detect covers more than the builtin unarchiver.
+[opener]
+extract = [
+	{ run = 'ouch d -y "$@"', desc = "Extract here with ouch", for = "unix" },
+]

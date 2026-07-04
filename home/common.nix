@@ -41,6 +41,8 @@ in
     ripgrep
     jq
     nnn
+    yazi                 # file-manager TUI — package only; any ~/.config/yazi would be chezmoi's
+    mc                   # Midnight Commander — dual-pane TUI for bulk copy/move
     git
     delta                # git diff pager
     lazygit              # git TUI
