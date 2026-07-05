@@ -35,13 +35,16 @@ in
     fishPlugins.z        # jethrokuan/z
     tmux
 
+    nethogs
+
     # ── CLI tools ──
     bat
     fd
     ripgrep
     jq
     nnn
-    yazi                 # file-manager TUI — package only; any ~/.config/yazi would be chezmoi's
+    # yazi lives in programs.yazi below — the one HM `programs.*` we allow, because it
+    # only writes ~/.config/yazi/plugins (code, not chezmoi's config files)
     mc                   # Midnight Commander — dual-pane TUI for bulk copy/move
     git
     delta                # git diff pager
@@ -127,6 +130,31 @@ in
     ghostscript          # `gs` — PDF/PostScript rendering & conversion (also the imagemagick PDF backend)
     img2pdf              # lossless image→PDF (no re-encode, unlike imagemagick's `convert`)
   ];
+
+  # Yazi + its plugins. Plugins are CODE, not config, so nix owns them: store symlinks
+  # under ~/.config/yazi/plugins, version-matched to this nixpkgs' yazi (`ya pkg` was
+  # rejected — it fetches upstream main at apply time, which can drift ahead of the
+  # installed yazi and needs the network). The chezmoi side keeps the sibling config
+  # files that wire these up (yazi.toml / keymap.toml / init.lua) — zero file overlap
+  # with what HM writes, so no clobber risk (see CLAUDE.md on that failure mode).
+  programs.yazi = {
+    enable = true;
+    # The `y` cwd-follow wrapper is chezmoi's fish function; HM's generated one must
+    # never land in chezmoi-owned fish config (moot while programs.fish is off, but
+    # explicit beats relying on that).
+    enableFishIntegration = false;
+    enableBashIntegration = false;
+    plugins = lib.genAttrs [
+      "git"          # status signs in the listing (init.lua + fetchers in yazi.toml)
+      "smart-enter"  # `l` opens files AND enters dirs (keymap.toml)
+      "full-border"  # rounded full borders (init.lua)
+      "chmod"        # `cm` perms editor (keymap.toml)
+      "mount"        # `M` mount/unmount/eject (keymap.toml)
+      "ouch"         # archive preview + `C` compress (yazi.toml + keymap.toml)
+      "lazygit"      # `gi` lazygit popup (keymap.toml)
+      "starship"     # starship prompt as yazi's status bar (init.lua)
+    ] (name: pkgs.yaziPlugins.${name});
+  };
 
   # Ensure clonedRepos (see top) exist under ~/repos on every switch. Fail-soft:
   # GIT_TERMINAL_PROMPT=0 makes a private/unauthenticated repo fail fast instead of

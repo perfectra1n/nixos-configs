@@ -3,7 +3,7 @@
     "commit": "",
     "pr": ""
   },
-  "model": "fable",
+  "model": "claude-fable-5[1m]",
   "enabledPlugins": {
     "explanatory-output-style@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
