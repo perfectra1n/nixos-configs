@@ -33,6 +33,6 @@ fish_add_path $GOPATH/bin
 
 set -Ux EDITOR vim
 
-# Change the zoom factor on applications that will listen to it, hopefully like BurpSuite
-set -Ux GDK_SCALE 2
-set -Ux QT_SCALE_FACTOR 2
+# NO GDK_SCALE / QT_SCALE_FACTOR here: they MULTIPLY with Hyprland's per-monitor
+# fractional scale, so anything relaunched from a terminal (e.g. `dms run`) renders
+# double-sized vs the login exec-once path. Set per-invocation if one app needs it.
