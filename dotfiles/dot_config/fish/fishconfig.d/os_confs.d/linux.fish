@@ -36,3 +36,7 @@ set -Ux EDITOR vim
 # NO GDK_SCALE / QT_SCALE_FACTOR here: they MULTIPLY with Hyprland's per-monitor
 # fractional scale, so anything relaunched from a terminal (e.g. `dms run`) renders
 # double-sized vs the login exec-once path. Set per-invocation if one app needs it.
+# Actively erase them: -U scrubs the stale fish_variables copy this config used to
+# persist (set -Ux), -g strips a copy inherited from a pre-cleanup parent process.
+set -eU GDK_SCALE QT_SCALE_FACTOR 2>/dev/null
+set -eg GDK_SCALE QT_SCALE_FACTOR 2>/dev/null
