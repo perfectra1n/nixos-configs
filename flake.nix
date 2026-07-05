@@ -51,6 +51,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Network Indicator DMS plugin — OUR FORK's branch, not the registry's gemb0-0 pin.
+    # `flake = false` because the plugin is plain QML (plugin.json at repo root — exactly
+    # the layout `plugins.<id>.src` expects); modules/hyprland.nix mkForce-overrides the
+    # registry's src with this input. Tracked like every other input: Renovate bumps the
+    # branch HEAD via flake-inputs.txt, so pushed commits land on the next Renovate PR.
+    network-indicator = {
+      url = "github:perfectra1n/Network-Indicator/reliability-hardening";
+      flake = false;
+    };
+
     # NOTE: hardware detection uses nixpkgs' built-in `hardware.facter` module
     # (the standalone nixos-facter-modules flake was upstreamed into nixpkgs and
     # is deprecated). A per-host facter.json replaces the fragile

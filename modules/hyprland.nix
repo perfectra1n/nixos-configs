@@ -82,6 +82,16 @@ in
     # modules/desktop-apps.nix) and persists the chosen output + Steam Workshop scene in DMS
     # settings. Pinned here so it survives a fresh checkout rather than living in DMS state.
     plugins.linuxWallpaperEngine.enable = true;
+    # Network speed bar widget — the registry's `networkIndicator`, but sourced from our
+    # fork's `reliability-hardening` branch (flake input, see flake.nix). mkForce because
+    # the registry module also sets `src` (upstream gemb0-0) at normal priority.
+    # ⚠️ On a machine that dev-symlinked ~/.config/DankMaterialShell/plugins/networkIndicator
+    # to a local clone, remove that symlink after switching — the config-dir copy and this
+    # /etc/xdg/quickshell/dms-plugins one are both discovered (duplicate plugin id).
+    plugins.networkIndicator = {
+      enable = true;
+      src = lib.mkForce inputs.network-indicator;
+    };
   };
 
   # Electron/Chromium apps default to XWayland (blurry under fractional scale). This

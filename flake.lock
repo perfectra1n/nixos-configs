@@ -214,6 +214,23 @@
         "type": "github"
       }
     },
+    "network-indicator": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783284723,
+        "narHash": "sha256-K/zew6OKerSdNv+CJWZiMVlgEQ5PLDrGcxb8vpV2ouc=",
+        "owner": "perfectra1n",
+        "repo": "Network-Indicator",
+        "rev": "924e6ad1c9adff10e165453d0aa69b42aa1f330d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "perfectra1n",
+        "ref": "reliability-hardening",
+        "repo": "Network-Indicator",
+        "type": "github"
+      }
+    },
     "nixos-wsl": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -297,6 +314,7 @@
         "dms-plugin-registry": "dms-plugin-registry",
         "home-manager": "home-manager_2",
         "hyprswitch": "hyprswitch",
+        "network-indicator": "network-indicator",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_2",
         "sops-nix": "sops-nix"

@@ -17,11 +17,14 @@ home-manager = "19d7472aca941c7e3d11e8a91d61be47d70c4ab5"
 # renovate: datasource=git-refs depName=hyprswitch packageName=https://github.com/h3rmt/hyprswitch branch=hyprshell-release
 hyprswitch = "61ddaa30563c1f091ca5fbe5d7203c19f42b519c"
 
+# renovate: datasource=git-refs depName=network-indicator packageName=https://github.com/perfectra1n/Network-Indicator branch=reliability-hardening
+network-indicator = "924e6ad1c9adff10e165453d0aa69b42aa1f330d"
+
 # renovate: datasource=git-refs depName=nixos-wsl packageName=https://github.com/nix-community/NixOS-WSL branch=main
 nixos-wsl = "5675822ba756e6e56f8f6a5a76e90e0da2ece94d"
 
 # renovate: datasource=git-refs depName=nixpkgs packageName=https://github.com/NixOS/nixpkgs branch=nixos-unstable
-nixpkgs = "567a49d1913ce81ac6e9582e3553dd90a955875f"
+nixpkgs = "e73de5be04e0eff4190a1432b946d469c794e7b4"
 
 # renovate: datasource=git-refs depName=sops-nix packageName=https://github.com/Mic92/sops-nix branch=master
 sops-nix = "56b24064fdcaedca53553b1a6d607fd23b613a24"
