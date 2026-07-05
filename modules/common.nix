@@ -127,6 +127,19 @@ in
   # ── nix-ld: run foreign dynamic binaries (mise runtimes, downloaded ELFs) ──
   programs.nix-ld.enable = true;
 
+  # ── nethogs without sudo ──
+  # nethogs (home/common.nix) needs cap_net_admin+cap_net_raw to open packet sockets.
+  # `setcap` on the store path doesn't survive rebuilds, so ship a capability wrapper
+  # instead — /run/wrappers/bin precedes the HM profile in PATH, so plain `nethogs`
+  # picks it up. `+p` only (not +ep): the NixOS wrapper raises permitted→ambient itself,
+  # same as nixpkgs' iftop/mtr modules.
+  security.wrappers.nethogs = {
+    owner = "root";
+    group = "root";
+    capabilities = "cap_net_admin,cap_net_raw+p";
+    source = lib.getExe pkgs.nethogs;
+  };
+
   # ── FHS-style /bin and /usr/bin via envfs ──
   # Maps /bin/* and /usr/bin/* to whatever is on PATH, so Debian-style shebangs in
   # chezmoi scripts (#!/bin/bash, #!/usr/bin/perl) work without rewriting them.
