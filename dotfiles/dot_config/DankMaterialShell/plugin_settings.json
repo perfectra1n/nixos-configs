@@ -26,5 +26,19 @@
   },
   "dankNotepadModule": {
     "enabled": true
+  },
+  "networkIndicator": {
+    "enabled": true,
+    "interfaceGroups": [
+      {
+        "name": "LAN",
+        "pattern": "en.*"
+      },
+      {
+        "name": "Docker",
+        "pattern": "(docker|br-|veth).*"
+      }
+    ],
+    "perAppTraffic": true
   }
 }

@@ -445,6 +445,10 @@
       ],
       "rightWidgets": [
         {
+          "id": "networkIndicator",
+          "enabled": true
+        },
+        {
           "id": "systemTray",
           "enabled": true
         },
@@ -578,6 +582,13 @@
   "builtInPluginSettings": {
     "dms_settings_search": {
       "trigger": "?"
+    },
+    "dankNotepadModule": {
+      "previewActive": false,
+      "currentFilePath": "notepad-files/untitled-1781973370635.txt",
+      "currentFileExtension": "txt",
+      "sourceContent": "asdf",
+      "updatedAt": 1783286014416
     }
   },
   "clipboardEnterToPaste": true,
