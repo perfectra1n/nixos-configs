@@ -1,6 +1,19 @@
-# Plugin wiring only — yazi's defaults are good as-is. Theme stays stock on purpose:
-# colors belong to DMS/matugen, which has no yazi template yet, and we don't hardcode
-# palettes in chezmoi (see CLAUDE.md ownership tree).
+# Behaviour + plugin wiring. Theme stays stock on purpose: colors belong to DMS/matugen,
+# which has no yazi template yet, and we don't hardcode palettes in chezmoi (CLAUDE.md
+# ownership tree). So "sane defaults" here means behaviour, never appearance.
+
+[mgr]
+show_hidden    = true               # dotfiles visible by default; "." toggles per-session
+sort_by        = "natural"          # "2.txt" before "10.txt", not lexical after it
+sort_dir_first = true               # folders float to the top
+sort_sensitive = false              # case-insensitive ordering
+show_symlink   = true               # render "→ target" after a symlink
+linemode       = "size_and_mtime"   # right-column info — custom, defined in init.lua
+scrolloff      = 5                  # keep 5 rows of context above/below the cursor
+
+[preview]
+wrap     = "yes"                    # word-wrap long lines in the text preview
+tab_size = 4
 
 # git.yazi — per-file VCS status signs in the listing
 [[plugin.prepend_fetchers]]
