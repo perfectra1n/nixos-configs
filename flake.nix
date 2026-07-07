@@ -33,16 +33,6 @@
     # force a local kernel compile. Used on the `desktop` and `laptop` hosts (CachyOS kernel).
     chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
 
-    # chaotic-kernel — a SECOND chaotic pin, used ONLY for boot.kernelPackages on desktop+laptop
-    # (hosts/*/default.nix) while `chaotic` above stays on the rolling branch for gaming pkgs.
-    # Held at the last rev shipping kernel 7.1.1-cachyos: the nyxpkgs-unstable bump to 7.1.3
-    # introduced an envfs FUSE parallel-lookup deadlock (mount.envfs/bash stuck in D state →
-    # Hyprland/DMS freeze, unkillable, forced reboots). 7.1.1 never hung. Same "no nixpkgs.follows"
-    # rule so its kernel + out-of-tree modules come from chaotic's cache, not a local compile.
-    # Remove this input (restore `pkgs.linuxPackages_cachyos-gcc` in both hosts) once 7.1.3+ is
-    # confirmed fixed upstream — see memory desktop-envfs-fuse-freeze-7-1-3.
-    chaotic-kernel.url = "github:chaotic-cx/nyx/7e9a1ccfe02f59cc44db21de445c20a816fd2d03";
-
     # DankMaterialShell (DMS) — Quickshell-based Wayland desktop shell (bar + dock +
     # notifications + launcher). Pin the `stable` branch; follow our nixpkgs per upstream
     # docs so its bundled (pinned) quickshell builds against the same nixpkgs. Imported by

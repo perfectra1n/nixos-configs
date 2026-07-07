@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, username, ... }:
+{ config, pkgs, lib, username, ... }:
 
 # Bare-metal desktop (NVIDIA). Composes (from flake.nix): common + facter +
 # desktop-base + hyprland + gaming + nvidia + pentest + desktop-apps + the chaotic
@@ -18,23 +18,7 @@
   # gnulib float-h test is broken under Clang (FLT_IS_IEC_60559 undeclared; gnulib fix not yet in
   # nixpkgs). The -gcc kernel builds modules with GCC, all cached upstream. CachyOS itself defaults
   # to GCC for this reason; the ~1% LTO delta isn't worth a local kernel+toolchain rebuild here.
-  #
-  # PINNED to kernel 7.1.1: the 7.1.3-cachyos bump introduced an envfs FUSE parallel-lookup
-  # deadlock that freezes Hyprland/DMS (see memory desktop-envfs-fuse-freeze-7-1-3). The kernel —
-  # plus its matching nvidia/v4l2loopback/vmmon — comes from the pinned `chaotic-kernel` input,
-  # while the rolling `chaotic` stays current for gaming pkgs. We can't use
-  # `chaotic-kernel.legacyPackages` directly: its nixpkgs has allowUnfree=false, which blocks
-  # nvidia-x11 in the hardware.graphics driver merge (`linuxPackagesFor` re-wrapping doesn't fix
-  # it either). So we re-import chaotic-kernel's OWN nixpkgs with allowUnfree=true + chaotic's
-  # overlay. allowUnfree is an eval-time gate only — it does NOT affect store hashes — so the
-  # resulting linux-7.1.1.drv is byte-identical to chaotic's cache (verified), hence substituted,
-  # never compiled locally. Restore `pkgs.linuxPackages_cachyos-gcc` (and drop the chaotic-kernel
-  # input) once 7.1.3+ is confirmed fixed upstream.
-  boot.kernelPackages = (import inputs.chaotic-kernel.inputs.nixpkgs {
-    inherit (pkgs.stdenv.hostPlatform) system;
-    config.allowUnfree = true;
-    overlays = [ inputs.chaotic-kernel.overlays.default ];
-  }).linuxPackages_cachyos-gcc;
+  boot.kernelPackages = pkgs.linuxPackages_cachyos-gcc;
 
   # NOTE: the nixpkgs.config.cudaCapabilities = [ "12.0" ] pin left with the CUDA-built
   # obs-backgroundremoval (its only consumer). NV Broadcast's CUDA comes from prebuilt pip
