@@ -23,11 +23,11 @@
         "pinned": false,
         "src": {
             "name": null,
-            "sha256": "sha256-ahfdg4d4OzFEplU1440Cw1ECfpcY6jSmw2BHbLJtKLs=",
+            "sha256": "sha256-HpBF7DK+qF2kPehfAGU1hSnqfHoVLsp4FU+6W1jCfYI=",
             "type": "url",
-            "url": "https://dl.k8s.io/release/v1.34.5/bin/linux/amd64/kubectl"
+            "url": "https://dl.k8s.io/release/v1.36.2/bin/linux/amd64/kubectl"
         },
-        "version": "1.34.5"
+        "version": "1.36.2"
     },
     "libratbag": {
         "cargoLock": null,
