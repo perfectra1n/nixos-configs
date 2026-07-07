@@ -27,5 +27,5 @@ nixos-wsl = "5675822ba756e6e56f8f6a5a76e90e0da2ece94d"
 nixpkgs = "e73de5be04e0eff4190a1432b946d469c794e7b4"
 
 # renovate: datasource=git-refs depName=sops-nix packageName=https://github.com/Mic92/sops-nix branch=master
-sops-nix = "56b24064fdcaedca53553b1a6d607fd23b613a24"
+sops-nix = "f1406619a3884cd5c47992a70b8b35c9c0fcb4c9"
 
