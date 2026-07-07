@@ -24,7 +24,7 @@ network-indicator = "924e6ad1c9adff10e165453d0aa69b42aa1f330d"
 nixos-wsl = "5675822ba756e6e56f8f6a5a76e90e0da2ece94d"
 
 # renovate: datasource=git-refs depName=nixpkgs packageName=https://github.com/NixOS/nixpkgs branch=nixos-unstable
-nixpkgs = "e73de5be04e0eff4190a1432b946d469c794e7b4"
+nixpkgs = "d407951447dcd00442e97087bf374aad70c04cea"
 
 # renovate: datasource=git-refs depName=sops-nix packageName=https://github.com/Mic92/sops-nix branch=master
 sops-nix = "56b24064fdcaedca53553b1a6d607fd23b613a24"
