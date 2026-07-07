@@ -37,12 +37,23 @@ jobs:
           extra-conf: |
             experimental-features = nix-command flakes
 
+      # Exchange the GitHub App's ID + private key for a short-lived installation
+      # token. An app token (like a PAT, unlike the workflow GITHUB_TOKEN) opens PRs
+      # that still trigger other workflows, so check.yaml runs on Renovate PRs.
+      # Caveat: installation tokens expire after 1h — if a run ever outlasts that
+      # (many PRs × nix postUpgradeTasks), split the run or fall back to a PAT.
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.RENOVATE_APP_ID }}
+          private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
+
       - name: Run Renovate
         env:
-          # Platform defaults to github; no endpoint needed. A PAT (repo scope) is
-          # required — the workflow-provided GITHUB_TOKEN can't open PRs that trigger
-          # other workflows (checks would never run on Renovate PRs).
-          RENOVATE_TOKEN: ${{ secrets.RENOVATE_SECRET_TOKEN }}
+          # Platform defaults to github; no endpoint needed. Renovate detects the app
+          # token and resolves the bot username/gitAuthor (<app>[bot]) automatically.
+          RENOVATE_TOKEN: ${{ steps.app-token.outputs.token }}
           RENOVATE_REPOSITORIES: '["perfectra1n/nixos-configs"]'
           # global-only option: permits the two postUpgradeTasks in renovate.json to run —
           # `nvfetcher` (nvfetcher.toml) and the per-input flake.lock re-lock `nix flake update <input>`.
