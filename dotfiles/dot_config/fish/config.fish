@@ -33,13 +33,16 @@ set -Ux fish_greeting
 set -U fish_color_command blue
 
 #My PATH variable
+# NOTE: /usr/bin and /bin are deliberately ABSENT. On NixOS they are envfs FUSE mounts that
+# resolve from PATH anyway (listing them adds nothing), and having them in PATH makes the envfs
+# daemon re-enter its own mount while servicing lookups — an ABBA deadlock that hard-froze the
+# desktop under heavy exec load (2026-07-07). If ever re-added, also purge them from the
+# persisted universal var fish_user_paths (fish_add_path writes there).
 fish_add_path -a $HOME/.local/bin
 fish_add_path -a /usr/local/sbin
 fish_add_path -a /usr/local/bin
 fish_add_path -a /usr/sbin
-fish_add_path -a /usr/bin
 fish_add_path -a /sbin
-fish_add_path -a /bin
 fish_add_path -a /usr/games
 fish_add_path -a /usr/local/games
 fish_add_path -a /snap/bin
