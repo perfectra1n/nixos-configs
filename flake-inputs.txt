@@ -3,7 +3,7 @@
 # flake-inputs packageRule re-locks flake.lock via 'nix flake update <input>'. See renovate.json.
 
 # renovate: datasource=git-refs depName=chaotic packageName=https://github.com/chaotic-cx/nyx branch=nyxpkgs-unstable
-chaotic = "7e9a1ccfe02f59cc44db21de445c20a816fd2d03"
+chaotic = "e603c3e817be4f3b041baf3af3f521f5a5435bd4"
 
 # renovate: datasource=git-refs depName=dms packageName=https://github.com/AvengeMedia/DankMaterialShell branch=stable
 dms = "eb5afcdc40ea5446c27e18552ff4a19f9daf9484"
