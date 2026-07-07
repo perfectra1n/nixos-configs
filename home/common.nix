@@ -36,6 +36,7 @@ in
     tmux
 
     nethogs
+    flux
 
     # ── CLI tools ──
     bat
@@ -53,6 +54,10 @@ in
     chezmoi              # dotfile manager (owns ~/.config)
     btop
     ncdu
+    lsof                 # list open files/sockets (who holds this port/file?)
+    # flock + pgrep are absent on purpose: util-linux and procps are NixOS
+    # requiredPackages (every system profile), so listing them would just shadow
+    # the same tools — same reasoning as the archive section below.
     yq-go                # YAML processor (mikefarah/yq)
     hugo                 # static site generator
     pandoc               # universal document converter (md↔docx/html/etc.); PDF output needs texlive separately
@@ -92,6 +97,8 @@ in
     saml2aws             # fetch temporary AWS STS creds via a SAML IdP (Okta/ADFS/etc.) for `aws`
     snowflake-cli        # Snowflake data-warehouse CLI; the binary is `snow`, not `snowflake-cli`
     claude-code          # nixpkgs lags releases; swap for the flake if you want latest
+    beads                # `bd` — graph-based issue tracker / memory for AI coding agents
+    dolt                 # version-controlled SQL database, git-style CLI
     mise                 # version manager; activated via chezmoi (fish/conf.d/mise.fish)
     kopia                # backup/snapshot tool — the CLI bundles the web UI (`kopia server
                          # start --ui`, served on localhost:51515); the standalone KopiaUI
