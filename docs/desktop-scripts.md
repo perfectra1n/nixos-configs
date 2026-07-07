@@ -7,40 +7,35 @@ records what and why. The full source + local rationale live as comments next to
 | Tool | Defined in | What it is |
 |------|-----------|------------|
 | `dms-idle-inhibit-watchdog` | [`modules/desktop-apps.nix`](../modules/desktop-apps.nix) | Idle-policy daemon — releases leaked ScreenSaver inhibits. **Own doc: [idle-watchdog.md](idle-watchdog.md)** |
-| `blurcam` | [`modules/desktop-apps.nix`](../modules/desktop-apps.nix) | Manual toggle for the OBS blurred virtual webcam |
 | `hypr-cheatsheet` | [`modules/hyprland.nix`](../modules/hyprland.nix) | Searchable rofi overlay of every live Hyprland keybind |
 | `grim` (shim) | [`modules/hyprland.nix`](../modules/hyprland.nix) | Surgical wrapper that kills screenshot-portal latency |
 
-## blurcam — the OBS blurred webcam, deliberately manual
+## blurcam — RETIRED (replaced by NV Broadcast)
 
-**What it does.** Toggle: run it before a call → OBS cold-starts to the tray on the scene named
-exactly **"Blurred Cam"** with the virtual camera (`/dev/video10`) already producing the blurred
-feed. Run it again (or quit OBS) → stops and releases the webcam + GPU. Also a launcher entry
-("Blurred Webcam", findable by *blur/webcam/camera*).
+The OBS-based blurred-webcam toggle (`blurcam` + the obs-backgroundremoval filter + a CUDA
+onnxruntime rebuild for the 5090) is gone — replaced on the desktop by **NV Broadcast**
+([`modules/nvbroadcast.nix`](../modules/nvbroadcast.nix)): a purpose-built app (unofficial
+NVIDIA Broadcast port) that produces the same blurred/virtual-background feed into the same
+`/dev/video10` without OBS in the loop. Launch `nvbroadcast` (GUI, also a launcher entry)
+before a call. The laptop keeps no blur stack at all — plain OBS + virtual camera only.
 
-**Why it's manual, not a daemon.** The obvious design — a daemon that starts OBS when an app
-grabs the camera — structurally loses a race: OBS cold-starts in ~4s, and a **producerless
-v4l2loopback advertises no format at all** (`G_FMT` fails), so the calling app opens a formatless
-device and errors out before OBS ever produces a frame. Keeping a format alive without a producer
-needs `keep_format`, which v4l2loopback only exposes through the `v4l2loopback-ctl` ioctl utility
-(not shipped by the kernel-module package). Launching OBS *by hand before the call* sidesteps the
-whole problem; a fast-producer tool (linux-blurcam) is the only clean zero-idle+instant
-alternative.
+**Lore worth keeping** (still true, still the reason things are shaped this way):
 
-**The supporting cast** (same module — blurcam is just the visible tip):
-
-- `v4l2loopback` pinned to `/dev/video10` with `exclusive_caps=1` — Chromium/Teams/Zoom ignore a
-  loopback node advertising both output+capture caps, so this forces capture-only.
-- WirePlumber's **libcamera monitor disabled** — a UVC cam enumerated twice (v4l2 MJPEG vs
-  libcamera raw-only ≈5fps) made captures a coin-flip.
+- **On-demand, not a daemon.** A producerless v4l2loopback advertises no format at all
+  (`G_FMT` fails), so any "auto-start the producer when an app grabs the cam" design loses the
+  open() race. Start the producer *before* the call.
+- `v4l2loopback` config now lives in [`modules/virtual-camera.nix`](../modules/virtual-camera.nix):
+  `/dev/video10`, `exclusive_caps=1` (Chromium/Teams/Zoom ignore a loopback node advertising both
+  output+capture caps), neutral `card_label="Virtual Camera"` — both NV Broadcast and OBS's
+  "Start Virtual Camera" produce into it, one at a time.
+- WirePlumber's **libcamera monitor disabled** (still in desktop-apps.nix) — a UVC cam enumerated
+  twice (v4l2 MJPEG vs libcamera raw-only ≈5fps) made captures a coin-flip.
 - The C922's **PipeWire v4l2 node disabled** — PipeWire only passes YUY2 through (raw 1080p
-  saturates USB2 → ~5fps ceiling), so OBS opens `/dev/video0` directly for MJPG 1080p30; apps only
-  ever consume the blurred `/dev/video10`.
+  saturates USB2 → ~5fps ceiling); the producer opens `/dev/video0` directly for MJPG 1080p30 and
+  apps only ever consume `/dev/video10`.
 
-**One-time setup** (app-owned OBS config, chezmoi-snapshotted): a scene named exactly
-`Blurred Cam` whose source is a Video Capture Device (V4L2) @ MJPEG 1080p30 with a Background
-Removal filter. `--scene` forces it active on every launch, so other scenes (streaming,
-recording) coexist freely.
+The old chezmoi-snapshotted OBS "Blurred Cam" scene is app-owned config — delete it from OBS's
+UI whenever.
 
 ## hypr-cheatsheet — live keybind overlay
 

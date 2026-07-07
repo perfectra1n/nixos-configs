@@ -14,6 +14,8 @@ Which modules each host opts into (defined in `flake.nix`'s `mkHost` calls). `co
 | `modules/laptop.nix` | — | ✅ | — | — |
 | `modules/pentest.nix` | ✅ | ✅ | — | — |
 | `modules/desktop-apps.nix` | ✅ | ✅ | — | — |
+| `modules/virtual-camera.nix` | ✅ | ✅ | — | — |
+| `modules/nvbroadcast.nix` | ✅ | — | — | — |
 | `modules/peripherals.nix` | ✅ | ✅ | — | — |
 | `modules/noise-suppression.nix` | ✅ | ✅ | — | — |
 | `modules/nextcloud-vfs.nix` | ✅ | ✅ | — | — |

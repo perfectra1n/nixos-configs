@@ -7,30 +7,12 @@ let
   # libnvidia-encode.so.1, NVENC fails ("reason=nvenc_lib"), and the encoder list collapses
   # to x264 (CPU only). Prepend the driver lib dir; the test child inherits this env and
   # then finds the NVIDIA encode lib. addDriverRunpath.driverLink = /run/opengl-driver.
-  # wrapOBS bakes the plugin search paths (OBS_PLUGINS_PATH/…) into bin/obs; we then
-  # re-wrap THAT with the NVENC driver-path fix below. obs-backgroundremoval = the AI
-  # segmentation filter for a "virtual background" (blur/replace behind the webcam feed);
-  # add it as a filter on the Video Capture Device source, not the screen.
-  #   GPU inference: nixpkgs' onnxruntime is CPU-only (cudaSupport=false), so the filter's
-  # "GPU - CUDA"/TensorRT inference-device options silently fall back to CPU — fine for the light
-  # MediaPipe model, but the better models (RVM, BRIA RMBG) want the GPU at 1080p30. On the NVIDIA
-  # host, rebuild the plugin against a CUDA onnxruntime so those options actually run on the 5090
-  # (build arch pinned by hosts/desktop's cudaCapabilities). Gated on the nvidia video driver so the
-  # AMD laptop (which also imports this module) keeps the cheap CPU plugin — a CUDA onnxruntime there
-  # would be a pointless multi-GB build it can't use.
-  bgRemovalPlugin =
-    if lib.elem "nvidia" config.services.xserver.videoDrivers
-    then pkgs.obs-studio-plugins.obs-backgroundremoval.override {
-      onnxruntime = pkgs.onnxruntime.override { cudaSupport = true; };
-    }
-    else pkgs.obs-studio-plugins.obs-backgroundremoval;
+  # (The obs-backgroundremoval plugin + CUDA onnxruntime override that used to be wrapped in
+  # here are retired — the blurred webcam is NV Broadcast now: modules/nvbroadcast.nix,
+  # desktop host. OBS stays for screen recording/streaming and its own virtual camera.)
   obs-studio-nvenc = pkgs.symlinkJoin {
     name = "obs-studio-nvenc";
-    paths = [
-      (pkgs.wrapOBS {
-        plugins = [ bgRemovalPlugin ];
-      })
-    ];
+    paths = [ pkgs.obs-studio ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
       wrapProgram $out/bin/obs \
@@ -263,35 +245,6 @@ let
     '';
   };
 
-  # blurcam — manual on/off toggle for the OBS "blurred webcam". Run it before a call: OBS launches
-  # to the tray with the virtual camera already producing the blurred feed (/dev/video10). Run it
-  # again (or just quit OBS) to stop and release the webcam + GPU. Deliberately MANUAL, not a daemon:
-  # OBS cold-starts ~4s and a producerless v4l2loopback advertises no format at all (G_FMT fails), so
-  # a hands-off "start OBS when a call grabs the cam" daemon loses the open() race — the app sees a
-  # formatless device and fails before OBS ever produces a frame. Keeping format alive without a
-  # producer needs keep_format, which v4l2loopback only exposes via the v4l2loopback-ctl ioctl util
-  # (not shipped by the kernel-module package). A fast-producer tool (linux-blurcam) is the only clean
-  # zero-idle+instant path; launching OBS by hand sidesteps the whole problem. Needs a one-time OBS
-  # setup (chezmoi-snapshot ~/.config/obs-studio, app-owned): a scene NAMED EXACTLY "Blurred Cam"
-  # whose Video Capture Device is V4L2 @ MJPEG 1080p30 with a Background Removal filter.
-  #   --scene forces that scene active on launch regardless of which scene you last used, so you can
-  # keep other scenes (streaming, recording, …) freely — blurcam only ever cold-starts OBS (the
-  # toggle launches only when it's not already running), so the flag always takes effect. (Pin
-  # --collection/--profile too if your blur scene lives in a non-default collection.) setsid -f fully
-  # detaches OBS so it survives this short-lived launcher (and a Hyprland exec bind).
-  blurcam = pkgs.writeShellApplication {
-    name = "blurcam";
-    runtimeInputs = with pkgs; [ procps util-linux obs-studio-nvenc ];
-    text = ''
-      if pgrep -x .obs-wrapped >/dev/null 2>&1; then
-        echo "blurcam: OBS running → stopping (releases webcam + GPU)"
-        pkill -x .obs-wrapped
-      else
-        echo "blurcam: starting OBS to tray on the 'Blurred Cam' scene + virtual camera"
-        setsid -f obs --scene "Blurred Cam" --startvirtualcam --minimize-to-tray --disable-shutdown-check >/dev/null 2>&1
-      fi
-    '';
-  };
 in
 {
   # Logitech wireless, QMK/VIA keyboard, and gaming-mouse/RGB device support moved to
@@ -311,19 +264,8 @@ in
   # would leave the daemon (and thus discovery) dormant until something first talked to it.
   programs.kdeconnect.enable = true;
 
-  # OBS Virtual Camera output. The obs-backgroundremoval filter (above) blurs the webcam
-  # *inside* OBS, but Teams/Zoom/Chromium can only consume that blurred feed through a real
-  # v4l2 capture node — OBS's "Start Virtual Camera" writes to a v4l2loopback device, and
-  # without the module there's nothing to write to (the button no-ops). Build the module
-  # against whatever kernel the host runs (CachyOS on desktop) via config.boot.kernelPackages.
-  #   exclusive_caps=1 is the load-bearing option: Chromium/Teams/Zoom ignore a loopback node
-  #     that advertises BOTH output+capture caps, so this forces capture-only and they detect it.
-  #   video_nr=10 pins it to a stable /dev/video10 so it doesn't fight the real webcam for a number.
-  boot.extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];
-  boot.kernelModules = [ "v4l2loopback" ];
-  boot.extraModprobeConfig = ''
-    options v4l2loopback devices=1 video_nr=10 card_label="OBS Virtual Camera" exclusive_caps=1
-  '';
+  # The v4l2loopback device OBS's "Start Virtual Camera" writes to lives in
+  # modules/virtual-camera.nix (shared with NV Broadcast, which produces into the same node).
 
   # Disable WirePlumber's libcamera monitor. A UVC webcam (the C922) gets enumerated TWICE —
   # once via the v4l2 SPA monitor (exposes the camera's MJPEG modes → 1920x1080@30) and once
@@ -395,7 +337,6 @@ in
       # mount in modules/nextcloud-vfs.nix (~/NextcloudVFS). See docs/host-matrix.md.
       owncloud-client     # ownCloud desktop sync client
       obs-studio-nvenc    # screen recording / streaming (PipeWire screencast on Wayland).
-      blurcam             # manual on/off toggle for the OBS blurred virtual webcam (let-binding above)
                           # Wrapped to add /run/opengl-driver/lib so NVENC works (see let-binding).
       vlc                 # media player
       plex-desktop        # Plex desktop player/client (streams from a Plex Media Server; NOT the server)
@@ -425,20 +366,6 @@ in
       playwright-test     # the `playwright` CLI (test, codegen, install) — @playwright/test
       playwright-mcp      # Playwright MCP server (browser automation over MCP)
     ];
-
-    # Searchable launcher entry for the blurcam toggle (writes ~/.local/share/applications, the
-    # standard app dir — NOT a chezmoi-managed ~/.config file). Same command as the CLI; running it
-    # from the launcher starts OBS+blur, running it again stops it. Keywords make it findable by
-    # "blur"/"webcam"/"camera" in the DMS launcher.
-    xdg.desktopEntries.blurcam = {
-      name = "Blurred Webcam";
-      comment = "Toggle the OBS blurred virtual webcam (start before a call, run again to stop)";
-      exec = "blurcam";
-      icon = "camera-web";
-      terminal = false;
-      categories = [ "AudioVideo" "Video" ];
-      settings.Keywords = "blur;webcam;camera;obs;virtual;background;";
-    };
 
     # Point Playwright at the nix-built browsers (the ones `playwright install` downloads
     # don't run on NixOS) and skip the host-requirements check + download. The browser
@@ -510,9 +437,9 @@ in
       # launch it (or kdeconnect-app) on demand; the daemon alone handles sync/notifications.
       exec-once = kdeconnectd
 
-      # NOTE: no OBS autostart — the blurred webcam is launched on demand with the `blurcam` command
-      # (let-binding above), not a background daemon (see that comment for why on-demand-automatic
-      # fights v4l2loopback). Bind it in the chezmoi hyprland.conf if you want a hotkey.
+      # NOTE: no OBS / NV Broadcast autostart — the blurred webcam (NV Broadcast,
+      # modules/nvbroadcast.nix) is launched on demand before a call; a producerless
+      # v4l2loopback advertises no format, so an always-on daemon buys nothing.
 
       # NOTE: no linux-wallpaperengine exec-once — the DMS `linuxWallpaperEngine` plugin
       # (modules/hyprland.nix) owns wallpaper launch + saved state (output, scene id) now.

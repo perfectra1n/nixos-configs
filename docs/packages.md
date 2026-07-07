@@ -88,6 +88,21 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 - Playwright env vars + `/opt/google/chrome/chrome` tmpfiles symlink.
 - Writes the `hypr/autostart.conf` exec-once fragment (see architecture.md).
 
+## Virtual camera — `modules/virtual-camera.nix` (graphical: D L)
+
+- `v4l2loopback` kernel module: one capture node at `/dev/video10`
+  (`card_label="Virtual Camera"`, `exclusive_caps=1`, `max_buffers=4`) — produced into by
+  NV Broadcast (desktop) or OBS's "Start Virtual Camera", consumed by Meet/Teams/Zoom.
+
+## NV Broadcast — `modules/nvbroadcast.nix` (desktop only)
+
+- `nvbroadcast` + `nvbroadcast-vcam` (+ launcher entry): unofficial NVIDIA Broadcast
+  (AI blurred/virtual-background webcam, noise removal, meeting transcription). A
+  `buildFHSEnv` that pip-installs the nvfetcher-pinned source (`[cuda,meeting]` extras)
+  into a first-run venv at `~/.local/share/nvbroadcast-nix` — see the module header for
+  why it can't be a normal Nix package. Replaced the OBS blurcam + obs-backgroundremoval
+  stack (see desktop-scripts.md).
+
 ## Security / pentest — `modules/pentest.nix` (graphical: D L)
 
 - `programs.wireshark` + `wireshark` group on `${username}`.

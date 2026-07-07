@@ -14,11 +14,14 @@
 # The pip CUDA wheels (cudnn/cublas/nvrtc) are self-contained; only libcuda comes from the
 # host driver via /run/opengl-driver.
 #
-# Virtual camera: the app hardcodes /dev/video10 — the SAME v4l2loopback node OBS's
-# virtual camera uses (modules/desktop-apps.nix). Deliberately left shared: blurcam is a
-# manual toggle, so only one producer ever writes at a time, and consumers (Meet/Teams)
-# keep a single stable camera device either way. Don't add a second loopback device here —
-# the app's discovery checks the video10 path FIRST, so it would grab OBS's node anyway.
+# This replaces the retired OBS `blurcam` workflow (obs-backgroundremoval + a manual OBS
+# toggle, removed from modules/desktop-apps.nix) — same blurred-webcam outcome, purpose-built
+# UI, no OBS cold-start.
+#
+# Virtual camera: the app hardcodes /dev/video10 — the v4l2loopback node owned by
+# modules/virtual-camera.nix (shared with OBS's "Start Virtual Camera"; one producer at a
+# time). Don't add a second loopback device here: the app's discovery checks the video10
+# path FIRST, so it would grab that node anyway.
 let
   sources = pkgs.callPackage ../_sources/generated.nix { };
   inherit (sources.nvbroadcast) version src;
@@ -28,23 +31,31 @@ let
   # through the venv's --system-site-packages.
   python = pkgs.python312.withPackages (ps: with ps; [ pygobject3 pycairo ]);
 
-  # "[cuda]" pulls the self-contained nvidia-*-cu12 wheel stack + onnxruntime-gpu. The
-  # "[meeting]" extra (local Whisper transcription) is deliberately NOT installed: its
-  # openai-whisper dep drags in a multi-GB torch — add it here if you want transcription.
-  extras = "cuda";
+  # "[cuda]" pulls the self-contained nvidia-*-cu12 wheel stack + onnxruntime-gpu (the 5090
+  # runs inference); "[meeting]" adds local Whisper meeting transcription — its openai-whisper
+  # dep drags in a multi-GB torch, accepted for the feature. Changing this rebuilds the venv.
+  extras = "cuda,meeting";
 
   fhsEnv = pkgs.buildFHSEnv {
     name = "nvbroadcast-env";
     targetPkgs = p: with p; [
       python
 
-      # GTK4 UI + introspection (typelibs merge into /usr/lib/girepository-1.0)
+      # GTK4 UI + introspection (typelibs merge into /usr/lib/girepository-1.0). gi resolves
+      # a namespace's DEPENDENCY typelibs too, so GTK4's chain (Graphene/Pango/GdkPixbuf/
+      # HarfBuzz) must be present explicitly — nix RPATHs cover the .so's but not typelibs.
       gtk4
+      graphene
+      pango
+      harfbuzz
+      gdk-pixbuf
+      librsvg # SVG pixbuf loader (app + icon theme ship SVG assets)
       libadwaita
       glib
       gobject-introspection
       gsettings-desktop-schemas
       adwaita-icon-theme
+      gtk3 # the AyatanaAppIndicator3 tray path is GTK3-based
       libayatana-appindicator # tray icon (gi AyatanaAppIndicator3)
 
       # camera pipeline: GStreamer core + v4l2src/videoconvert live in -good/-base
@@ -55,11 +66,17 @@ let
       pipewire
 
       # native libs the manylinux wheels dlopen but don't bundle (mediapipe: GL + glib;
-      # everything C++: libstdc++). These must be in /usr/lib — wheels have no RPATHs.
+      # everything C++: libstdc++; mediapipe's opencv-contrib — the non-headless build —
+      # wants the X11 client libs even on Wayland). Must be in /usr/lib — wheels have no RPATHs.
       libGL
       libglvnd
       stdenv.cc.cc.lib
       zlib
+      xorg.libxcb
+      xorg.libX11
+      xorg.libXext
+      xorg.libSM
+      xorg.libICE
 
       # upstream debian Depends: v4l2-ctl (device discovery), pactl (mic routing),
       # fuser/killall (stale-producer cleanup)
@@ -93,6 +110,15 @@ let
         cp -r --no-preserve=mode ${src} "$tmp/src"
         "$venv/bin/pip" install --quiet --upgrade pip
         "$venv/bin/pip" install "$tmp/src[${extras}]"
+        # onnxruntime (CPU, core dep) and onnxruntime-gpu (cuda extra) unpack into the SAME
+        # package dir; whichever installs last wins, and losing the GPU one silently drops
+        # the CUDAExecutionProvider. Upstream's installer re-runs the cuda extra as a second
+        # pass for the same reason — reinstall the GPU wheel last, at the version the
+        # resolver already picked, so its capi library is the survivor.
+        ortgpu="$("$venv/bin/pip" show onnxruntime-gpu 2>/dev/null | sed -n 's/^Version: //p')"
+        if [ -n "$ortgpu" ]; then
+          "$venv/bin/pip" install --quiet --force-reinstall --no-deps "onnxruntime-gpu==$ortgpu"
+        fi
         echo "$want" > "$venv/.pin"
       fi
       exec "$venv/bin/$entry" "$@"

@@ -1,4 +1,4 @@
-{ config, pkgs, lib, username, ... }:
+{ config, pkgs, lib, inputs, username, ... }:
 
 # Bare-metal desktop (NVIDIA). Composes (from flake.nix): common + facter +
 # desktop-base + hyprland + gaming + nvidia + pentest + desktop-apps + the chaotic
@@ -18,15 +18,29 @@
   # gnulib float-h test is broken under Clang (FLT_IS_IEC_60559 undeclared; gnulib fix not yet in
   # nixpkgs). The -gcc kernel builds modules with GCC, all cached upstream. CachyOS itself defaults
   # to GCC for this reason; the ~1% LTO delta isn't worth a local kernel+toolchain rebuild here.
-  boot.kernelPackages = pkgs.linuxPackages_cachyos-gcc;
+  #
+  # PINNED to kernel 7.1.1: the 7.1.3-cachyos bump introduced an envfs FUSE parallel-lookup
+  # deadlock that freezes Hyprland/DMS (see memory desktop-envfs-fuse-freeze-7-1-3). The kernel —
+  # plus its matching nvidia/v4l2loopback/vmmon — comes from the pinned `chaotic-kernel` input,
+  # while the rolling `chaotic` stays current for gaming pkgs. We can't use
+  # `chaotic-kernel.legacyPackages` directly: its nixpkgs has allowUnfree=false, which blocks
+  # nvidia-x11 in the hardware.graphics driver merge (`linuxPackagesFor` re-wrapping doesn't fix
+  # it either). So we re-import chaotic-kernel's OWN nixpkgs with allowUnfree=true + chaotic's
+  # overlay. allowUnfree is an eval-time gate only — it does NOT affect store hashes — so the
+  # resulting linux-7.1.1.drv is byte-identical to chaotic's cache (verified), hence substituted,
+  # never compiled locally. Restore `pkgs.linuxPackages_cachyos-gcc` (and drop the chaotic-kernel
+  # input) once 7.1.3+ is confirmed fixed upstream.
+  boot.kernelPackages = (import inputs.chaotic-kernel.inputs.nixpkgs {
+    inherit (pkgs.stdenv.hostPlatform) system;
+    config.allowUnfree = true;
+    overlays = [ inputs.chaotic-kernel.overlays.default ];
+  }).linuxPackages_cachyos-gcc;
 
-  # Pin CUDA builds to THIS GPU's compute capability (RTX 5090 = Blackwell, sm_120 / cap 12.0).
-  # Only the CUDA-accelerated obs-backgroundremoval (modules/desktop-apps.nix, NVIDIA-gated) uses
-  # CUDA here, and onnxruntime derives its target arch from config.cudaCapabilities — left at the
-  # nixpkgs default it would compile every supported arch (7.5…12.1), a far longer build for code
-  # this machine can't run. nixpkgs' default cudaPackages is 12.9, which supports 12.0. Host-local
-  # (the AMD laptop sharing desktop-apps.nix builds no CUDA and never reads this).
-  nixpkgs.config.cudaCapabilities = [ "12.0" ];
+  # NOTE: the nixpkgs.config.cudaCapabilities = [ "12.0" ] pin left with the CUDA-built
+  # obs-backgroundremoval (its only consumer). NV Broadcast's CUDA comes from prebuilt pip
+  # wheels (modules/nvbroadcast.nix) — nothing in nixpkgs builds CUDA anymore. Restore the
+  # pin (RTX 5090 = Blackwell, sm_120 / cap 12.0) if a nixpkgs cudaSupport build ever
+  # returns, or it compiles every supported arch (7.5…12.1).
 
   # UEFI boot — adjust to match the real machine's firmware (see hosts/server for BIOS).
   boot.loader.systemd-boot.enable = true;

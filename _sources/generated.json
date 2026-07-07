@@ -50,6 +50,27 @@
         },
         "version": "b23167c644d8f78b477a5a12668b9edf22da1616"
     },
+    "nvbroadcast": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "nvbroadcast",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "Hkshoonya",
+            "repo": "nvidia-broadcast-linux",
+            "rev": "v1.1.13",
+            "sha256": "sha256-ZIyDMcbXJumMuEup5vytn0pPv5PsPeCB5FdkHvCrIrU=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "v1.1.13"
+    },
     "talosctl": {
         "cargoLock": null,
         "date": null,

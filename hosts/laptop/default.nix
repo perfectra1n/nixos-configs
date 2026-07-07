@@ -1,4 +1,4 @@
-{ config, pkgs, lib, username, ... }:
+{ config, pkgs, lib, inputs, username, ... }:
 
 # Laptop (AMD). Composes (from flake.nix): common + facter + desktop-base +
 # hyprland + gaming + amd + laptop + desktop-apps + the chaotic module. Plus this
@@ -17,7 +17,18 @@
   # stdenv, so an LTO kernel builds them under pkgsLLVM — which drags in a Clang-built gnugrep-3.12
   # whose gnulib float-h test is broken under Clang (FLT_IS_IEC_60559 undeclared; fix not yet in
   # nixpkgs). The -gcc kernel builds modules with GCC, all cached upstream. See hosts/desktop.
-  boot.kernelPackages = pkgs.linuxPackages_cachyos-gcc;
+  #
+  # PINNED to kernel 7.1.1 via the separate `chaotic-kernel` input (flake.nix), NOT the rolling
+  # `chaotic`. The 7.1.3-cachyos bump introduced an envfs FUSE parallel-lookup deadlock that
+  # freezes Hyprland/DMS; 7.1.1 is the last good kernel (same fix as desktop; laptop shares the
+  # kernel and the latent bug). Re-import chaotic-kernel's own nixpkgs with allowUnfree + chaotic's
+  # overlay so the kernel comes byte-identical from cache — see hosts/desktop for the full why.
+  # Restore `pkgs.linuxPackages_cachyos-gcc` (and drop the chaotic-kernel input) once 7.1.3+ is fixed.
+  boot.kernelPackages = (import inputs.chaotic-kernel.inputs.nixpkgs {
+    inherit (pkgs.stdenv.hostPlatform) system;
+    config.allowUnfree = true;
+    overlays = [ inputs.chaotic-kernel.overlays.default ];
+  }).linuxPackages_cachyos-gcc;
 
   # eDP panel flicker on idle/static content (BOE panel @165): the flicker engages only when
   # nothing is redrawing and clears the instant something animates (cursor, workspace switch).

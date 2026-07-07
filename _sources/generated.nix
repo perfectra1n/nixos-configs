@@ -33,6 +33,17 @@
       sha256 = "sha256-MDraqC1iZiKxszM1PZ0TSvJ4lGATGAi9ryExHzESqrM=";
     };
   };
+  nvbroadcast = {
+    pname = "nvbroadcast";
+    version = "v1.1.13";
+    src = fetchFromGitHub {
+      owner = "Hkshoonya";
+      repo = "nvidia-broadcast-linux";
+      rev = "v1.1.13";
+      fetchSubmodules = false;
+      sha256 = "sha256-ZIyDMcbXJumMuEup5vytn0pPv5PsPeCB5FdkHvCrIrU=";
+    };
+  };
   talosctl = {
     pname = "talosctl";
     version = "1.13.5";
