@@ -16,10 +16,10 @@
   };
   kubectl = {
     pname = "kubectl";
-    version = "1.34.5";
+    version = "1.36.2";
     src = fetchurl {
-      url = "https://dl.k8s.io/release/v1.34.5/bin/linux/amd64/kubectl";
-      sha256 = "sha256-ahfdg4d4OzFEplU1440Cw1ECfpcY6jSmw2BHbLJtKLs=";
+      url = "https://dl.k8s.io/release/v1.36.2/bin/linux/amd64/kubectl";
+      sha256 = "sha256-HpBF7DK+qF2kPehfAGU1hSnqfHoVLsp4FU+6W1jCfYI=";
     };
   };
   libratbag = {
