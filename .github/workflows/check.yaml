@@ -25,7 +25,7 @@ jobs:
         host: [desktop, laptop, server, wsl]
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@main
