@@ -60,6 +60,7 @@ hosts/<name>/        # per-machine: default.nix (identity/boot/services) +
 secrets/secrets.yaml # sops-encrypted (real values as ciphertext — publishable by design)
 .sops.yaml           # sops keys + creation rules (CLI-only; not read by Nix)
 _sources/            # nvfetcher output (kubectl/talosctl/ksops/libratbag pins) — generated, don't hand-edit
+manifests/           # generated per-host name-version inventories (nix run .#gen-manifests, auto via mise verify; CI-gated) — don't hand-edit
 docs/                # design decisions, package inventory, host×module matrix
 .chezmoiroot         # one line ("dotfiles") — redirects chezmoi into the dotfiles/ subtree
 dotfiles/            # chezmoi SOURCE (shell rc + ~/.config/* app config + one .age secret).

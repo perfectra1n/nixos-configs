@@ -14,7 +14,7 @@ Three layers, least- to most-frequently used:
 |-------|-------|---------|
 | **Bootstrap** | `secrets:key-bootstrap`, `secrets:init`, `hardware`, `dots-cutover`, `new-host` | once per machine / host |
 | **Change loop** | `verify`, `diff`, `test`, `apply`, `dots-diff`, `update` | daily |
-| **Maintenance** | `secrets:pull`, `bump`, `gc`, `rollback`, `generations`, `deploy` | occasional |
+| **Maintenance** | `secrets:pull`, `bump`, `gc`, `rollback`, `generations`, `deploy`, `manifests`, `whatchanged` | occasional |
 
 ## `apply` — the self-healing entry point
 
@@ -44,7 +44,7 @@ first (see [chezmoi.md](chezmoi.md#daily-edit-loop)).
 ## The change loop
 
 ```sh
-mise run verify      # git add -A + flake check + dry-build all 4 hosts — run BEFORE committing
+mise run verify      # git add -A + flake check + dry-build every host + refresh manifests/ — run BEFORE committing
 mise run diff        # closure diff: what would a rebuild actually change vs the running system
 mise run test        # activate WITHOUT touching the bootloader — auto-reverts on reboot
 mise run apply       # the real switch (+ dotfiles)
@@ -53,7 +53,9 @@ mise run update      # chezmoi update: pull the whole monorepo + apply DOTFILES 
 ```
 
 - `verify` starts with `git add -A` because **flakes only see tracked files** — the repo's #1
-  gotcha, encoded into the task so it can't be forgotten.
+  gotcha, encoded into the task so it can't be forgotten. It ends by regenerating
+  `manifests/<host>.txt` (the committed package-version inventories) — CI fails if they drift
+  from the evaluated closure, see [package-versioning.md](package-versioning.md).
 - `test` vs `apply`: `nixos-rebuild test` is the safe trial — the change is live now but the
   bootloader still points at the old generation, so a reboot rolls back for free.
 - `update` is the cheap cross-machine sync: pulled Nix changes just sit until the next `apply`.
@@ -106,9 +108,11 @@ these tasks move it around:
 | Task | What it does |
 |------|-------------|
 | `bump` | `nix flake update` + full `verify` — never relock without dry-building every host |
-| `gc` | Delete generations >14 days old + `nix store optimise` |
+| `gc` | Delete generations >14 days old + `nix store optimise` (also prunes `whatchanged`'s local history — git manifests are the durable record) |
 | `rollback` | Switch back to the previous system generation |
 | `generations` | List generations + dates (rollback targets) |
+| `manifests` | Regenerate `manifests/<host>.txt` (all hosts, or `HOST=desktop`) without a full verify |
+| `whatchanged` | Package history across kept generations; `PKG=<name>` finds STORE-PATH changes — catches same-version rebuilds version diffs miss (see [package-versioning.md](package-versioning.md)) |
 
 ## Conventions
 
