@@ -83,7 +83,7 @@ chezmoi apply || echo ">> apply failed — is the age key at ~/.config/age/age.a
 '''
 
 [tasks.verify]
-description = "Eval the flake + dry-run-build every host (run before committing)"
+description = "Eval the flake + dry-run-build every host + refresh manifests (run before committing)"
 run = '''
 set -eu
 git add -A                               # flakes only see tracked files
@@ -91,6 +91,11 @@ nix flake check --no-build
 for h in $(ls hosts); do
   nix build --dry-run ".#nixosConfigurations.$h.config.system.build.toplevel"
 done
+# Manifests ride the eval cache the dry-runs above just warmed, so this is cheap here.
+# verify is the choke-point every change flows through (bump calls it too) — keeping the
+# committed manifests in lockstep with the closure; CI fails if they drift (check.yaml).
+nix run .#gen-manifests
+git add manifests/
 '''
 
 [tasks.hardware]
@@ -351,6 +356,21 @@ set -eu
 host=$(./scripts/host.sh)
 nixos-rebuild build --flake ".#$host"           # builds ./result, does NOT activate
 nix store diff-closures /run/current-system ./result
+'''
+
+[tasks.manifests]
+description = "Regenerate manifests/<host>.txt name-version inventories (all hosts, or HOST=desktop)"
+run = '''
+set -eu
+nix run .#gen-manifests -- ${HOST:-}
+git add manifests/
+'''
+
+[tasks.whatchanged]
+description = "Package history across kept generations. No arg: version diffs per generation pair. PKG=<name>: where <name>'s STORE PATH changed — catches same-version rebuilds (the xdph case)"
+run = '''
+set -eu
+nix run .#whatchanged -- ${PKG:-}
 '''
 
 [tasks.dots-diff]
