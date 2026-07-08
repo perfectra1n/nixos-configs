@@ -168,6 +168,11 @@
             runtimeInputs = with pkgs; [ nix gnused gnugrep coreutils ];
             text = builtins.readFile ./scripts/whatchanged.sh;
           };
+          suspects = pkgs.writeShellApplication {
+            name = "suspects";
+            runtimeInputs = with pkgs; [ nix gnused gnugrep coreutils ];
+            text = builtins.readFile ./scripts/suspects.sh;
+          };
         };
     };
 }

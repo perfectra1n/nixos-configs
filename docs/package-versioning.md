@@ -72,6 +72,50 @@ Renovate's idempotent re-runs require byte-reproducible output.
     to the xdph investigation. It found the gen 87→88 change *and* an earlier same-version
     rebuild (gen 66→67) nobody had noticed.
 
+## Runbook: a bump broke something
+
+Escalate in order — each step needs less knowledge than the last.
+
+**0. Confirm and unblock (30s).** `mise run rollback`. Symptom gone → it's the bump, and
+you know the exact generation pair. Roll forward when ready to hunt.
+
+**1. Shrink the suspect list (minutes).** Intersect *what changed* with *what's plausibly
+involved*: grep the manifest diff (or the PR's sticky comment) by symptom —
+`git diff <before>..<after> -- manifests/desktop.txt | grep -iE 'portal|grim|hypr'` — and
+run `PKG=<name> mise run whatchanged` for same-version rebuilds the manifest can't show.
+
+**2. Unknown-unknowns → graph query (minutes).** When the changed names mean nothing to
+you: `BIN=<broken-app> FROM=<gen> TO=<gen> mise run suspects`. The culprit must be in the
+intersection of the app's runtime closure and the generation diff — the tool computes it
+and prints each hit's `why-depends` chain. A **CLEAR** result is equally useful: the
+breakage isn't in that app's deps — check the services it talks to (portals, daemons) by
+running suspects on *their* binaries, or look at config changes instead.
+Then A/B each suspect with zero builds — the old versions are still on disk:
+`/nix/var/nix/profiles/system-<N>-link/sw/bin/<tool> …` (symptom gone with the old binary
+→ culprit found).
+
+**3. No leads at all → bisect the snapshot.** Binary-search nixpkgs between the old and
+new locked revs, symptom as oracle:
+`sudo nixos-rebuild test --flake .#desktop --override-input nixpkgs github:NixOS/nixpkgs/<rev>`.
+Walk `nixos-unstable` channel-release commits first — Hydra built those, so every step is
+a cache download, and ~3 test cycles pinpoint the offending day.
+
+**4. Culprit found → surgical hold (the escape hatch).** Pin ONE package to the last-good
+nixpkgs rev while taking the rest of the bump:
+
+```nix
+# flake.nix inputs — temporary, delete when upstream fixes it:
+nixpkgs-heldpkg.url = "github:NixOS/nixpkgs/<last-good-rev>";
+# any module:
+nixpkgs.overlays = [ (final: prev: {
+  heldpkg = inputs.nixpkgs-heldpkg.legacyPackages.${prev.system}.heldpkg;
+}) ];
+```
+
+`gen-flake-input-pins.sh` auto-discovers the input, so Renovate tracks the hold as its own
+PR line until you remove it. Keep holds per-incident and temporary — every held package
+forfeits snapshot coherence and (off channel revs) the binary cache.
+
 ## Tooling notes
 
 Both tools are flake apps built with `writeShellApplication`: shellcheck runs at build

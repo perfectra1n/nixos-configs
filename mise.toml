@@ -373,6 +373,14 @@ set -eu
 nix run .#whatchanged -- ${PKG:-}
 '''
 
+[tasks.suspects]
+description = "A bump broke <app> — which of its deps changed? BIN=flameshot [FROM=87 TO=88] — intersects the app's runtime closure with the generation diff + why-depends chains"
+run = '''
+set -eu
+: "${BIN:?usage: BIN=<binary-or-path> [FROM=<gen> TO=<gen>] mise run suspects}"
+nix run .#suspects -- "$BIN" "${FROM:-}" "${TO:-}"
+'''
+
 [tasks.dots-diff]
 description = "Preview dotfile changes before apply overwrites anything"
 run = "chezmoi diff"

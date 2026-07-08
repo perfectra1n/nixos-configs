@@ -113,6 +113,7 @@ these tasks move it around:
 | `generations` | List generations + dates (rollback targets) |
 | `manifests` | Regenerate `manifests/<host>.txt` (all hosts, or `HOST=desktop`) without a full verify |
 | `whatchanged` | Package history across kept generations; `PKG=<name>` finds STORE-PATH changes — catches same-version rebuilds version diffs miss (see [package-versioning.md](package-versioning.md)) |
+| `suspects` | `BIN=<app> [FROM= TO=]` — which of a broken app's deps changed between generations (closure ∩ generation diff, with why-depends chains); step 2 of the [breakage runbook](package-versioning.md#runbook-a-bump-broke-something) |
 
 ## Conventions
 
