@@ -1742,6 +1742,7 @@ coreutils-full-9.11
 coreutils-full-9.11_fish-completions
 coreutils-static-9.10
 coreutils-static-get-version-9.10
+cowsay-3.8.4
 coxpcall-1.17.0-1.rockspec
 coxpcall-luarocks-config.lua
 cpio-2.15

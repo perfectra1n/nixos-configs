@@ -112,6 +112,7 @@ in
     ffmpeg
     imagemagick
     yt-dlp
+    cowsay               # TEMP: manifest PR-comment E2E test — branch is never merged
 
     # ── Archives / (un)compression ──
     # tar/gzip/xz/zstd/bzip2 are absent on purpose: NixOS puts them in every system
