@@ -1,10 +1,11 @@
-# MCP servers for Claude Code
+# Claude Code in these dotfiles — MCP servers & plugins
 
-How this repo gives Claude Code a set of **HTTP MCP servers** that follow you onto
-every machine, with their bearer tokens kept out of the (publishable) repo and out of
-`~/.claude.json`. This is a thin layer on top of the [one-key / two-channel secrets
-model](chezmoi.md#secrets-one-key-two-encryption-systems) — read that first if the `secrets.fish` / age plumbing is
-unfamiliar; this doc covers only the MCP-specific wiring and the add/update/remove loops.
+How this repo makes Claude Code's setup follow you onto every machine: the **HTTP MCP servers**
+(most of this doc) and the **plugins** ([last section](#plugins)). MCP servers carry bearer
+tokens, so they lean on the [one-key / two-channel secrets
+model](chezmoi.md#secrets-one-key-two-encryption-systems) — read that first if the `secrets.fish` /
+age plumbing is unfamiliar. Plugins carry no secrets and are simpler. Both share one theme: the
+repo holds a **source**, and nothing reaches `$HOME` until `chezmoi apply` renders it.
 
 ## The three moving parts
 
@@ -243,3 +244,68 @@ curl -s -o /dev/null -w '%{http_code}\n' -X POST "$MEMINI_MCP_URL" \
 - **Internal-only endpoints.** Servers like memini bind to a LAN-only route on purpose (its admin UI
   embeds the API key). They resolve/connect only on the home network or VPN — expect connect
   failures off-LAN, that's the trust boundary, not a misconfig.
+
+---
+
+# Plugins
+
+Claude Code plugins (skills, output styles, extra MCP servers, commands — e.g. `superpowers`,
+`code-review`, your own `custom-claude-skills`) need **no new tracked file**: the declarative state
+already lives in `~/.claude/settings.json`, which is chezmoi-managed as
+[`dotfiles/dot_claude/settings.json`](../dotfiles/dot_claude/settings.json).
+
+## Declarative vs. cache — track one, never the other
+
+Claude Code splits plugin state in two. Only the small declarative half is portable; the rest is a
+rebuildable cache full of absolute, machine-specific paths.
+
+| Path | Kind | Track? |
+|------|------|--------|
+| `~/.claude/settings.json` → `enabledPlugins` | **declarative** — which plugins are on | ✅ already tracked (`dot_claude/settings.json`) |
+| `~/.claude/settings.json` → `extraKnownMarketplaces` | **declarative** — where non-official plugins come from | ✅ same file |
+| `~/.claude/plugins/{cache,data,marketplaces}/` | git clones of the plugins | ❌ rebuilt on demand |
+| `~/.claude/plugins/installed_plugins.json`, `known_marketplaces.json`, `plugin-catalog-cache.json` | install state with absolute paths | ❌ machine-local, regenerated |
+
+You never `chezmoi add` the cache dirs — chezmoi only manages what you explicitly add, so leaving
+them alone is the default. On a fresh box, `chezmoi apply` writes `settings.json`, and the next
+`claude` launch re-installs each `enabledPlugins` entry from its marketplace, rebuilding the cache.
+
+```mermaid
+flowchart LR
+    ENABLE["/plugin (enable/disable)<br/>writes ~/.claude/settings.json"] -->|"czadd (chezmoi add)"| SRC
+    SRC["dotfiles/dot_claude/settings.json<br/>(git source)<br/>enabledPlugins + extraKnownMarketplaces"] -->|"git push"| REMOTE["origin (public)"]
+    REMOTE -->|"clone + chezmoi apply on another machine"| LIVE["~/.claude/settings.json"]
+    LIVE -->|"next claude launch"| INSTALL["installs plugins<br/>from their marketplace<br/>(cache rebuilt)"]
+```
+
+## Add / enable a plugin so it's tracked
+
+```fish
+# 1. Enable it the normal way — this writes ~/.claude/settings.json:
+#      /plugin        (browse + enable in a claude session), or
+#      claude plugin install <name>@<marketplace>
+# 2. Snapshot the changed file back INTO the chezmoi source (chezmoi does NOT auto-detect):
+czadd ~/.claude/settings.json           # = chezmoi add
+# 3. Commit + push:
+git add dotfiles/dot_claude/settings.json
+git commit -m "feat(claude): enable <plugin> plugin"
+```
+
+Enabling a plugin from a **new marketplace** writes `extraKnownMarketplaces` into the same file, so
+one `czadd` captures both the marketplace and the enablement. Removing a plugin is symmetric:
+disable it (`/plugin`), `czadd`, commit.
+
+## Gotchas
+
+- **`settings.json` is a mixed file.** It also holds machine-local prefs (`model`, `theme`). A
+  `czadd` snapshots the *whole* file, so it picks up whatever else drifted — and `chezmoi apply`
+  elsewhere pushes those too. **Always `chezmoi diff ~/.claude/settings.json` before you apply**, or
+  an apply can silently revert e.g. your `model` to whatever the source pins. To capture *only* a
+  plugin change, hand-edit `dotfiles/dot_claude/settings.json` instead of a blanket `czadd`.
+- **Directory-source marketplaces need the path to exist.** `extraKnownMarketplaces` records an
+  **absolute** local path (e.g. `custom-claude-skills` → a repo under `~/repos/…`). It only resolves
+  on a machine where that repo is checked out at the same path. Github-source (official) plugins have
+  no such dependency.
+- **Same source-vs-rendered rule as MCP.** Editing `dotfiles/dot_claude/settings.json` does nothing
+  until `chezmoi apply` writes `~/.claude/settings.json`; a running `claude` session reads it at
+  launch, so restart to pick up changes.
