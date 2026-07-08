@@ -15,6 +15,11 @@
 #    case) does NOT show here — `nix run .#whatchanged` and the switch-time nvd diff catch that.
 #  - NO timestamps in output: CI regenerates and diffs this file; content must be reproducible.
 
+# Byte-order collation everywhere: sort (and regex ranges) are locale-sensitive, and the
+# CI freshness gate diffs this output against a regeneration on a different machine — a
+# locale mismatch reorders identical content and fails the gate (it did, on its first run).
+export LC_ALL=C
+
 if [ ! -f flake.nix ]; then
   echo "error: run from the repo root (flake.nix not found)" >&2
   exit 1
