@@ -8,7 +8,7 @@ A multi-host NixOS + Home Manager flake. **Plain `mkHost` factory — no framewo
 (snowfall-lib/flake-parts were deliberately rejected for maintainability). Modeled on
 the sibling `../duck-nixos-configs`, borrowing sops-nix + facter from `../m00n-nixos-configs`.
 
-Hosts: `desktop` (NVIDIA), `laptop` (AMD), `server` (headless), `wsl`.
+Hosts: `desktop` (NVIDIA), `laptop` (AMD), `server` (headless).
 
 ## Hard rules
 
@@ -66,7 +66,7 @@ dotfiles/            # chezmoi SOURCE (shell rc + ~/.config/* app config + one .
                      #   NOT scanned by the flake; flat dotfile-name convention (dot_config/ …)
 ```
 
-- **Flake inputs beyond the basics** (`nixpkgs`/`home-manager`/`nixos-wsl`/`sops-nix`):
+- **Flake inputs beyond the basics** (`nixpkgs`/`home-manager`/`sops-nix`):
   `hyprswitch` (Alt+Tab switcher, used in `modules/hyprland.nix`), `dms` +
   `dms-plugin-registry` (DankMaterialShell, `modules/hyprland.nix`), and `chaotic`
   (CachyOS kernel — `inputs.chaotic.nixosModules.default` on the `desktop` host only; it
@@ -102,12 +102,12 @@ dotfiles/            # chezmoi SOURCE (shell rc + ~/.config/* app config + one .
 
 ## Verify before claiming done
 
-`nix` is **not installed in the WSL dev box** — run these on a machine with Nix:
+Run these before committing (or just `mise run verify`, which also refreshes `manifests/`):
 
 ```sh
 git add -A                       # flakes only see tracked files
 nix flake check --no-build
-for h in desktop laptop server wsl; do
+for h in desktop laptop server; do
   nix build --dry-run ".#nixosConfigurations.$h.config.system.build.toplevel"
 done
 ```

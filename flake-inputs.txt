@@ -3,7 +3,7 @@
 # flake-inputs packageRule re-locks flake.lock via 'nix flake update <input>'. See renovate.json.
 
 # renovate: datasource=git-refs depName=chaotic packageName=https://github.com/chaotic-cx/nyx branch=nyxpkgs-unstable
-chaotic = "e603c3e817be4f3b041baf3af3f521f5a5435bd4"
+chaotic = "20f7c6dde5c9b961c5e7bd8ebf25a745f6757a72"
 
 # renovate: datasource=git-refs depName=dms packageName=https://github.com/AvengeMedia/DankMaterialShell branch=stable
 dms = "eb5afcdc40ea5446c27e18552ff4a19f9daf9484"
@@ -19,9 +19,6 @@ hyprswitch = "61ddaa30563c1f091ca5fbe5d7203c19f42b519c"
 
 # renovate: datasource=git-refs depName=network-indicator packageName=https://github.com/perfectra1n/Network-Indicator branch=reliability-hardening
 network-indicator = "924e6ad1c9adff10e165453d0aa69b42aa1f330d"
-
-# renovate: datasource=git-refs depName=nixos-wsl packageName=https://github.com/nix-community/NixOS-WSL branch=main
-nixos-wsl = "a9620cfa43f0c1c30a46c31ae3c6e58cdb124a14"
 
 # renovate: datasource=git-refs depName=nixpkgs packageName=https://github.com/NixOS/nixpkgs branch=nixos-unstable
 nixpkgs = "d407951447dcd00442e97087bf374aad70c04cea"

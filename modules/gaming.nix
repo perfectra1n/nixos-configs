@@ -1,6 +1,6 @@
 { config, pkgs, lib, ... }:
 
-# Gaming stack — shared by the graphical desktop/laptop hosts. NOT on server/wsl.
+# Gaming stack — shared by the graphical desktop/laptop hosts. NOT on server.
 # GPU drivers are separate (modules/nvidia.nix, modules/amd.nix).
 {
   programs.steam = {

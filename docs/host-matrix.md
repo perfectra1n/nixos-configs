@@ -4,24 +4,24 @@ Which modules each host opts into (defined in `flake.nix`'s `mkHost` calls). `co
 `facter`, `hosts/<name>`, sops-nix, home-manager, and `home/common.nix` are implicit on
 **every** host and omitted from the table.
 
-| Module / home import | desktop | laptop | server | wsl |
-|----------------------|:-------:|:------:|:------:|:---:|
-| `modules/desktop-base.nix` | ✅ | ✅ | — | — |
-| `modules/hyprland.nix` | ✅ | ✅ | — | — |
-| `modules/gaming.nix` | ✅ | ✅ | — | — |
-| `modules/nvidia.nix` | ✅ | — | — | — |
-| `modules/amd.nix` | — | ✅ | — | — |
-| `modules/laptop.nix` | — | ✅ | — | — |
-| `modules/pentest.nix` | ✅ | ✅ | — | — |
-| `modules/desktop-apps.nix` | ✅ | ✅ | — | — |
-| `modules/virtual-camera.nix` | ✅ | ✅ | — | — |
-| `modules/nvbroadcast.nix` | ✅ | — | — | — |
-| `modules/peripherals.nix` | ✅ | ✅ | — | — |
-| `modules/noise-suppression.nix` | ✅ | ✅ | — | — |
-| `modules/nextcloud-vfs.nix` | ✅ | ✅ | — | — |
-| `inputs.chaotic.nixosModules.default` | ✅ | — | — | — |
-| `modules/server.nix` | — | — | ✅ | — |
-| `home/gui.nix` (homeModules) | ✅ | ✅ | — | — |
+| Module / home import | desktop | laptop | server |
+|----------------------|:-------:|:------:|:------:|
+| `modules/desktop-base.nix` | ✅ | ✅ | — |
+| `modules/hyprland.nix` | ✅ | ✅ | — |
+| `modules/gaming.nix` | ✅ | ✅ | — |
+| `modules/nvidia.nix` | ✅ | — | — |
+| `modules/amd.nix` | — | ✅ | — |
+| `modules/laptop.nix` | — | ✅ | — |
+| `modules/pentest.nix` | ✅ | ✅ | — |
+| `modules/desktop-apps.nix` | ✅ | ✅ | — |
+| `modules/virtual-camera.nix` | ✅ | ✅ | — |
+| `modules/nvbroadcast.nix` | ✅ | — | — |
+| `modules/peripherals.nix` | ✅ | ✅ | — |
+| `modules/noise-suppression.nix` | ✅ | ✅ | — |
+| `modules/nextcloud-vfs.nix` | ✅ | ✅ | — |
+| `inputs.chaotic.nixosModules.default` | ✅ | — | — |
+| `modules/server.nix` | — | — | ✅ |
+| `home/gui.nix` (homeModules) | ✅ | ✅ | — |
 
 Transitively, `modules/hyprland.nix` imports `modules/chromium-cm-fix.nix` and the DMS
 modules, so those reach desktop + laptop too.
@@ -53,11 +53,6 @@ merged after v0.18 (#1693/#1728/#1799). Drop the overlay once nixpkgs ships libr
 ### server — headless
 - `modules/server.nix` only: SSH key-only, sleep disabled, journald capped, ops CLI.
 - No desktop, no `home/gui.nix`. Supports BIOS GRUB too (see the host file).
-
-### wsl — WSL2
-- Imports `inputs.nixos-wsl.nixosModules.default`; no `hardware-configuration.nix`.
-- CLI/dev only (`home/common.nix`). Port 22 can clash with Windows sshd — override
-  `services.openssh.ports` if needed.
 
 ## Adding a host
 

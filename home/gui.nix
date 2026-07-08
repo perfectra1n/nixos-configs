@@ -1,7 +1,7 @@
 { config, pkgs, lib, osConfig, ... }:
 
 # GUI apps — imported only by graphical hosts (desktop, laptop) via flake.nix's
-# `homeModules`. Never reaches the headless server/wsl hosts.
+# `homeModules`. Never reaches the headless server host.
 {
   home.packages = with pkgs; [
     kitty       # terminal

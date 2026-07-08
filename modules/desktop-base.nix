@@ -1,6 +1,6 @@
 { config, pkgs, lib, username, ... }:
 
-# Shared by all graphical hosts (desktop, laptop). NOT imported by server/wsl.
+# Shared by all graphical hosts (desktop, laptop). NOT imported by server.
 # WM-agnostic: networking, audio, fonts, graphical group memberships, shared GUI apps.
 {
   networking.networkmanager.enable = true; # nm-applet / waybar network module

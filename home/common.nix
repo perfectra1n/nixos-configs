@@ -1,6 +1,6 @@
 { config, pkgs, lib, username, ... }:
 
-# Base home-manager config — imported for EVERY host (including headless server/wsl).
+# Base home-manager config — imported for EVERY host (including the headless server).
 # CLI/dev only. GUI apps live in home/gui.nix (graphical hosts add it).
 # Dotfiles under ~/.config are owned by chezmoi, NOT here — no xdg.configFile.
 let

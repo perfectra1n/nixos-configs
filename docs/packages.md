@@ -2,9 +2,9 @@
 
 What's installed, which file owns it, and which hosts get it. The modules are the source of
 truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=laptop,
-**S**=server, **W**=wsl.
+**S**=server.
 
-## CLI / dev — `home/common.nix` (every host: D L S W)
+## CLI / dev — `home/common.nix` (every host: D L S)
 
 | Group | Packages |
 |-------|----------|
@@ -17,7 +17,7 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 > `opentofu` is this repo's deliberate FOSS choice over duck's `terraform` (BSL). `mise` is
 > a bare package activated by chezmoi, not `programs.mise` (chezmoi boundary).
 
-## System base — `modules/common.nix` (every host: D L S W)
+## System base — `modules/common.nix` (every host: D L S)
 
 - Packages: `git vim curl wget bash psmisc wireguard-tools zip unzip gzip gnutar cmake file
   nvfetcher sops age ssh-to-age`, plus pinned `kubectl` + `talosctl` (via `mkBin`) and

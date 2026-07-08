@@ -36,8 +36,8 @@ echo ">> host: $host"
 
 # Preflight: a fresh box ships a PLACEHOLDER hardware-configuration.nix (fake disk UUIDs) —
 # switching on that yields an UNBOOTABLE system. If this machine's real root UUID isn't in
-# the host's hardware config, capture+commit it first. Skipped for wsl (no hardware file)
-# and for any established host whose UUID already matches (normal day-to-day apply).
+# the host's hardware config, capture+commit it first. Skipped for any established host
+# whose UUID already matches (normal day-to-day apply).
 hw="hosts/$host/hardware-configuration.nix"
 uuid=$(findmnt -no UUID / 2>/dev/null || true)
 if [ -f "$hw" ] && [ -n "$uuid" ] && ! grep -qiF "$uuid" "$hw"; then
@@ -88,7 +88,7 @@ run = '''
 set -eu
 git add -A                               # flakes only see tracked files
 nix flake check --no-build
-for h in desktop laptop server wsl; do
+for h in $(ls hosts); do
   nix build --dry-run ".#nixosConfigurations.$h.config.system.build.toplevel"
 done
 '''

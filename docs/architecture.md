@@ -112,7 +112,6 @@ time is fine — e.g. the CachyOS kernel and DMS's quickshell only build on a re
 |-------|---------------|---------|
 | `nixpkgs` (nixos-unstable) | Package set. | everything |
 | `home-manager` | Per-user config; follows nixpkgs. | `flake.nix` |
-| `nixos-wsl` | WSL2 integration. | `hosts/wsl` |
 | `sops-nix` | Activation-time secret decryption. | `modules/common.nix` |
 | `hyprswitch` | GUI Alt+Tab switcher (`hyprshell`); not in nixpkgs. | `modules/hyprland.nix` |
 | `dms` + `dms-plugin-registry` | DankMaterialShell (Quickshell Wayland shell) + declarative plugins. | `modules/hyprland.nix` |

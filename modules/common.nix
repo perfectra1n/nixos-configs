@@ -1,6 +1,6 @@
 { config, pkgs, lib, username, ... }:
 
-# Universal base — applied to EVERY host (desktop, laptop, server, wsl).
+# Universal base — applied to EVERY host (desktop, laptop, server).
 # Only things that make sense everywhere belong here. Graphical-only and
 # host-specific settings live in the desktop modules / hosts/<name>.
 let
@@ -114,7 +114,7 @@ in
   # of at activation. Validation checks sops STRUCTURE only, no key needed: CI stays green.
   sops.validateSopsFiles = true;
 
-  # ── Docker (all hosts; works under WSL too) ──
+  # ── Docker (all hosts) ──
   virtualisation.docker.enable = true;
   # Disable the containerd image store (Docker 28+/29 default). Its overlayfs
   # snapshotter exporter deadlocks on images with duplicate-content layers
@@ -147,7 +147,6 @@ in
 
   # ── OpenSSH server — installed and started on boot on every host ──
   # Defaults: root login key-only (prohibit-password); openFirewall opens TCP 22.
-  # (On WSL, port 22 can clash with Windows' own sshd — change services.openssh.ports.)
   services.openssh.enable = true;
 
   # ── Firewall — DISABLED on every host ──

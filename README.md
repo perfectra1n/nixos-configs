@@ -11,7 +11,6 @@ Multi-host NixOS + Home Manager flake. Plain `mkHost` factory (no framework), wi
 | `desktop` | bare-metal       | Wayland + Hyprland | NVIDIA | gaming, GUI apps               |
 | `laptop`  | bare-metal       | Wayland + Hyprland | AMD    | gaming, GUI apps, power mgmt   |
 | `server`  | bare-metal / VM  | none (headless)    | —      | SSH-hardened, docker/services  |
-| `wsl`     | WSL2             | none (headless)    | —      | CLI/dev only                   |
 
 The config name matches `networking.hostName`, so on the box itself you can drop the
 `#name` from `nixos-rebuild`.
@@ -44,7 +43,6 @@ hosts/
   desktop/{default.nix, hardware-configuration.nix}   # NVIDIA — real captured hardware
   laptop/{default.nix, hardware-configuration.nix}    # AMD    — real captured hardware
   server/{default.nix, hardware-configuration.nix}    #        — hardware is a PLACEHOLDER
-  wsl/default.nix      # NixOS-WSL; no hardware-configuration.nix needed
 secrets/secrets.yaml   # sops-encrypted (real values; ciphertext is safe to publish)
 .sops.yaml             # sops keys + creation rules
 ```
@@ -52,7 +50,7 @@ secrets/secrets.yaml   # sops-encrypted (real values; ciphertext is safe to publ
 ## Installing from scratch (bare-metal: desktop / laptop / server)
 
 Install a baseline NixOS the normal way, boot it, then let `mise run apply` do the rest.
-The heavy flake build happens *after* reboot on the real disk. (`wsl` differs — see the end.)
+The heavy flake build happens *after* reboot on the real disk.
 
 1. **Install a baseline NixOS** (graphical or minimal ISO). Create your user with the
    **same name `flake.nix` uses** (`perf3ct`) and set its password — it stays machine-local;
@@ -98,13 +96,6 @@ The heavy flake build happens *after* reboot on the real disk. (`wsl` differs �
 
    This drives `nixos-rebuild switch`, **not** `nixos-install` (that's the ISO tool, which
    targets `/mnt`). Optionally generate a facter report too (see **Facter** below).
-
-### WSL (no ISO)
-
-Install the NixOS-WSL rootfs tarball on Windows, then from inside it:
-```sh
-sudo nixos-rebuild switch --flake github:perfectra1n/nixos-configs#wsl
-```
 
 ## Facter (hardware detection)
 

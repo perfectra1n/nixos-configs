@@ -1,16 +1,11 @@
 {
-  description = "NixOS + Home Manager — multi-host (desktop / laptop / server / wsl)";
+  description = "NixOS + Home Manager — multi-host (desktop / laptop / server)";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -155,9 +150,19 @@
         server = mkHost "server" {
           extraModules = [ ./modules/server.nix ];
         };
-
-        # WSL2 — headless, NO window manager, CLI/dev tools only.
-        wsl = mkHost "wsl" { };
       };
+
+      # Ops tooling as flake apps: shellcheck-gated at build time, runtime deps pinned,
+      # runnable from anywhere via `nix run github:perfectra1n/nixos-configs#<name>`.
+      # Scripts are BODIES only — writeShellApplication injects the shebang + set -euo pipefail.
+      packages.x86_64-linux =
+        let pkgs = nixpkgs.legacyPackages.x86_64-linux; in
+        {
+          gen-manifests = pkgs.writeShellApplication {
+            name = "gen-manifests";
+            runtimeInputs = with pkgs; [ nix gnused gnugrep coreutils findutils ];
+            text = builtins.readFile ./scripts/gen-manifests.sh;
+          };
+        };
     };
 }
