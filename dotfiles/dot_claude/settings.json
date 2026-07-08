@@ -4,7 +4,7 @@
     "pr": "",
     "sessionUrl": false
   },
-  "model": "opus",
+  "model": "claude-fable-5[1m]",
   "enabledPlugins": {
     "explanatory-output-style@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
@@ -18,7 +18,8 @@
     "feature-dev@claude-plugins-official": true,
     "ralph-loop@claude-plugins-official": true,
     "datadog@claude-plugins-official": true,
-    "custom-claude-skills@custom-claude-skills": true
+    "custom-claude-skills@custom-claude-skills": true,
+    "memini@memini": true
   },
   "extraKnownMarketplaces": {
     "custom-claude-skills": {
@@ -26,10 +27,17 @@
         "source": "directory",
         "path": "/home/perf3ct/repos/custom-claude-skills"
       }
+    },
+    "memini": {
+      "source": {
+        "source": "github",
+        "repo": "eleboucher/memini"
+      }
     }
   },
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
   "autoCompactEnabled": true,
+  "fileCheckpointingEnabled": true,
   "agentPushNotifEnabled": true
 }
