@@ -55,6 +55,7 @@ in
     btop
     ncdu
     lsof                 # list open files/sockets (who holds this port/file?)
+    nvd                  # closure diff by package/version — modules/system-diff.nix prints it at switch; handy vs ./result too
     # flock + pgrep are absent on purpose: util-linux and procps are NixOS
     # requiredPackages (every system profile), so listing them would just shadow
     # the same tools — same reasoning as the archive section below.

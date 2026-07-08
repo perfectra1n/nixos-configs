@@ -87,6 +87,7 @@
           modules = [
             ./modules/common.nix
             ./modules/facter.nix
+            ./modules/system-diff.nix
             ./hosts/${hostName}
             inputs.sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager
