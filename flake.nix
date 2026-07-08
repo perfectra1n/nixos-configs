@@ -163,6 +163,11 @@
             runtimeInputs = with pkgs; [ nix gnused gnugrep coreutils findutils ];
             text = builtins.readFile ./scripts/gen-manifests.sh;
           };
+          whatchanged = pkgs.writeShellApplication {
+            name = "whatchanged";
+            runtimeInputs = with pkgs; [ nix gnused gnugrep coreutils ];
+            text = builtins.readFile ./scripts/whatchanged.sh;
+          };
         };
     };
 }
