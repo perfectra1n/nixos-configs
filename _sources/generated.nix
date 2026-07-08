@@ -35,13 +35,13 @@
   };
   nvbroadcast = {
     pname = "nvbroadcast";
-    version = "9bf852faaa32f95fbef811f14023eac3886b12f0";
+    version = "ced47011b3fc90ca1d55a4d2674f231d999fea33";
     src = fetchFromGitHub {
       owner = "perfectra1n";
       repo = "nvidia-broadcast-linux";
-      rev = "9bf852faaa32f95fbef811f14023eac3886b12f0";
+      rev = "ced47011b3fc90ca1d55a4d2674f231d999fea33";
       fetchSubmodules = false;
-      sha256 = "sha256-uH7vBmF3G5I+oCjQg1H8O3qNr9opJNURsvztZrDYiXI=";
+      sha256 = "sha256-VDu3Ag6Mz5p/VNQ9MkBFZ4WdY06YXJ+kxhTddJZ/ymg=";
     };
   };
   talosctl = {

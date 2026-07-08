@@ -31,6 +31,13 @@
       "headers": {
         "Authorization": "Bearer ${PROTONDB_MCP_BEARER}"
       }
+    },
+    "memini": {
+      "type": "http",
+      "url": "${MEMINI_MCP_URL}",
+      "headers": {
+        "Authorization": "Bearer ${MEMINI_MCP_BEARER}"
+      }
     }
   }
 }

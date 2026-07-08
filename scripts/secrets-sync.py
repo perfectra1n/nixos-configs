@@ -79,6 +79,8 @@ FISHENV_MANIFEST = [
     ("KUBESEARCH_MCP_BEARER",        "Kubesearch MCP",       "field", "mcp_bearer"),
     ("PROTONDB_MCP_URL",             "ProtonDB MCP",         "field", "mcp_url"),
     ("PROTONDB_MCP_BEARER",          "ProtonDB MCP",         "field", "mcp_bearer"),
+    ("MEMINI_MCP_URL",               "Memini MCP",           "field", "mcp_url"),
+    ("MEMINI_MCP_BEARER",            "Memini MCP",           "field", "mcp_bearer"),
     # Private domains — kept out of the (public) repo; fish functions reference these vars.
     ("MAIN_GITEA_HOST",              "Main Gitea",           "host",  ""),
     ("HOMELAB_SSH_DOMAIN",           "Homelab Domains",      "field", "ssh_domain"),
