@@ -27,12 +27,13 @@ fetch.url = "https://github.com/viaduct-ai/kustomize-sops/releases/download/v$ve
 # NV Broadcast — unofficial NVIDIA Broadcast (GTK4/Python). Not packageable from nixpkgs
 # (mediapipe/pyrnnoise missing there, onnxruntime-gpu hard-pinned upstream); instead
 # modules/nvbroadcast.nix pip-installs this pinned source into an FHS venv at first launch.
-# src.manual KEEPS the "v" here (unlike the url pins above): fetch.github uses the version
-# string verbatim as the git rev/tag.
+# Pinned to our fork's gpu-offload branch (not upstream Hkshoonya releases) — src.manual is
+# the branch-HEAD commit SHA, same fork-branch pattern as libratbag below. Repoint to
+# "Hkshoonya/nvidia-broadcast-linux" releases once the branch lands upstream.
 [nvbroadcast]
-# renovate: datasource=github-releases depName=Hkshoonya/nvidia-broadcast-linux
-src.manual = "v1.1.13"
-fetch.github = "Hkshoonya/nvidia-broadcast-linux"
+# renovate: datasource=git-refs depName=https://github.com/perfectra1n/nvidia-broadcast-linux branch=gpu-offload
+src.manual = "9bf852faaa32f95fbef811f14023eac3886b12f0"
+fetch.github = "perfectra1n/nvidia-broadcast-linux"
 
 # libratbag — pinned to our fork branch, NOT upstream. Two gaps vs nixpkgs' 0.18 tag: (1) 0.18
 # predates G502 X PLUS support (merged to upstream master after the tag), and (2) even upstream

@@ -1,6 +1,7 @@
 { config, pkgs, lib, ... }:
 
-# NV Broadcast — unofficial NVIDIA Broadcast for Linux (Hkshoonya/nvidia-broadcast-linux):
+# NV Broadcast — unofficial NVIDIA Broadcast for Linux (our perfectra1n/nvidia-broadcast-linux
+# fork, gpu-offload branch — upstream is Hkshoonya/nvidia-broadcast-linux):
 # AI virtual camera (background blur/replace, auto-framing, eye contact) + noise removal,
 # GTK4/Python, GPU-accelerated via the onnxruntime CUDA EP. NVIDIA hosts only (desktop).
 #
