@@ -20,6 +20,47 @@ block (or vice-versa), so nothing loads.
 
 ## How it wires together at launch
 
+Grouped by **where each artifact lives** — Bitwarden vault, the git repo, `$HOME` (only reached via
+`chezmoi apply`), and launch time. The two `chezmoi apply` edges are the ones people forget.
+
+```mermaid
+flowchart TD
+    subgraph vault["Bitwarden vault (source of truth for secrets)"]
+        BW["'Memini MCP' item<br/>fields: mcp_url, mcp_bearer"]
+    end
+
+    subgraph repo["git repo · nixos-configs (tracked, publishable)"]
+        MAN["scripts/secrets-sync.py<br/>FISHENV_MANIFEST rows"]
+        MCPSRC["dotfiles/dot_config/claude/mcp.json<br/>server block — ${VAR} refs, no secrets"]
+        AGE["dotfiles/.../encrypted_private_secrets.fish.age<br/>age ciphertext"]
+    end
+
+    subgraph home["$HOME · rendered only by 'chezmoi apply'"]
+        FISH["~/.config/fish/.../secrets.fish<br/>set -Ux MEMINI_MCP_URL / _BEARER"]
+        MCPREND["~/.config/claude/mcp.json<br/>← what Claude actually reads"]
+    end
+
+    subgraph run["launch time (a new fish + claude session)"]
+        ENV["fish env<br/>$MEMINI_MCP_URL / $MEMINI_MCP_BEARER"]
+        CLAUDE["claude (fish wrapper)<br/>--mcp-config=~/.config/claude/mcp.json"]
+        MCP["memini MCP server<br/>https://memini.example.internal/mcp"]
+    end
+
+    MAN -.->|"maps each VAR to a Bitwarden field"| BW
+    BW -->|"mise run secrets:pull-env"| AGE
+    AGE ==>|"chezmoi apply"| FISH
+    MCPSRC ==>|"chezmoi apply"| MCPREND
+    FISH -->|"sourced by config.fish"| ENV
+    ENV -->|"claude expands ${VAR}"| CLAUDE
+    MCPREND -->|"read at launch"| CLAUDE
+    CLAUDE -->|"Authorization: Bearer + URL"| MCP
+
+    classDef apply stroke-width:3px;
+    class AGE,MCPSRC apply;
+```
+
+Plain-text version of the same flow:
+
 ```
  SECRET CHANNEL
    Bitwarden item ──(secrets-sync.py, FISHENV_MANIFEST)──▶ encrypted_private_secrets.fish.age  (git)
