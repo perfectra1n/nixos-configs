@@ -36,8 +36,8 @@
       "matchFileNames": ["flake-inputs.txt"],
       "commitMessageTopic": "flake input {{depName}}",
       "postUpgradeTasks": {
-        "commands": ["nix flake update {{{depName}}}"],
-        "fileFilters": ["flake.lock", "flake-inputs.txt"],
+        "commands": ["nix flake update {{{depName}}}", "nix run .#gen-manifests"],
+        "fileFilters": ["flake.lock", "flake-inputs.txt", "manifests/**"],
         "executionMode": "update"
       }
     },
@@ -45,8 +45,8 @@
       "matchManagers": ["custom.regex"],
       "matchFileNames": ["nvfetcher.toml"],
       "postUpgradeTasks": {
-        "commands": ["nvfetcher"],
-        "fileFilters": ["nvfetcher.toml", "_sources/**"],
+        "commands": ["nvfetcher", "nix run .#gen-manifests"],
+        "fileFilters": ["nvfetcher.toml", "_sources/**", "manifests/**"],
         "executionMode": "branch"
       }
     }
