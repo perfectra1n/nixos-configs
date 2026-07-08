@@ -5,6 +5,8 @@ name: Check
 # of every host. Catches the breakage lock bumps cause — renamed/removed packages,
 # changed options — without realizing the (large) closures. Mark this required in
 # branch protection so Renovate's platformAutomerge waits for it.
+# Also verifies the committed manifests/ inventories match the evaluated closure —
+# `mise run verify` keeps them fresh locally; Renovate's postUpgradeTasks do on bump PRs.
 
 on:
   pull_request:
@@ -40,3 +42,14 @@ jobs:
         run: |
           nix build --dry-run \
             ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
+
+      - name: Manifest freshness (${{ matrix.host }})
+        # gen-manifests reuses the eval the dry-run above already did (same installable →
+        # warm eval cache + instantiated drvs). A diff means the closure changed without
+        # regenerating manifests/ — `mise run verify` does it automatically.
+        run: |
+          nix run .#gen-manifests -- ${{ matrix.host }}
+          git diff --exit-code -- "manifests/${{ matrix.host }}.txt" || {
+            echo "::error::manifests/${{ matrix.host }}.txt is stale — run 'mise run verify' on a Nix machine and commit the result"
+            exit 1
+          }
