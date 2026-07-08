@@ -18,6 +18,42 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # ONE sticky comment per PR: which packages changed version, per host — rendered from the
+  # manifests/*.txt diff already in the PR (no nix, no eval; ~seconds). Marker-tagged so
+  # reruns edit the same comment. Skipped for fork PRs (their token can't write comments).
+  manifest-comment:
+    name: PR package-diff comment
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # need the base commit for the three-dot diff below
+
+      - name: Render + upsert sticky comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          git diff "$BASE"...HEAD -- 'manifests/*.txt' \
+            | python3 scripts/manifest-pr-comment.py > body.md
+          marker='<!-- manifest-diff-comment -->'
+          cid=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
+                  --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -n1)
+          if [ -n "$cid" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$cid" -F body=@body.md >/dev/null
+            echo "updated comment $cid"
+          else
+            gh api "repos/$REPO/issues/$PR/comments" -F body=@body.md >/dev/null
+            echo "created comment"
+          fi
+
   hosts:
     name: ${{ matrix.host }}
     runs-on: ubuntu-latest
