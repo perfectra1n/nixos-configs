@@ -2464,6 +2464,8 @@ gnome-common-3.18.0
 gnome-desktop-44.5
 gnome-disk-utility-46.1
 gnome-keyring-50.0
+gnome-network-displays-0.99.0
+gnome-network-displays-0.99.0_fish-completions
 gnome-online-accounts-3.58.1
 gnome-session-ctl-50.0
 gnome-settings-daemon-50.1
@@ -2587,6 +2589,7 @@ gst-plugins-bad-1.26.11
 gst-plugins-base-1.26.11
 gst-plugins-good-1.26.11
 gst-plugins-ugly-1.26.11
+gst-rtsp-server-1.26.11
 gstreamer-1.26.11
 gstreamer-vaapi-1.26.11
 gtest-1.17.0

@@ -136,6 +136,7 @@
             ./modules/virtual-camera.nix # v4l2loopback /dev/video10 for OBS's virtual camera (no NV Broadcast here — CUDA-only, and no blur wanted on the laptop)
             ./modules/peripherals.nix # gaming mice (Piper/ratbagd), RGB (OpenRGB), QMK/VIA keyboards (Vial)
             ./modules/noise-suppression.nix # DeepFilterNet mic denoise (Broadcast-like virtual source)
+            ./modules/miracast.nix # cast the screen to Miracast TVs (gnome-network-displays; needs Wi-Fi for the P2P leg, so laptop-only)
             ./modules/nextcloud-vfs.nix # rclone WebDAV files-on-demand mount (activates once the sops secret lands)
             ./modules/smb-mounts.nix # CIFS mount of //192.168.2.155/main_smb at /mnt (on-demand automount; won't choke when the server is unreachable)
             ./modules/dotfiles.nix # chezmoi bootstrap: sops token + chezmoi.toml (orchestration in mise.toml — `mise run apply`)
