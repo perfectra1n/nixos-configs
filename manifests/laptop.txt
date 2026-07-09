@@ -6367,6 +6367,7 @@ rmdir-builder
 rnnoise-0.2
 robin-map-1.4.1
 roc-toolkit-0.4.0
+rocm-smi-7.2.3
 rofi-2.0.0
 rofi-2.0.0_fish-completions
 rofi-unwrapped-2.0.0

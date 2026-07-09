@@ -1,4 +1,4 @@
-{ config, pkgs, lib, username, ... }:
+{ config, osConfig, pkgs, lib, username, ... }:
 
 # Base home-manager config — imported for EVERY host (including the headless server).
 # CLI/dev only. GUI apps live in home/gui.nix (graphical hosts add it).
@@ -52,7 +52,13 @@ in
     lazygit              # git TUI
     lazydocker           # docker TUI
     chezmoi              # dotfile manager (owns ~/.config)
-    btop
+    # btop flavored to the host's GPU so its GPU panel works. The vendor truth is
+    # whichever of modules/{nvidia,amd}.nix the host imported (videoDrivers), read
+    # via osConfig — NOT detected.* (no facter.json is committed yet, so those are
+    # all false). Server matches neither driver → plain btop.
+    (if lib.elem "nvidia" osConfig.services.xserver.videoDrivers then btop-cuda
+     else if lib.elem "amdgpu" osConfig.services.xserver.videoDrivers then btop-rocm
+     else btop)
     ncdu
     lsof                 # list open files/sockets (who holds this port/file?)
     nvd                  # closure diff by package/version — modules/system-diff.nix prints it at switch; handy vs ./result too
