@@ -6,7 +6,7 @@
 chaotic = "20f7c6dde5c9b961c5e7bd8ebf25a745f6757a72"
 
 # renovate: datasource=git-refs depName=dms packageName=https://github.com/AvengeMedia/DankMaterialShell branch=stable
-dms = "eb5afcdc40ea5446c27e18552ff4a19f9daf9484"
+dms = "bdfd565b72cbb416441a9ab828efcac4fd516c70"
 
 # renovate: datasource=git-refs depName=dms-plugin-registry packageName=https://github.com/AvengeMedia/dms-plugin-registry branch=master
 dms-plugin-registry = "8b61e8fca730986e673737529fa56802dc9326bb"
