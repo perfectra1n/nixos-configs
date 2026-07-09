@@ -66,6 +66,7 @@ X-Reload-Triggers-polkit
 X-Restart-Triggers-NetworkManager
 X-Restart-Triggers-NetworkManager-dispatcher
 X-Restart-Triggers-dbus-broker
+X-Restart-Triggers-geoclue
 X-Restart-Triggers-nix-daemon
 X-Restart-Triggers-polkit
 X-Restart-Triggers-reload-systemd-vconsole-setup
@@ -1912,9 +1913,9 @@ dms-idle-inhibit-watchdog
 dms-plugin-hyprlandSubmapIndicator-1.0.0
 dms-plugin-linuxWallpaperEngine-1.1.0
 dms-plugins-851e06c
-dms-shell-1.4.6+date=2026-04-29_eb5afcd
-dms-shell-1.4.6+date=2026-04-29_eb5afcd-go-modules
-dms-shell-1.4.6+date=2026-04-29_eb5afcd_fish-completions
+dms-shell-1.5.0+date=2026-07-08_bdfd565
+dms-shell-1.5.0+date=2026-07-08_bdfd565-go-modules
+dms-shell-1.5.0+date=2026-07-08_bdfd565_fish-completions
 dms-wallpaperengine-714ccb7
 dns-root-data-2025-04-14
 dnsmasq-2.93
@@ -2355,6 +2356,7 @@ generics-sop-0.5.1.4
 generics-sop-0.5.1.4-r3.cabal
 gengetopt-2.23
 geoclue-2.7.2
+geoclue-2.7.2_fish-completions
 geocode-glib-3.26.4
 geoip-1.6.12
 get_patch
@@ -6259,9 +6261,8 @@ quickcheck-instances-0.3.33
 quickcheck-instances-0.3.33-r1.cabal
 quickcheck-io-0.2.0
 quickcheck-unicode-1.0.1.0
-quickshell-0.2.1
-quickshell-wrapped-0.2.1
-quickshell-wrapped-0.2.1_fish-completions
+quickshell-0.3.0
+quickshell-0.3.0_fish-completions
 quilt-0.69
 quirc-1.2
 quote-1.0.36
@@ -7501,8 +7502,6 @@ write-builder
 write-proxy-settings
 write-text-file.kaem
 writeable-0.6.2
-wtype-0.4
-wtype-0.4_fish-completions
 wyz-0.5.1
 x264-0-unstable-2025-01-03
 x265-4.1
