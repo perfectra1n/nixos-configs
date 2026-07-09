@@ -4,7 +4,7 @@
     "pr": "",
     "sessionUrl": false
   },
-  "model": "claude-fable-5[1m]",
+  "model": "opus",
   "enabledPlugins": {
     "explanatory-output-style@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
@@ -33,9 +33,16 @@
         "source": "github",
         "repo": "eleboucher/memini"
       }
+    },
+    "atvik": {
+      "source": {
+        "source": "github",
+        "repo": "AtvikSecurity/claude-extensions"
+      }
     }
   },
   "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
   "theme": "dark",
   "autoCompactEnabled": true,
   "fileCheckpointingEnabled": true,

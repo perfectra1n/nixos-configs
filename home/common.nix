@@ -37,6 +37,10 @@ in
 
     nethogs
     flux
+    #nsys
+    py-spy
+    perf
+    #pidstat
 
     # ── CLI tools ──
     bat

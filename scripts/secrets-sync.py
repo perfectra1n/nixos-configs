@@ -42,6 +42,9 @@ from pathlib import Path
 #                      resolves the username FROM the item (login Username, else a "User Name" field).
 #   kind=note       -> value is the item's secure-note body VERBATIM — for MULTILINE file contents
 #                      (rclone conf, smb creds) that a single-line custom field can't carry.
+#   kind=mcpbase    -> the named field `selector` (an MCP URL) with a trailing "/mcp" removed — for
+#                      plugins that append /mcp themselves (e.g. memini's bundled .mcp.json). Lets one
+#                      stored mcp_url feed both a full-URL client and a base-URL one, no second field.
 
 # System secrets -> secrets/secrets.yaml. EVERY key is Bitwarden-backed — `mise run secrets:pull`
 # refreshes all of them; `secrets:edit` is only for out-of-band experiments.
@@ -79,8 +82,14 @@ FISHENV_MANIFEST = [
     ("KUBESEARCH_MCP_BEARER",        "Kubesearch MCP",       "field", "mcp_bearer"),
     ("PROTONDB_MCP_URL",             "ProtonDB MCP",         "field", "mcp_url"),
     ("PROTONDB_MCP_BEARER",          "ProtonDB MCP",         "field", "mcp_bearer"),
-    ("MEMINI_MCP_URL",               "Memini MCP",           "field", "mcp_url"),
-    ("MEMINI_MCP_BEARER",            "Memini MCP",           "field", "mcp_bearer"),
+    ("MEMINI_MCP_URL",               "Memini MCP",           "field",   "mcp_url"),
+    ("MEMINI_MCP_BEARER",            "Memini MCP",           "field",   "mcp_bearer"),
+    # The memini *plugin* (hooks + its own MCP server) reads its config from the SHELL ENV under
+    # different var names than mcp.json's ${MEMINI_MCP_*}: base URL (it re-appends /mcp itself) +
+    # MEMINI_API_KEY. Both come from the same Bitwarden item — the key is an exact dup of the bearer,
+    # the base is mcp_url minus /mcp — so the plugin can never drift from the manual server.
+    ("MEMINI_BASE_URL",              "Memini MCP",           "mcpbase", "mcp_url"),
+    ("MEMINI_API_KEY",               "Memini MCP",           "field",   "mcp_bearer"),
     # Private domains — kept out of the (public) repo; fish functions reference these vars.
     ("MAIN_GITEA_HOST",              "Main Gitea",           "host",  ""),
     ("HOMELAB_SSH_DOMAIN",           "Homelab Domains",      "field", "ssh_domain"),
@@ -195,6 +204,12 @@ def host_of(item: dict) -> str:
     return val
 
 
+def strip_mcp(v: str) -> str:
+    """Drop a trailing /mcp (optionally slash-terminated) from an MCP URL, for clients that
+    re-append it. Origin-only URLs pass through untouched."""
+    return re.sub(r"/mcp/?$", "", v)
+
+
 def resolve_rows(manifest, session) -> list[tuple[str, str]]:
     """Resolve every manifest row to (key, value). ASSUMES the vault is already unlocked, so both
     channels share one unlock + one warm _ITEM_CACHE. Fails loudly on the first empty/null value."""
@@ -207,6 +222,9 @@ def resolve_rows(manifest, session) -> list[tuple[str, str]]:
             value = host_of(item)
         elif kind == "note":
             value = note_of(item)
+        elif kind == "mcpbase":
+            v = field_of(item, sel)
+            value = strip_mcp(v) if v else v
         elif kind == "basicauth":
             bauser, _, fld = sel.partition(":")
             btok = field_of(item, fld)
@@ -415,6 +433,10 @@ def cmd_selftest():
     assert quote_fish("a'b\\c") == "'a\\'b\\\\c'", quote_fish("a'b\\c")
     # url/token values (the real shape) pass through untouched inside quotes
     assert quote_fish("https://h/x") == "'https://h/x'"
+    # mcpbase kind: strip a trailing /mcp (the plugin re-appends it); origin-only is untouched
+    assert strip_mcp("https://memini.h/mcp") == "https://memini.h"
+    assert strip_mcp("https://memini.h/mcp/") == "https://memini.h"
+    assert strip_mcp("https://memini.h") == "https://memini.h"
 
     old = (
         "# header comment\n"
