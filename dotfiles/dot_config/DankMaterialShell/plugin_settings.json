@@ -5,7 +5,9 @@
     "defaultIconName": "key"
   },
   "linuxWallpaperEngine": {
+    "pauseOnPowerSaver": true,
     "enabled": true,
+    "pauseOnBattery": true,
     "monitorPlaylists": {},
     "monitorScenes": {
       "DP-1": "897016354",
