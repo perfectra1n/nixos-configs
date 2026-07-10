@@ -73,3 +73,12 @@ repositories:
   password: ""
   url: https://democratic-csi.github.io/charts/
   username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: ceph-csi-op
+  pass_credentials_all: false
+  password: ""
+  url: https://ceph.github.io/ceph-csi-operator
+  username: ""

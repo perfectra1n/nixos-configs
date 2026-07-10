@@ -82,12 +82,11 @@ FISHENV_MANIFEST = [
     ("KUBESEARCH_MCP_BEARER",        "Kubesearch MCP",       "field", "mcp_bearer"),
     ("PROTONDB_MCP_URL",             "ProtonDB MCP",         "field", "mcp_url"),
     ("PROTONDB_MCP_BEARER",          "ProtonDB MCP",         "field", "mcp_bearer"),
-    ("MEMINI_MCP_URL",               "Memini MCP",           "field",   "mcp_url"),
-    ("MEMINI_MCP_BEARER",            "Memini MCP",           "field",   "mcp_bearer"),
-    # The memini *plugin* (hooks + its own MCP server) reads its config from the SHELL ENV under
-    # different var names than mcp.json's ${MEMINI_MCP_*}: base URL (it re-appends /mcp itself) +
-    # MEMINI_API_KEY. Both come from the same Bitwarden item — the key is an exact dup of the bearer,
-    # the base is mcp_url minus /mcp — so the plugin can never drift from the manual server.
+    # memini is PLUGIN-ONLY (no manual server in mcp.json): the memini@memini plugin bundles its own
+    # MCP server + hooks + skills, all reading config from the SHELL ENV. It wants the base URL WITHOUT
+    # /mcp (it re-appends /mcp itself) + MEMINI_API_KEY. Both derive from the one "Memini MCP" item —
+    # the key is the mcp_bearer field verbatim, the base is mcp_url with the trailing /mcp stripped
+    # (mcpbase kind). MEMINI_NAMESPACE (=default) lives in the PUBLIC fish conf.d, not here: not a secret.
     ("MEMINI_BASE_URL",              "Memini MCP",           "mcpbase", "mcp_url"),
     ("MEMINI_API_KEY",               "Memini MCP",           "field",   "mcp_bearer"),
     # Private domains — kept out of the (public) repo; fish functions reference these vars.
