@@ -160,6 +160,8 @@ git -c user.name="${GIT_NAME:-perfectra1n}" -c user.email="${GIT_EMAIL:-jonfulle
   || { echo ">> no change to commit (secrets already current)"; exit 0; }
 git push || echo ">> committed locally, but push failed — set up creds, then: git push"
 echo ">> secrets refreshed from Bitwarden (sops + fish env) + committed"
+echo ">> new shells pick up the fish env automatically; for a shell that's ALREADY open run 'reload-secrets'"
+echo ">> restart any app that reads these vars (MCP servers, editors) — its env froze at launch"
 '''
 
 [tasks."secrets:pull-env"]
@@ -178,6 +180,8 @@ git -c user.name="${GIT_NAME:-perfectra1n}" -c user.email="${GIT_EMAIL:-jonfulle
   || { echo ">> no change to commit (fish env already current)"; exit 0; }
 git push || echo ">> committed locally, but push failed — set up creds, then: git push"
 echo ">> fish env secrets refreshed from Bitwarden + committed"
+echo ">> new shells pick up the change automatically; for a shell that's ALREADY open run 'reload-secrets'"
+echo ">> restart any app that reads these vars (MCP servers, editors) — its env froze at launch"
 '''
 
 [tasks."secrets:init"]

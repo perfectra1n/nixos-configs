@@ -277,11 +277,18 @@ def quote_fish(v: str) -> str:
 
 
 def merge_fishenv(old_text: str, rows) -> str:
-    """Surgically rewrite ONLY the managed `set -Ux VAR 'value'` lines, leaving every other line
+    """Surgically rewrite ONLY the managed `set -gx VAR 'value'` lines, leaving every other line
     (hand-set vars, comments, blanks) byte-identical — the env-var analogue of a per-key `sops set`.
     Match by EXACT var name (never a prefix: TRILIUM_PERSONAL_URL is a prefix of *_MCP_URL). Unseen
     managed vars append at EOF under a one-time header, in manifest order. Idempotent: re-running
-    with unchanged values reproduces byte-identical lines, so callers can no-op on `old == new`."""
+    with unchanged values reproduces byte-identical lines, so callers can no-op on `old == new`.
+
+    We emit `set -gx` (global-exported, per-session), NOT `set -Ux`: these secrets are re-provisioned
+    from THIS file on every rotation, so a UNIVERSAL var (persisted in fish_variables, shared across
+    all live sessions) turns rotation into a footgun — the stale value sticks in the universal store
+    and in already-running sessions until you `set -eU` it, and `chezmoi apply` + a new shell silently
+    fail to update. A global var is re-read from this file by each new shell, so pull→apply→new-shell
+    just works. We still MATCH legacy `-Ux` lines so the first pull after this change migrates them."""
     managed = dict(rows)
     order = [k for k, _ in rows]
     seen: set[str] = set()
@@ -291,8 +298,8 @@ def merge_fishenv(old_text: str, rows) -> str:
     result_lines = []
     for line in body.split("\n"):
         parts = line.split()
-        if len(parts) >= 3 and parts[0] == "set" and parts[1] == "-Ux" and parts[2] in managed:
-            result_lines.append(f"set -Ux {parts[2]} {quote_fish(managed[parts[2]])}")
+        if len(parts) >= 3 and parts[0] == "set" and parts[1] in ("-gx", "-Ux") and parts[2] in managed:
+            result_lines.append(f"set -gx {parts[2]} {quote_fish(managed[parts[2]])}")
             seen.add(parts[2])
         else:
             result_lines.append(line)
@@ -303,7 +310,7 @@ def merge_fishenv(old_text: str, rows) -> str:
             result_lines.append("")
         result_lines.append("# --- secrets-sync managed (fishenv manifest) ---")
         for k in missing:
-            result_lines.append(f"set -Ux {k} {quote_fish(managed[k])}")
+            result_lines.append(f"set -gx {k} {quote_fish(managed[k])}")
 
     text = "\n".join(result_lines)
     if had_trailing_nl:

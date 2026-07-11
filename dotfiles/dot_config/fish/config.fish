@@ -16,6 +16,13 @@ set -x REPO_DIR $HOME/repos
 # expansion being done in ~/.tmux.conf.
 set -Ux TMUX_PLUGIN_MANAGER_PATH $HOME/.tmux/plugins/
 
+# Secret env vars — decrypted from chezmoi-managed encrypted_private_secrets.fish.age.
+# MUST load BEFORE the `tmux attach` below: a fresh top-level shell blocks there for the life of
+# the tmux session and never reaches the rest of this file, so sourcing secrets later would leave
+# the env unset for any tmux server this shell spawns. Vars are `set -gx` (per-session), so every
+# new shell re-reads the current file after a rotation — no sticky universal store to fight.
+test -f $FISHCONFIG/secrets.fish; and source $FISHCONFIG/secrets.fish
+
 # Check if the shell is interactive
 if status is-interactive
     if not set -q TMUX
@@ -58,9 +65,6 @@ source $FISHCONFIG/fish_functions.fish
 source $FISHCONFIG/fish_aliases.fish
 source $FISHCONFIG/claude-edge.fish
 source $FISHCONFIG/mise.fish
-
-# Secret env vars — decrypted from chezmoi-managed encrypted_private_secrets.fish.age
-test -f $FISHCONFIG/secrets.fish; and source $FISHCONFIG/secrets.fish
 
 set -Ux SPACESHIP_HOST_SHOW_FULL "true"
 set -Ux SPACESHIP_HOST_SHOW always
