@@ -482,6 +482,70 @@ def cmd_sync_all():
     apply_fish(fish_rows)
 
 
+# ── The age IDENTITY that decrypts everything else ─────────────────────────────────────────────
+# Ported from ~50 lines of shell in mise.toml, which reimplemented bw_unlock/bwitem/field_of via
+# `bw status | jq`, `bw get item | jq -r '.fields[]|select(...)'` etc. Beyond deleting the
+# duplication, folding it in here means a fresh box unlocks the vault ONCE instead of twice: the
+# shell version ended with `bw lock`, and then secrets-sync.py immediately called bw_unlock() again.
+# Sharing the session and the warm _ITEM_CACHE saves a master-password prompt.
+
+SOPS_KEY = Path("/var/lib/sops-nix/key.txt")          # system: sops-nix, root-owned
+CHEZMOI_KEY = Path.home() / ".config/age/age.agekey"  # user: chezmoi
+
+
+def bw_set_server() -> None:
+    """Point the CLI at our Vaultwarden, if it isn't already.
+
+    Subtle and load-bearing: `bw config server` is REJECTED while authenticated ("logout required
+    before server config update"), so changing the endpoint means logging out FIRST — but only when
+    it actually differs. An already-correct server must be a silent no-op with no logout, or every
+    bootstrap would gratuitously drop an existing session.
+    """
+    current = (json.loads(out(["bw", "status"])).get("serverUrl") or "")
+    want = os.environ.get("BW_SERVER", "")
+    if not want and not current:
+        want = input("Bitwarden server URL: ").strip()
+    if want and want != current:
+        subprocess.run(["bw", "logout"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        out(["bw", "config", "server", want])
+
+
+def cmd_key_bootstrap():
+    """Fresh install: pull the ONE age key from Bitwarden into both identities.
+
+    ITEM=<name> to override the item, FORCE=1 to overwrite. Idempotent: a no-op (exit 0, no vault
+    prompt) when either key already exists, because clobbering a key is how you lose access to
+    every secret encrypted to the old one.
+    """
+    item_name = os.environ.get("ITEM", "AGE SOPS Key")
+
+    if not os.environ.get("FORCE") and (SOPS_KEY.exists() or CHEZMOI_KEY.exists()):
+        print(f">> key already present ({SOPS_KEY} / {CHEZMOI_KEY}) — skipping. FORCE=1 to overwrite.")
+        return
+
+    bw_set_server()
+    session = bw_unlock()
+    try:
+        key = field_of(bwitem(item_name, session), "secret key")
+    finally:
+        bw_lock()
+    if not key:
+        die(f'field "secret key" not found in item "{item_name}"')
+
+    # Stage at 0600 via umask so the key is never briefly world-readable, then install to both.
+    os.umask(0o077)
+    with tempfile.NamedTemporaryFile("w", delete=False) as tmp:
+        tmp.write(key.rstrip("\n") + "\n")
+        staged = tmp.name
+    try:
+        out(["sudo", "install", "-Dm600", staged, str(SOPS_KEY)])
+        out(["install", "-Dm600", staged, str(CHEZMOI_KEY)])
+    finally:
+        os.unlink(staged)
+
+    print(f">> installed {SOPS_KEY} + {CHEZMOI_KEY} — now: mise run apply")
+
+
 def cmd_selftest():
     # note kind: body verbatim, but normalized to end in exactly one newline (BW strips it)
     assert note_of({"notes": "[section]\nkey = val"}) == "[section]\nkey = val\n"
@@ -549,6 +613,7 @@ COMMANDS = {
     "fishenv": cmd_fishenv,
     "fishenv-emit": cmd_fishenv_emit,
     "sync-all": cmd_sync_all,
+    "key-bootstrap": cmd_key_bootstrap,
     "selftest": cmd_selftest,
 }
 

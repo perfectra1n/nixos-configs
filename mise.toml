@@ -277,58 +277,14 @@ echo ">> installed ~/.config/age/age.agekey"
 
 [tasks."secrets:key-bootstrap"]
 description = "Fresh-install: pull the one age key from Bitwarden → sops-nix + chezmoi (BW_SERVER=url ITEM='AGE SOPS Key')"
-run = '''
-set -eu
-item="${ITEM:-AGE SOPS Key}"
-sops_key="/var/lib/sops-nix/key.txt"
-chezmoi_key="$HOME/.config/age/age.agekey"
-
-# Brand-new setup only: bail if either identity already exists (FORCE=1 to override).
-# Never clobber a key already on the box — that's how you lose access to old secrets.
-if [ -z "${FORCE:-}" ] && { [ -e "$sops_key" ] || [ -e "$chezmoi_key" ]; }; then
-  echo ">> key already present ($sops_key / $chezmoi_key) — skipping. FORCE=1 to overwrite."
-  exit 0
-fi
-
-# Custom Bitwarden/Vaultwarden endpoint. `bw config server` is REJECTED once you're
-# authenticated ("logout required before server config update"), so only touch it when
-# the configured endpoint actually differs from what we want — log out first if so.
-# Already-correct server (e.g. you ran `bw config server` by hand) → no-op, no logout.
-current=$(bw status | jq -r '.serverUrl // empty')
-if [ -z "${BW_SERVER:-}" ] && [ -z "$current" ]; then
-  printf 'Bitwarden server URL: '
-  read -r BW_SERVER
-fi
-if [ -n "${BW_SERVER:-}" ] && [ "$current" != "$BW_SERVER" ]; then
-  bw logout >/dev/null 2>&1 || true        # changing the endpoint requires being logged out
-  bw config server "$BW_SERVER"
-fi
-
-# Unlock the vault → session token. login if unauthenticated, else just unlock.
-if [ "$(bw status | jq -r .status)" = "unauthenticated" ]; then
-  BW_SESSION=$(bw login --raw)
-else
-  BW_SESSION=$(bw unlock --raw)
-fi
-export BW_SESSION
-
-# The age secret key lives in the custom field named "secret key".
-key=$(bw get item "$item" --session "$BW_SESSION" \
-  | jq -r '.fields[] | select(.name=="secret key") | .value')
-[ -n "$key" ] && [ "$key" != "null" ] || { echo ">> field 'secret key' not found in item '$item'"; exit 1; }
-
-# Stage at mode 600 via umask, then install to both identities (same key for both):
-#   /var/lib/sops-nix/key.txt   → sops-nix (system, root-owned)
-#   ~/.config/age/age.agekey    → chezmoi (user)
-umask 077
-tmp=$(mktemp); trap 'rm -f "$tmp"' EXIT
-printf '%s\n' "$key" > "$tmp"
-sudo install -Dm600 "$tmp" "$sops_key"
-install -Dm600 "$tmp" "$chezmoi_key"
-
-bw lock >/dev/null 2>&1 || true
-echo ">> installed $sops_key + $chezmoi_key — now: mise run apply"
-'''
+# Was ~50 lines of Bitwarden auth state machine in shell (bw status | jq, conditional logout +
+# config server, login vs unlock, bw get item | jq '.fields[]|select(...)', mktemp + trap +
+# install ×2) — reimplementing bw_unlock/bwitem/field_of, which secrets-sync.py already had.
+# Folding it in also means a fresh box unlocks the vault ONCE, not twice: the shell version ended
+# with `bw lock`, and then secrets-sync.py immediately called bw_unlock() again. One prompt now.
+# python3 is already a hard pre-rebuild dependency (apply calls secrets-sync.py a few lines below,
+# still before nixos-rebuild), so this adds no new bootstrap requirement.
+run = "./scripts/secrets-sync.py key-bootstrap"
 
 [tasks.dirs]
 description = "Create the dirs the Hyprland binds write to (screenshots)"
