@@ -131,6 +131,21 @@
       nixosConfigurations = nixpkgs.lib.genAttrs hostNames
         (name: mkHost name (import (./hosts + "/${name}/spec.nix") { inherit inputs graphical; }));
 
+      # Unit tests for lib/. These `throw` at EVAL time rather than failing in a builder, because
+      # `nix flake check --no-build` — what mise's verify and CI actually run — only EVALUATES
+      # checks. A runCommand full of assertions would be silently skipped by the very command meant
+      # to run it. Keep this derivation trivial: a BARE `nix flake check` (no --no-build) realizes
+      # checks, and CLAUDE.md tells people to run exactly that.
+      checks.x86_64-linux.lib-secrets =
+        let
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          inherit (nixpkgs) lib;
+          cases = import ./lib/secrets-test.nix { inherit lib; };
+          failures = builtins.filter (c: c.actual != c.expected) cases;
+        in
+        if failures == [ ] then pkgs.runCommand "lib-secrets-ok" { } "touch $out"
+        else throw "lib/secrets.nix FAILED: ${lib.generators.toPretty { } failures}";
+
       # Ops tooling as flake apps: shellcheck-gated at build time, runtime deps pinned,
       # runnable from anywhere via `nix run github:perfectra1n/nixos-configs#<name>`.
       # Scripts are BODIES only — writeShellApplication injects the shebang + set -euo pipefail.
