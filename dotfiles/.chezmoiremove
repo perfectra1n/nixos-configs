@@ -17,3 +17,8 @@
 .zshaliases
 .zshrc.d/**
 .zshrc.d
+
+# 2026-07-12: a committed editor backup, byte-identical to fish_frozen_key_bindings.fish. Never
+# read (fish auto-loads conf.d/*.fish, not *.fish.bak) but it WAS deployed, so deleting the source
+# alone would leave it orphaned in ~ forever.
+.config/fish/conf.d/fish_frozen_key_bindings.fish.bak
