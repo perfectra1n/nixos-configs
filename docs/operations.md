@@ -12,7 +12,7 @@ Three layers, least- to most-frequently used:
 
 | Layer | Tasks | Cadence |
 |-------|-------|---------|
-| **Bootstrap** | `secrets:key-bootstrap`, `secrets:init`, `hardware`, `dots-cutover`, `new-host` | once per machine / host |
+| **Bootstrap** | `secrets:key-bootstrap`, `secrets:init`, `hardware`, `new-host` | once per machine / host |
 | **Change loop** | `verify`, `diff`, `test`, `apply`, `dots-diff`, `update` | daily |
 | **Maintenance** | `secrets:pull`, `bump`, `gc`, `rollback`, `generations`, `deploy`, `manifests`, `whatchanged` | occasional |
 
@@ -100,7 +100,6 @@ these tasks move it around:
 | `new-host` | Scaffold `hosts/<name>/` (server-flavoured `default.nix` + CI-safe placeholder hardware config) and append the host to the CI matrix. One manual step remains: the `mkHost` entry in `flake.nix` (printed for you) |
 | `hosts` | List host configs + which one this machine resolves to |
 | `deploy` | Build locally, activate remotely: `HOST=server TARGET=user@host mise run deploy` |
-| `dots-cutover` | One-time post-monorepo-merge: verify chezmoi resolves to `./dotfiles` here, then retire the orphaned standalone `~/.local/share/chezmoi` clone |
 | `dirs` | Create the screenshot dirs the Hyprland binds write into |
 
 ## Maintenance

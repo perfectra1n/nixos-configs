@@ -47,7 +47,7 @@ fi
 
 # Preflight: secrets.yaml still the placeholder? Populate ALL Bitwarden-backed secrets
 # (the git/* credential tokens, per the secrets-sync manifest) + commit BEFORE the switch — so
-# this rebuild declares + decrypts them (modules/git-credentials.nix gates on `secretsReady`).
+# this rebuild declares + decrypts them (modules/git-credentials.nix gates on lib/secrets.nix).
 if grep -q "replace me with" secrets/secrets.yaml; then
   echo ">> secrets.yaml is the placeholder — initializing secrets from Bitwarden"
   mise run secrets:init
@@ -112,15 +112,11 @@ out="hosts/$host/hardware-configuration.nix"
 echo ">> host: $host → $out"
 sudo nixos-generate-config --show-hardware-config > "$out"
 
-# Commit, not just stage: nixos-rebuild resolves this as a git+file:// flake, which only
-# sees COMMITTED files (an uncommitted hardware-configuration.nix is invisible to the build).
-git add "$out"
-# Set the author identity inline so the commit works on a fresh box with no git config
-# (else: "Please tell me who you are"). Override with GIT_NAME=/GIT_EMAIL=.
-git -c user.name="${GIT_NAME:-perfectra1n}" -c user.email="${GIT_EMAIL:-jonfuller2012@gmail.com}" \
-  commit -m "feat(hosts/$host): capture real hardware-configuration" "$out" \
-  || { echo ">> no change to commit"; exit 0; }
-git push || echo ">> committed locally, but push failed — set up the remote/creds, then: git push"
+# Commit, not just stage: nixos-rebuild resolves this as a git+file:// flake, which only sees
+# COMMITTED files (an uncommitted hardware-configuration.nix is invisible to the build).
+# commit-push sets the author identity inline, so this works on a fresh box with no git config,
+# and treats "nothing to commit" as success (re-capturing identical hardware is a normal no-op).
+nix run .#commit-push -- "feat(hosts/$host): capture real hardware-configuration" "$out"
 echo ">> done — now: mise run apply"
 '''
 
@@ -157,11 +153,7 @@ export SOPS_AGE_KEY_FILE="$agekey"
 # Commit both files together. A channel that was a no-op leaves its file unchanged and simply
 # drops out of the commit; if BOTH are unchanged the `|| echo` makes this a clean exit 0.
 fishage="dotfiles/dot_config/fish/fishconfig.d/encrypted_private_secrets.fish.age"
-git add secrets/secrets.yaml "$fishage"
-git -c user.name="${GIT_NAME:-perfectra1n}" -c user.email="${GIT_EMAIL:-jonfuller2012@gmail.com}" \
-  commit -m "chore(secrets): refresh from Bitwarden" secrets/secrets.yaml "$fishage" \
-  || { echo ">> no change to commit (secrets already current)"; exit 0; }
-git push || echo ">> committed locally, but push failed — set up creds, then: git push"
+nix run .#commit-push -- "chore(secrets): refresh from Bitwarden" secrets/secrets.yaml "$fishage"
 echo ">> secrets refreshed from Bitwarden (sops + fish env) + committed"
 echo ">> new shells pick up the fish env automatically; for a shell that's ALREADY open run 'reload-secrets'"
 echo ">> restart any app that reads these vars (MCP servers, editors) — its env froze at launch"
@@ -177,11 +169,7 @@ agekey="$HOME/.config/age/age.agekey"
 ./scripts/secrets-sync.py fishenv
 
 fishage="dotfiles/dot_config/fish/fishconfig.d/encrypted_private_secrets.fish.age"
-git add "$fishage"
-git -c user.name="${GIT_NAME:-perfectra1n}" -c user.email="${GIT_EMAIL:-jonfuller2012@gmail.com}" \
-  commit -m "chore(secrets): refresh fish env from Bitwarden" "$fishage" \
-  || { echo ">> no change to commit (fish env already current)"; exit 0; }
-git push || echo ">> committed locally, but push failed — set up creds, then: git push"
+nix run .#commit-push -- "chore(secrets): refresh fish env from Bitwarden" "$fishage"
 echo ">> fish env secrets refreshed from Bitwarden + committed"
 echo ">> new shells pick up the change automatically; for a shell that's ALREADY open run 'reload-secrets'"
 echo ">> restart any app that reads these vars (MCP servers, editors) — its env froze at launch"
@@ -209,10 +197,7 @@ umask 077
 sops --encrypt --in-place secrets/secrets.yaml
 
 # Commit (git+file:// flake only sees committed files; and the secret must exist at eval).
-git add .sops.yaml secrets/secrets.yaml
-git -c user.name="${GIT_NAME:-perfectra1n}" -c user.email="${GIT_EMAIL:-jonfuller2012@gmail.com}" \
-  commit -m "feat(secrets): initialize from Bitwarden" .sops.yaml secrets/secrets.yaml
-git push || echo ">> committed locally, but push failed — set up creds, then: git push"
+nix run .#commit-push -- "feat(secrets): initialize from Bitwarden" .sops.yaml secrets/secrets.yaml
 echo ">> secrets initialized + committed — rebuild to decrypt /run/secrets/*"
 '''
 
@@ -332,33 +317,6 @@ nix run .#suspects -- "$BIN" "${FROM:-}" "${TO:-}"
 description = "Preview dotfile changes before apply overwrites anything"
 run = "chezmoi diff"
 
-[tasks.dots-cutover]
-# ONE-TIME, after the first post-merge `mise run apply` has regenerated ~/.config/chezmoi/chezmoi.toml
-# with the new sourceDir. Confirms chezmoi now reads ./dotfiles from this repo, then retires the
-# orphaned standalone clone at ~/.local/share/chezmoi. Idempotent + safe to re-run.
-description = "One-time: verify chezmoi reads ./dotfiles here, then remove the old ~/.local/share/chezmoi clone"
-run = '''
-set -eu
-want="$PWD/dotfiles"
-got=$(chezmoi source-path)
-if [ "$got" != "$want" ]; then
-  echo ">> chezmoi still resolves to: $got"
-  echo ">> expected:                 $want"
-  echo ">> Rebuild first (mise run apply) so the generated chezmoi.toml re-points sourceDir, then re-run."
-  exit 1
-fi
-echo ">> chezmoi source-path → $got (via .chezmoiroot) ✓"
-chezmoi diff >/dev/null                       # sanity: the source renders/decrypts from the new location
-echo ">> source renders from the monorepo ✓"
-old="$HOME/.local/share/chezmoi"
-if [ -e "$old" ]; then
-  echo ">> removing orphaned standalone clone: $old"
-  rm -rf "$old"
-  echo ">> done — the monorepo's dotfiles/ is now the sole chezmoi source."
-else
-  echo ">> no old clone at $old — nothing to remove."
-fi
-'''
 
 [tasks.test]
 description = "Apply now WITHOUT touching the bootloader (auto-reverts on reboot) — safe trials"

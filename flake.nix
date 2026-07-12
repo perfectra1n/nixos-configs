@@ -174,6 +174,13 @@
             runtimeInputs = with pkgs; [ nix gnused gnugrep coreutils ];
             text = builtins.readFile ./scripts/suspects.sh;
           };
+          # The commit/push tail four mise tasks used to repeat verbatim. Here rather than as a
+          # loose script so it gets the same shellcheck gate as the others.
+          commit-push = pkgs.writeShellApplication {
+            name = "commit-push";
+            runtimeInputs = with pkgs; [ git ];
+            text = builtins.readFile ./scripts/commit-push.sh;
+          };
         };
     };
 }
