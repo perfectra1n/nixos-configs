@@ -91,11 +91,13 @@ dotfiles/            # chezmoi SOURCE (shell rc + ~/.config/* app config + one .
 
 ## Common tasks
 
-- **Add a host:** create `hosts/<name>/{default.nix,hardware-configuration.nix}`, add a
-  `<name> = mkHost "<name>" { extraModules = [...]; homeModules = [...]; };` entry in
-  `flake.nix`, add `<name>` to the matrix in `.github/workflows/check.yaml`.
-- **Add a system feature:** new single-concern `modules/<feature>.nix`, opt hosts in via
-  their `extraModules` list.
+- **Add a host:** `NAME=<name> mise run new-host`. That's the whole thing — `flake.nix`
+  derives `nixosConfigurations` from `hosts/` (`readDir`) and the CI matrix comes from
+  `ls hosts`, so neither needs editing. It scaffolds `hosts/<name>/{default.nix,spec.nix,
+  hardware-configuration.nix}`; adjust `spec.nix` if it isn't a plain server.
+- **Add a system feature:** new single-concern `modules/<feature>.nix`, opt hosts in by
+  listing it in their `hosts/<name>/spec.nix` `extraModules` (or in `graphical` in
+  `flake.nix`, if BOTH graphical hosts should get it).
 - **Add a package:** CLI/ops → `home/common.nix`; GUI → `home/gui.nix`; system service or
   setuid wrapper → the relevant `modules/*.nix`. Unfree is already allowed.
 - **Pin an out-of-tree binary:** add to `nvfetcher.toml`, run `nvfetcher`, reference via
@@ -107,11 +109,12 @@ Run these before committing (or just `mise run verify`, which also refreshes `ma
 
 ```sh
 git add -A                       # flakes only see tracked files
-nix flake check --no-build
-for h in desktop laptop server; do
-  nix build --dry-run ".#nixosConfigurations.$h.config.system.build.toplevel"
-done
+nix flake check --no-build       # evaluates EVERY host's toplevel + runs the lib/ unit tests
 ```
+
+`nix flake check` forces `config.system.build.toplevel.drvPath` for every `nixosConfigurations`
+entry, so it already covers all hosts — there is no need to loop and `nix build --dry-run` each
+one. Keep `--no-build`: a **bare** `nix flake check` *realizes* the `checks` outputs.
 
 Apply on a real host: `sudo nixos-rebuild switch --flake .#<HOST>` (hostname auto-selects,
 so `#<HOST>` is optional on the box itself).

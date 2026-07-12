@@ -54,13 +54,35 @@ jobs:
             echo "created comment"
           fi
 
+  # The host list comes from hosts/ — the same directory flake.nix now derives nixosConfigurations
+  # from (readDir) — so adding a host needs no CI edit. Deliberately NOT `nix eval`: evaluating a
+  # flake output first fetches every locked input (~307 MB: nixpkgs, dms, hyprswitch, …) plus a Nix
+  # install, just to print three strings — and `builtins.attrNames` validates nothing that the
+  # per-host jobs below don't already catch.
+  discover:
+    name: Discover hosts
+    runs-on: ubuntu-latest
+    outputs:
+      hosts: ${{ steps.list.outputs.hosts }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: List hosts
+        id: list
+        run: echo "hosts=$(ls -1 hosts | jq -Rsc 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
+
   hosts:
+    # Keep `name: ${{ matrix.host }}` — the per-host check names stay desktop/laptop/server, so the
+    # branch-protection required checks keep matching. A NEW host still has to be added to that
+    # required list by hand; this only automates the matrix.
     name: ${{ matrix.host }}
+    needs: discover
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        host: [desktop, laptop, server]
+        host: ${{ fromJSON(needs.discover.outputs.hosts) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7

@@ -1,4 +1,4 @@
-{ config, lib, username, ... }:
+{ config, lib, username, secrets, ... }:
 
 # Renders ~/.docker/config.json's content from sops so `docker pull/push` to the two Gitea
 # instances + ghcr.io works non-interactively, without a plaintext token ever living on disk.
@@ -23,11 +23,8 @@
 # template ONLY once secrets.yaml actually holds the docker/* keys, so a fresh checkout that lacks
 # them doesn't brick sops activation / `nixos-rebuild`. Inert until `mise run secrets:pull`.
 let
-  secretsFile = builtins.readFile ../secrets/secrets.yaml;
-  secretsReady = !(lib.hasInfix "replace me with" secretsFile);
-  # sops keeps YAML KEYS in plaintext (only values are encrypted), so a raw read detects the key.
-  secretPresent = lib.hasInfix "main_gitea_auth" secretsFile;
-  declareSecret = secretsReady && secretPresent;
+  # sops keeps YAML KEYS in plaintext (only values are encrypted), so this needs no age identity.
+  declareSecret = secrets.has "docker/main_gitea_auth";
 
   ph = name: config.sops.placeholder.${name};
 in

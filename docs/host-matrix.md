@@ -56,5 +56,12 @@ merged after v0.18 (#1693/#1728/#1799). Drop the overlay once nixpkgs ships libr
 
 ## Adding a host
 
-Create `hosts/<name>/{default.nix,hardware-configuration.nix}`, add a `mkHost` entry in
-`flake.nix`, and add `<name>` to the matrix in `.github/workflows/check.yaml`.
+`NAME=<name> mise run new-host`, then `mise run verify`.
+
+That is the entire procedure. `flake.nix` derives `nixosConfigurations` from `hosts/` via
+`readDir`, and the CI matrix is generated from `ls hosts`, so there is no `mkHost` entry to add
+and no matrix to edit. The task scaffolds `hosts/<name>/{default.nix,spec.nix,hardware-configuration.nix}`;
+edit `spec.nix` if the box is not a plain server.
+
+One thing it cannot do: a new host still has to be added to the branch-protection
+required-checks list by hand.

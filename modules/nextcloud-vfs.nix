@@ -1,4 +1,4 @@
-{ config, pkgs, lib, username, ... }:
+{ config, pkgs, lib, username, secrets, ... }:
 
 # Files-on-demand "virtual drive" for Nextcloud — the thing the official desktop client
 # still does NOT do natively on Linux (its only Linux VFS is the clunky, experimental
@@ -44,12 +44,9 @@ let
   cfg = config.services.nextcloudVfs;
 
   # sops leaves YAML KEYS in plaintext (only values are encrypted), so a raw read tells us
-  # whether the secret has actually been added yet — same tolerate-missing-secret trick as
-  # modules/dotfiles.nix. `secretsReady` additionally rejects the shipped unencrypted stub.
-  secretsFile = builtins.readFile ../secrets/secrets.yaml;
-  secretsReady = !(lib.hasInfix "replace me with" secretsFile);
-  secretPresent = lib.hasInfix "rclone_conf" secretsFile;
-  declareSecret = secretsReady && secretPresent;
+  # whether the secret has actually been added yet — the tolerate-missing-secret gate, now shared
+  # via lib/secrets.nix. `has` also rejects the shipped unencrypted stub.
+  declareSecret = secrets.has "nextcloud/rclone_conf";
 
   # sops-nix default location for a `name/subname` secret. Hardcoded (not the `.path` attr)
   # because the secret is only conditionally declared — referencing `.path` when undeclared

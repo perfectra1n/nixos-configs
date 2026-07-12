@@ -71,6 +71,13 @@
       username = "perf3ct";
       # ──────────────────────────────────────────────────────────────────────
 
+      # Which secrets actually exist in secrets/secrets.yaml, read ONCE here instead of five
+      # modules each re-reading and substring-searching the raw file. sops keeps YAML keys in
+      # plaintext, so this needs no age identity — a fresh checkout still evaluates. Modules use
+      # `secrets.has "group/key"`; see lib/secrets.nix for why the group qualifier is load-bearing.
+      secrets = import ./lib/secrets.nix { inherit (nixpkgs) lib; }
+        (builtins.readFile ./secrets/secrets.yaml);
+
       # Factory: every host gets common.nix + its own hosts/<name> dir +
       # home-manager + sops + facter, then opts into whatever extra modules it
       # needs (desktop stack, gaming, gpu, …). `homeModules` are extra
@@ -78,7 +85,7 @@
       mkHost = hostName: { extraModules ? [ ], homeModules ? [ ] }:
         nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit inputs hostName username; };
+          specialArgs = { inherit inputs hostName username secrets; };
           modules = [
             ./modules/common.nix
             ./modules/facter.nix
@@ -96,62 +103,55 @@
             }
           ] ++ extraModules;
         };
+
+      # The stack BOTH graphical hosts share. This was duplicated verbatim — trailing comments and
+      # all — in each host's list, and the two copies had already drifted apart. Per-host GPU and
+      # portable extras live in hosts/<name>/spec.nix.
+      graphical = [
+        ./modules/desktop-base.nix
+        ./modules/hyprland.nix
+        ./modules/gaming.nix
+        ./modules/pentest.nix
+        ./modules/desktop-apps.nix
+        ./modules/virtual-camera.nix # v4l2loopback /dev/video10 — the node the virtual camera(s) produce into
+        ./modules/peripherals.nix # gaming mice (Piper/ratbagd), RGB (OpenRGB), QMK/VIA keyboards (Vial)
+        ./modules/noise-suppression.nix # DeepFilterNet mic denoise (Broadcast-like virtual source)
+        ./modules/nextcloud-vfs.nix # rclone WebDAV files-on-demand mount (activates once the sops secret lands)
+        ./modules/smb-mounts.nix # CIFS mount of //192.168.2.155/main_smb (on-demand automount; activates once the sops creds land)
+        ./modules/dotfiles.nix # chezmoi bootstrap: sops token + chezmoi.toml (orchestration in mise.toml — `mise run apply`)
+        ./modules/git-credentials.nix # sops-rendered ~/.git-credentials for GitHub + both Gitea (helper line lives in chezmoi gitconfig)
+        ./modules/docker-credentials.nix # sops-rendered ~/.docker/config.json for both Gitea + ghcr.io (symlink lives in home/docker.nix)
+        inputs.chaotic.nixosModules.default # CachyOS kernel + chaotic cache (see boot.kernelPackages in hosts/<name>)
+      ];
+
+      # hosts/ is the single source of truth. It already was for gen-manifests.sh, host.sh and mise's
+      # verify — all three glob it — and flake.nix was the last place still hand-listing the hosts.
+      # Adding a host is now `mise run new-host`, with no edit here and none to the CI matrix.
+      # CAVEAT: readDir sees only GIT-TRACKED content, so an unstaged hosts/<x>/ silently does not
+      # exist (it used to be a loud error). `mise run verify` does `git add -A` first, which covers it.
+      hostNames = nixpkgs.lib.attrNames
+        (nixpkgs.lib.filterAttrs (_: t: t == "directory") (builtins.readDir ./hosts));
     in
     {
-      nixosConfigurations = {
-        # Bare-metal desktop (NVIDIA) — Wayland + Hyprland + gaming + apps.
-        # Swap modules/nvidia.nix → modules/amd.nix if this box is AMD.
-        desktop = mkHost "desktop" {
-          extraModules = [
-            ./modules/desktop-base.nix
-            ./modules/hyprland.nix
-            ./modules/gaming.nix
-            ./modules/nvidia.nix
-            ./modules/pentest.nix
-            ./modules/desktop-apps.nix
-            ./modules/virtual-camera.nix # v4l2loopback /dev/video10 — the node NV Broadcast + OBS's virtual camera produce into
-            ./modules/nvbroadcast.nix # NV Broadcast (blurred webcam etc.) — CUDA, so NVIDIA desktop only; replaced the OBS blurcam
-            ./modules/peripherals.nix # gaming mice (Piper/ratbagd), RGB (OpenRGB), QMK/VIA keyboards (Vial)
-            ./modules/noise-suppression.nix # DeepFilterNet mic denoise (Broadcast-like virtual source)
-            ./modules/nextcloud-vfs.nix # rclone WebDAV files-on-demand mount (activates once the sops secret lands)
-            ./modules/smb-mounts.nix # CIFS mount of //192.168.2.155/main_smb at /mnt (on-demand automount; activates once the sops creds land)
-            ./modules/dotfiles.nix # chezmoi bootstrap: sops token + chezmoi.toml (orchestration in mise.toml — `mise run apply`)
-            ./modules/git-credentials.nix # sops-rendered ~/.git-credentials for GitHub + both Gitea (helper line lives in chezmoi gitconfig)
-            ./modules/docker-credentials.nix # sops-rendered ~/.docker/config.json for both Gitea + ghcr.io (symlink lives in home/docker.nix)
-            inputs.chaotic.nixosModules.default # CachyOS kernel + chaotic cache (see boot.kernelPackages in hosts/desktop)
-          ];
-          homeModules = [ ./home/gui.nix ./home/docker.nix ];
-        };
+      # Each hosts/<name>/spec.nix returns { extraModules, homeModules } — a plain function consumed
+      # by mkHost, NOT a NixOS module, so this is still composition rather than cross-import.
+      nixosConfigurations = nixpkgs.lib.genAttrs hostNames
+        (name: mkHost name (import (./hosts + "/${name}/spec.nix") { inherit inputs graphical; }));
 
-        # Laptop (AMD) — same desktop stack, AMD GPU + power management.
-        laptop = mkHost "laptop" {
-          extraModules = [
-            ./modules/desktop-base.nix
-            ./modules/hyprland.nix
-            ./modules/gaming.nix
-            ./modules/amd.nix
-            ./modules/laptop.nix
-            ./modules/pentest.nix
-            ./modules/desktop-apps.nix
-            ./modules/virtual-camera.nix # v4l2loopback /dev/video10 for OBS's virtual camera (no NV Broadcast here — CUDA-only, and no blur wanted on the laptop)
-            ./modules/peripherals.nix # gaming mice (Piper/ratbagd), RGB (OpenRGB), QMK/VIA keyboards (Vial)
-            ./modules/noise-suppression.nix # DeepFilterNet mic denoise (Broadcast-like virtual source)
-            ./modules/miracast.nix # cast the screen to Miracast TVs (gnome-network-displays; needs Wi-Fi for the P2P leg, so laptop-only)
-            ./modules/nextcloud-vfs.nix # rclone WebDAV files-on-demand mount (activates once the sops secret lands)
-            ./modules/smb-mounts.nix # CIFS mount of //192.168.2.155/main_smb at /mnt (on-demand automount; won't choke when the server is unreachable)
-            ./modules/dotfiles.nix # chezmoi bootstrap: sops token + chezmoi.toml (orchestration in mise.toml — `mise run apply`)
-            ./modules/git-credentials.nix # sops-rendered ~/.git-credentials for GitHub + both Gitea (helper line lives in chezmoi gitconfig)
-            ./modules/docker-credentials.nix # sops-rendered ~/.docker/config.json for both Gitea + ghcr.io (symlink lives in home/docker.nix)
-            inputs.chaotic.nixosModules.default # CachyOS kernel + chaotic cache (see boot.kernelPackages in hosts/laptop)
-          ];
-          homeModules = [ ./home/gui.nix ./home/docker.nix ];
-        };
-
-        # Headless server — SSH + docker/services, no desktop.
-        server = mkHost "server" {
-          extraModules = [ ./modules/server.nix ];
-        };
-      };
+      # Unit tests for lib/. These `throw` at EVAL time rather than failing in a builder, because
+      # `nix flake check --no-build` — what mise's verify and CI actually run — only EVALUATES
+      # checks. A runCommand full of assertions would be silently skipped by the very command meant
+      # to run it. Keep this derivation trivial: a BARE `nix flake check` (no --no-build) realizes
+      # checks, and CLAUDE.md tells people to run exactly that.
+      checks.x86_64-linux.lib-secrets =
+        let
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          inherit (nixpkgs) lib;
+          cases = import ./lib/secrets-test.nix { inherit lib; };
+          failures = builtins.filter (c: c.actual != c.expected) cases;
+        in
+        if failures == [ ] then pkgs.runCommand "lib-secrets-ok" { } "touch $out"
+        else throw "lib/secrets.nix FAILED: ${lib.generators.toPretty { } failures}";
 
       # Ops tooling as flake apps: shellcheck-gated at build time, runtime deps pinned,
       # runnable from anywhere via `nix run github:perfectra1n/nixos-configs#<name>`.
@@ -173,6 +173,13 @@
             name = "suspects";
             runtimeInputs = with pkgs; [ nix gnused gnugrep coreutils ];
             text = builtins.readFile ./scripts/suspects.sh;
+          };
+          # The commit/push tail four mise tasks used to repeat verbatim. Here rather than as a
+          # loose script so it gets the same shellcheck gate as the others.
+          commit-push = pkgs.writeShellApplication {
+            name = "commit-push";
+            runtimeInputs = with pkgs; [ git ];
+            text = builtins.readFile ./scripts/commit-push.sh;
           };
         };
     };
