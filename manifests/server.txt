@@ -209,6 +209,7 @@ azure-sdk-for-cpp-storage-common-12.12.0
 azure-sdk-for-cpp-storage-files-datalake-12.14.0
 azurite-3.35.0
 azurite-3.35.0-npm-deps
+babeltrace-1.5.11
 backoff-0.4.0
 barbies-2.1.1.0
 base-compat-0.14.1
@@ -537,6 +538,7 @@ curl-8.20.0_fish-completions
 curl-impersonate-1.5.6
 curl-sys-0.4.84+curl-8.17.0
 cyrus-sasl-2.1.28
+d3-flame-graph-templates-4.1.3
 dash-0.5.13.3
 data-default-0.8.0.2
 data-default-class-0.2.0.0
@@ -1528,6 +1530,8 @@ libtiff-4.7.1
 libtirpc-1.3.7
 libtool-2.5.4
 libtpms-0.10.2
+libtraceevent
+libtraceevent-1.9
 libultrahdr-1.4.0
 libunistring-1.4.2
 libunwind-1.8.3
@@ -1872,6 +1876,7 @@ network-control-0.1.7
 network-run-0.4.4
 network-uri-2.6.4.2
 network-uri-2.6.4.2-r1.cabal
+newt-0.52.24
 nextcloud-spreed-signaling.md
 nextcloud.md
 nftables-1.1.6
@@ -2092,6 +2097,7 @@ pendulum-3.1.0-unstable-2025-10-28-vendor-staging
 penlight-1.15.0-1.rockspec
 penlight-luarocks-config.lua
 percent-encoding-2.3.2
+perf-linux-7.1.3
 perl-5.42.0
 perl-5.42.0-binlore
 perl-5.42.0-env
@@ -2324,6 +2330,9 @@ putenv
 putenv-builder
 puts
 puts-builder
+py-spy-0.4.2
+py-spy-0.4.2-vendor
+py-spy-0.4.2-vendor-staging
 pybind11-setup-hook
 pydantic-core-2.41.5-vendor
 pydantic-core-2.41.5-vendor-staging
