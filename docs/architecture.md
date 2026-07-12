@@ -26,8 +26,22 @@ base `home/common.nix`, then **opts into** features via `extraModules` (system) 
 ## Composition, not cross-import
 
 Modules never `import` each other. A host gains a feature by listing the module in its
-`mkHost` call, so the full feature set of a host is readable in one place (`flake.nix`).
-This avoids hidden dependency graphs where enabling one module silently drags in others.
+`hosts/<name>/spec.nix`, so the full feature set of a host is readable in one place. This avoids
+hidden dependency graphs where enabling one module silently drags in others.
+
+`spec.nix` is a plain function — `{ inputs, graphical } -> { extraModules, homeModules }` — that
+`mkHost` consumes. It is **not** a NixOS module, which is why this is still composition rather than
+cross-import, and why it is named `spec.nix` and not `modules.nix`: it sits next to `default.nix`,
+which *is* a module, and a file called `modules.nix` that isn't one would be a trap.
+
+Modules shared by BOTH graphical hosts live in the `graphical` list in `flake.nix`, so they are
+declared once instead of being copy-pasted into two host lists (which had already drifted apart).
+
+`flake.nix` discovers `hosts/*` with `readDir`, so there is no host list to keep in sync — not in
+the flake, not in the CI matrix. One consequence to know: `readDir` sees only **git-tracked**
+content, so an unstaged `hosts/<x>/` silently does not exist rather than erroring. `mise run verify`
+runs `git add -A` first, which covers the normal path — but it is the same "flakes only see tracked
+files" gotcha wearing a quieter disguise.
 
 Allowed exceptions, all intentional:
 - A host's `default.nix` imports its own `hardware-configuration.nix`.

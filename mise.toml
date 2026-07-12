@@ -83,15 +83,16 @@ chezmoi apply || echo ">> apply failed — is the age key at ~/.config/age/age.a
 '''
 
 [tasks.verify]
-description = "Eval the flake + dry-run-build every host + refresh manifests (run before committing)"
+description = "Eval the flake + every host + refresh manifests (run before committing)"
 run = '''
 set -eu
 git add -A                               # flakes only see tracked files
+# flake check forces config.system.build.toplevel.drvPath for EVERY nixosConfigurations entry, so
+# this one command covers all hosts — the old `for h in $(ls hosts); do nix build --dry-run` loop
+# was pure duplicate work (verified: it exits 1 on a bad option with no `checks` output at all).
+# It also runs checks/ — the lib/secrets.nix unit tests.
 nix flake check --no-build
-for h in $(ls hosts); do
-  nix build --dry-run ".#nixosConfigurations.$h.config.system.build.toplevel"
-done
-# Manifests ride the eval cache the dry-runs above just warmed, so this is cheap here.
+# Manifests ride the eval cache flake check just warmed, so this is cheap here.
 # verify is the choke-point every change flows through (bump calls it too) — keeping the
 # committed manifests in lockstep with the closure; CI fails if they drift (check.yaml).
 nix run .#gen-manifests
@@ -488,8 +489,7 @@ mkdir -p "$dir"
 cat > "$dir/default.nix" <<EOF
 { config, pkgs, lib, ... }:
 
-# Headless server "$NAME". Composes (from flake.nix): common + facter + server.
-# Plus this host's hardware + identity below. No desktop stack.
+# Headless server "$NAME". Hardware + identity only — what this host COMPOSES lives in ./spec.nix.
 {
   imports = [ ./hardware-configuration.nix ];
 
@@ -534,18 +534,22 @@ cat > "$dir/hardware-configuration.nix" <<'EOF'
 }
 EOF
 
-# Add to the CI build matrix (append before the closing ]).
-sed -i "s/\(host: \[[^]]*\)\]/\1, $NAME]/" .github/workflows/check.yaml
+# The composition spec. flake.nix derives nixosConfigurations from hosts/ (readDir) and the CI
+# matrix is generated from `ls hosts`, so there is NOTHING else to edit — no flake.nix entry, no
+# sed into check.yaml. A host dir WITHOUT this file fails the whole flake, so it must exist.
+cat > "$dir/spec.nix" <<'EOF'
+# What this host composes, on top of the base every host gets from mkHost (flake.nix).
+# A plain spec consumed by mkHost — NOT a NixOS module. Add ../../modules/<feature>.nix to opt in;
+# for a graphical host use `graphical ++ [ ... ]` instead (see hosts/desktop/spec.nix).
+{ inputs, graphical }:
+{
+  extraModules = [ ../../modules/server.nix ];
+}
+EOF
 
-git add "$dir" .github/workflows/check.yaml
+git add "$dir"
 echo
-echo ">> Scaffolded $dir + added '$NAME' to the CI matrix (both git-added)."
-echo ">> ONE manual step — paste this into flake.nix under nixosConfigurations"
-echo "   (adjust extraModules/homeModules if it's not a plain server):"
-echo
-echo "        $NAME = mkHost \"$NAME\" {"
-echo "          extraModules = [ ./modules/server.nix ];"
-echo "        };"
-echo
-echo ">> Then: mise run verify   (and on the box: mise run hardware)"
+echo ">> Scaffolded $dir (git-added): default.nix + spec.nix + placeholder hardware-configuration.nix"
+echo ">> flake.nix and the CI matrix both discover it automatically — nothing else to edit."
+echo ">> Next: mise run verify   (and on the box: mise run hardware)"
 '''
