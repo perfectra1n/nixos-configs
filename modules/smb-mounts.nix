@@ -1,4 +1,4 @@
-{ config, pkgs, lib, username, ... }:
+{ config, pkgs, lib, username, secrets, ... }:
 
 # CIFS/SMB mount of the TrueNAS share //192.168.2.155/main_smb at /mnt/main_smb.
 # TrueNAS exposes the ZFS dataset main_pool/main_dataset as the single SMB share `main_smb`
@@ -30,10 +30,11 @@
 # file makes sops activation fail and bricks `nixos-rebuild`; until the secret lands this
 # module adds nothing but the cifs-utils package, so a fresh checkout still builds CI-green.
 let
-  secretsFile = builtins.readFile ../secrets/secrets.yaml;
-  secretsReady = !(lib.hasInfix "replace me with" secretsFile);
-  secretPresent = lib.hasInfix "smb_creds" secretsFile;
-  declareSecret = secretsReady && secretPresent;
+  # NB the key is `main_smb_creds`, not `smb_creds`. This used to be
+  # `lib.hasInfix "smb_creds" secretsFile` — a substring search over the whole file, which matched
+  # the real key purely by luck. lib/secrets.nix is anchored, so the group-qualified path is
+  # required; a wrong key here now fails loudly instead of silently unmounting /mnt/main_smb.
+  declareSecret = secrets.has "smb/main_smb_creds";
 
   # sops-nix default location for a `name/subname` secret. Hardcoded (not the `.path` attr)
   # because the secret is only conditionally declared — referencing `.path` when undeclared

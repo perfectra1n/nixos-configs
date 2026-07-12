@@ -1,4 +1,4 @@
-{ config, lib, username, ... }:
+{ config, lib, username, secrets, ... }:
 
 # Renders ~/.git-credentials' content from sops so `git push/pull` to GitHub + the two Gitea
 # instances works non-interactively, without a plaintext token ever living in a dotfile.
@@ -17,14 +17,12 @@
 #
 # EVAL GATE: a real secrets.yaml that lacks the git/* keys would make sops activation fail and
 # brick `nixos-rebuild`. So declare the secrets + template ONLY once secrets.yaml actually holds
-# them — same tolerate-missing-secret trick as modules/{dotfiles,nextcloud-vfs,smb-mounts}.nix.
+# them — the tolerate-missing-secret gate shared via lib/secrets.nix (see also
+# modules/{nextcloud-vfs,smb-mounts,docker-credentials}.nix and home/docker.nix).
 # Until `mise run secrets:init`/`secrets:pull` populates them, this module is fully inert.
 let
-  secretsFile = builtins.readFile ../secrets/secrets.yaml;
-  secretsReady = !(lib.hasInfix "replace me with" secretsFile);
-  # sops keeps YAML KEYS in plaintext (only values are encrypted), so a raw read detects the key.
-  secretPresent = lib.hasInfix "github_token" secretsFile;
-  declareSecret = secretsReady && secretPresent;
+  # sops keeps YAML KEYS in plaintext (only values are encrypted), so this needs no age identity.
+  declareSecret = secrets.has "git/github_token";
 
   ph = name: config.sops.placeholder.${name};
 in

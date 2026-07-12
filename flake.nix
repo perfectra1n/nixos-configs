@@ -71,6 +71,13 @@
       username = "perf3ct";
       # ──────────────────────────────────────────────────────────────────────
 
+      # Which secrets actually exist in secrets/secrets.yaml, read ONCE here instead of five
+      # modules each re-reading and substring-searching the raw file. sops keeps YAML keys in
+      # plaintext, so this needs no age identity — a fresh checkout still evaluates. Modules use
+      # `secrets.has "group/key"`; see lib/secrets.nix for why the group qualifier is load-bearing.
+      secrets = import ./lib/secrets.nix { inherit (nixpkgs) lib; }
+        (builtins.readFile ./secrets/secrets.yaml);
+
       # Factory: every host gets common.nix + its own hosts/<name> dir +
       # home-manager + sops + facter, then opts into whatever extra modules it
       # needs (desktop stack, gaming, gpu, …). `homeModules` are extra
@@ -78,7 +85,7 @@
       mkHost = hostName: { extraModules ? [ ], homeModules ? [ ] }:
         nixpkgs.lib.nixosSystem {
           system = "x86_64-linux";
-          specialArgs = { inherit inputs hostName username; };
+          specialArgs = { inherit inputs hostName username secrets; };
           modules = [
             ./modules/common.nix
             ./modules/facter.nix
