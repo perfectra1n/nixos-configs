@@ -59,16 +59,13 @@ fi
 # CHEAP LOCAL check (sops keeps keys in plaintext), so it only unlocks Bitwarden when something's
 # genuinely missing — a normal day-to-day apply never prompts for the vault.
 if ! grep -q "replace me with" secrets/secrets.yaml; then
-  missing=""
-  while IFS="$(printf '\t')" read -r path _; do
-    [ -n "$path" ] || continue
-    key=${path#*/}                                   # manifest keys are unique across groups
-    grep -qE "^[[:space:]]+$key:" secrets/secrets.yaml || missing="$missing $path"
-  done <<MANIFEST
-$(./scripts/secrets-sync.py paths)
-MANIFEST
+  # `missing` = manifest rows absent from secrets.yaml. This was a while/read loop over a heredoc'd
+  # manifest doing a `grep -qE "^[[:space:]]+$key:"` per key — which compared BARE keys and so
+  # relied on them being unique across groups. The Python does a set difference on the
+  # group-qualified paths instead, the same vocabulary lib/secrets.nix gates on.
+  missing=$(./scripts/secrets-sync.py missing)
   if [ -n "$missing" ]; then
-    echo ">> manifest keys not in secrets.yaml yet —$missing — pulling from Bitwarden first"
+    echo ">> manifest keys not in secrets.yaml yet — $(echo "$missing" | tr '\n' ' ')— pulling from Bitwarden first"
     mise run secrets:pull
   fi
 fi
@@ -92,6 +89,11 @@ git add -A                               # flakes only see tracked files
 # was pure duplicate work (verified: it exits 1 on a bad option with no `checks` output at all).
 # It also runs checks/ — the lib/secrets.nix unit tests.
 nix flake check --no-build
+# secrets-sync.py's selftest was wired into NOTHING and had silently rotted (it still asserted
+# `set -Ux` long after merge_fishenv switched to `set -gx`). Run it here, in the choke-point every
+# change flows through, so it can't rot again. It also asserts that yaml_paths agrees with
+# lib/secrets.nix — i.e. that the ops tooling and the eval-time gate share one vocabulary.
+./scripts/secrets-sync.py selftest
 # Manifests ride the eval cache flake check just warmed, so this is cheap here.
 # verify is the choke-point every change flows through (bump calls it too) — keeping the
 # committed manifests in lockstep with the closure; CI fails if they drift (check.yaml).
@@ -216,27 +218,11 @@ echo ">> secrets initialized + committed — rebuild to decrypt /run/secrets/*"
 
 [tasks."secrets:list"]
 description = "List the secret keys in secrets.yaml, marking manifest-managed (secrets:pull) vs hand-set (secrets:edit). Read-only — no decryption."
-run = '''
-set -eu
-# Managed path→Bitwarden-item map straight from the secrets-sync manifest (no vault access).
-managed=$(./scripts/secrets-sync.py paths)
-# Walk the plaintext YAML structure — sops encrypts VALUES, not keys: "group:" then "    key:".
-# Stop at the trailing sops: metadata block (not real secrets).
-group=""
-while IFS= read -r line; do
-  case "$line" in
-    sops:) break ;;
-    [a-z]*:) group=${line%%:*} ;;
-    "    "*:*)
-      key=$(printf '%s' "$line" | sed -E 's/^ +([A-Za-z0-9_]+):.*/\1/')
-      path="$group/$key"
-      item=$(printf '%s\n' "$managed" | awk -F'\t' -v p="$path" '$1==p {print $2}')
-      if [ -n "$item" ]; then printf '  %-26s [manifest: %s]\n' "$path" "$item"
-      else printf '  %-26s [hand-set]\n' "$path"; fi
-      ;;
-  esac
-done < secrets/secrets.yaml
-'''
+# Was a hand-rolled YAML parser in POSIX sh: a `while read` loop with a `case` statement, a `sed -E`
+# per line and an `awk` join, reconstructing structure from indentation. The same walk now lives
+# once, in Python, next to the manifest it joins against — and mirrors lib/secrets.nix, which the
+# Nix modules gate on. `mise run verify` asserts the two agree.
+run = "./scripts/secrets-sync.py list"
 
 [tasks."secrets:status"]
 description = "Health check: both age keys present? secrets.yaml real? .sops.yaml recipient matches the key you hold? Read-only."

@@ -399,6 +399,59 @@ def cmd_inventory():
         print(f"fishenv\t{var}\t{item}\t{kind}")
 
 
+# ── What's actually IN secrets.yaml (vs. what the manifest says SHOULD be) ──────────────────
+# The manifest above is the intent; the YAML is the reality. Drift is the set difference, and
+# `mise run apply` gates on it. This used to be a hand-rolled YAML parser in POSIX sh (a `while
+# read` loop with a `case` statement, a `sed -E` and an `awk`), plus a second copy of the same
+# idea inline in the apply preflight.
+#
+# NO YAML LIBRARY ON PURPOSE. This script has a plain `#!/usr/bin/env python3` shebang, and the
+# python3 on PATH is home-manager's withPackages(pip requests evtx) — it has no `yaml` module. A
+# module-scope `import yaml` would kill EVERY subcommand, including `paths`, which mise's apply
+# calls BEFORE the first nixos-rebuild. That would brick the bootstrap on a fresh box.
+#
+# We can get away without one: sops encrypts VALUES but leaves KEYS in plaintext, and the file is
+# a fixed two-level shape. This mirrors lib/secrets.nix exactly — the two MUST agree, which
+# cmd_selftest asserts against the real file.
+
+def yaml_paths() -> list[str]:
+    """group/key paths present in secrets.yaml. Needs no age identity — keys are plaintext."""
+    found: list[str] = []
+    group: str | None = None
+    for line in SECRETS_YAML.read_text().splitlines():
+        # Everything from `sops:` on is sops' own metadata (age recipients, mac, lastmodified).
+        if line == "sops:":
+            break
+        if m := re.fullmatch(r"([a-z0-9_]+):", line):
+            group = m.group(1)
+        elif group and (m := re.fullmatch(r"\s+([a-z0-9_]+):.*", line)):
+            found.append(f"{group}/{m.group(1)}")
+    return found
+
+
+def cmd_yaml_paths():
+    for path in yaml_paths():
+        print(path)
+
+
+def cmd_missing():
+    """Manifest paths NOT yet in secrets.yaml — the rows `secrets:pull` still owes you.
+    Empty output + exit 0 when in sync, so callers can just test for a non-empty string."""
+    present = set(yaml_paths())
+    for path, _item, _kind, _sel in SOPS_MANIFEST:
+        if path not in present:
+            print(path)
+
+
+def cmd_list():
+    """Every key in secrets.yaml, marked manifest-managed (secrets:pull) vs hand-set
+    (secrets:edit). Read-only — decrypts nothing."""
+    managed = {path: item for path, item, _kind, _sel in SOPS_MANIFEST}
+    for path in yaml_paths():
+        item = managed.get(path)
+        print(f"  {path:<26} [manifest: {item}]" if item else f"  {path:<26} [hand-set]")
+
+
 def cmd_fishenv():
     session = bw_unlock()
     rows = resolve_rows(FISHENV_MANIFEST, session)
@@ -453,18 +506,35 @@ def cmd_selftest():
     )
     new = merge_fishenv(old, [("FOO", "newval"), ("BAR", "https://x/y")])
     assert "set -Ux KEEP_ME plainvalue" in new, "hand-set var clobbered"
-    assert "set -Ux FOO 'newval'" in new, "managed var not updated"
-    assert "set -Ux BAR 'https://x/y'" in new, "new managed var not appended"
+    # Managed vars are emitted as -gx (see merge_fishenv's docstring on why universal vars turn a
+    # rotation into a footgun). A legacy -Ux line for a MANAGED var is migrated to -gx on the next
+    # pull — which is exactly what FOO exercises here.
+    assert "set -gx FOO 'newval'" in new, "managed var not updated (or not migrated -Ux -> -gx)"
+    assert "set -gx BAR 'https://x/y'" in new, "new managed var not appended"
     assert "# header comment" in new, "comment lost"
     # idempotency: same values is a fixed point
     assert merge_fishenv(new, [("FOO", "newval"), ("BAR", "https://x/y")]) == new, "merge not idempotent"
-    # no-op: unchanged value reproduces byte-identical text
-    base = "set -Ux X 'v'\n"
+    # no-op: an already-migrated line with an unchanged value reproduces byte-identical text
+    base = "set -gx X 'v'\n"
     assert merge_fishenv(base, [("X", "v")]) == base, "unchanged value should be a no-op"
+    # legacy migration: a -Ux line for a MANAGED var is rewritten, even when the value is unchanged
+    assert merge_fishenv("set -Ux X 'v'\n", [("X", "v")]) == "set -gx X 'v'\n", "legacy -Ux not migrated"
     # exact-name match: a prefix var must NOT be rewritten by a longer managed name
     pre = "set -Ux TRILIUM_PERSONAL_URL 'keep'\n"
     assert merge_fishenv(pre, [("TRILIUM_PERSONAL_MCP_URL", "other")]).startswith(
         "set -Ux TRILIUM_PERSONAL_URL 'keep'"), "prefix collision rewrote the wrong var"
+
+    # yaml_paths must agree with lib/secrets.nix — the Nix modules gate on the same vocabulary, so
+    # a divergence means the eval-time gate and the ops tooling disagree about what exists.
+    # The group qualifier is the point: modules/smb-mounts.nix used to ask for the bare "smb_creds"
+    # while the real key is "main_smb_creds", and matched only by accident of substring search.
+    paths = yaml_paths()
+    assert "smb/main_smb_creds" in paths, "the real SMB key must be found, group-qualified"
+    assert "smb/smb_creds" not in paths, "a bare substring must NOT masquerade as a key"
+    assert not any(p.startswith("sops/") for p in paths), "the sops: metadata block is not a secret"
+    assert len(paths) == len(set(paths)), "duplicate paths"
+    manifest = {p for p, _i, _k, _s in SOPS_MANIFEST}
+    assert manifest <= set(paths), f"manifest keys absent from secrets.yaml: {manifest - set(paths)}"
     print("selftest: OK")
 
 
@@ -472,6 +542,9 @@ COMMANDS = {
     "set": cmd_set,
     "emit": cmd_emit,
     "paths": cmd_paths,
+    "yaml-paths": cmd_yaml_paths,
+    "missing": cmd_missing,
+    "list": cmd_list,
     "inventory": cmd_inventory,
     "fishenv": cmd_fishenv,
     "fishenv-emit": cmd_fishenv_emit,
