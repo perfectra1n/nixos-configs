@@ -73,11 +73,13 @@ let
       libglvnd
       stdenv.cc.cc.lib
       zlib
-      xorg.libxcb
-      xorg.libX11
-      xorg.libXext
-      xorg.libSM
-      xorg.libICE
+      # Top-level attrs, not the `xorg.*` set — that set is deprecated and each access printed an
+      # eval warning on every desktop rebuild. Same derivations, just the un-namespaced names.
+      libxcb
+      libx11
+      libxext
+      libsm
+      libice
 
       # upstream debian Depends: v4l2-ctl (device discovery), pactl (mic routing),
       # fuser/killall (stale-producer cleanup)
