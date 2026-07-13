@@ -10,3 +10,5 @@
 # it lives here next to MEMINI_NAMESPACE. Re-enable by removing this / setting 1
 # once an LLM is wired up for distillation.
 set -gx MEMINI_CAPTURE_TURNS 0
+
+set -gx MEMINI_SESSION_DIGEST 0
