@@ -32,7 +32,7 @@ fetch.url = "https://github.com/viaduct-ai/kustomize-sops/releases/download/v$ve
 # "Hkshoonya/nvidia-broadcast-linux" releases once the branch lands upstream.
 [nvbroadcast]
 # renovate: datasource=git-refs depName=https://github.com/perfectra1n/nvidia-broadcast-linux branch=gpu-offload
-src.manual = "1ea12b1e761a83a97e35f4b5a4832c2e81d27947"
+src.manual = "526184d6126e625007ffe50df45c4a5552b24ff8"
 fetch.github = "perfectra1n/nvidia-broadcast-linux"
 
 # libratbag — pinned to our fork branch, NOT upstream. Two gaps vs nixpkgs' 0.18 tag: (1) 0.18
