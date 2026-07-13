@@ -4077,6 +4077,8 @@ nvbroadcast_fish-completions
 nvd-0.2.4
 nvfetcher-0.8.0.0
 nvfetcher-0.8.0.0_fish-completions
+nvidia-cdi-generator
+nvidia-container-toolkit-1.19.1
 nvidia-egl-external-platforms
 nvidia-egl-external-platforms-x32
 nvidia-open-610.43.02-7.1.3

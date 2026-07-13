@@ -19,6 +19,11 @@
     powerManagement.enable = true;
   };
 
+  # GPU in containers via CDI: `docker run --device nvidia.com/gpu=all …`. The module
+  # generates the device spec (/var/run/cdi) and flips Docker's cdi feature flag itself;
+  # the legacy `virtualisation.docker.enableNvidia` runtime wrapper is deprecated.
+  hardware.nvidia-container-toolkit.enable = true;
+
   # Hyprland + NVIDIA env (GBM/GLX/VAAPI). Written as a flake-owned fragment the
   # chezmoi hyprland.conf sources, so GPU truth stays here and prefs stay in chezmoi.
   home-manager.users.${username}.xdg.configFile."hypr/gpu.conf".text = ''
