@@ -64,12 +64,12 @@
             "name": null,
             "owner": "perfectra1n",
             "repo": "nvidia-broadcast-linux",
-            "rev": "1ea12b1e761a83a97e35f4b5a4832c2e81d27947",
-            "sha256": "sha256-AEqZUNco5qvTTlcAJNA7JR5IYa5IceGkqov78fYcCRo=",
+            "rev": "17df0afc4c035f4d54a5b6f965635c79d0d13448",
+            "sha256": "sha256-eowVEUJZ77XYNRIaYU3tckv5C+4xUn9aKxbt+Al0Hjk=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "1ea12b1e761a83a97e35f4b5a4832c2e81d27947"
+        "version": "17df0afc4c035f4d54a5b6f965635c79d0d13448"
     },
     "talosctl": {
         "cargoLock": null,
