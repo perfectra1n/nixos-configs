@@ -113,6 +113,7 @@
         ./modules/gaming.nix
         ./modules/pentest.nix
         ./modules/desktop-apps.nix
+        ./modules/snapx.nix # SnapX (ShareX fork) — on trial next to flameshot; FHS-sandboxed .NET app
         ./modules/virtual-camera.nix # v4l2loopback /dev/video10 — the node the virtual camera(s) produce into
         ./modules/peripherals.nix # gaming mice (Piper/ratbagd), RGB (OpenRGB), QMK/VIA keyboards (Vial)
         ./modules/noise-suppression.nix # DeepFilterNet mic denoise (Broadcast-like virtual source)

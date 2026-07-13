@@ -2,6 +2,32 @@
 
 # GUI apps — imported only by graphical hosts (desktop, laptop) via flake.nix's
 # `homeModules`. Never reaches the headless server host.
+let
+  # Blender, GPU-rendering where the GPU can actually do it. Cycles only sees a GPU device in a
+  # cudaSupport build: upstream gates BOTH WITH_CYCLES_CUDA_BINARIES and WITH_CYCLES_DEVICE_OPTIX
+  # on that flag (pkgs/by-name/bl/blender/package.nix), so the cached default build offers CPU
+  # only. The override is a LOCAL build (~22 min, 3.8 GiB closure), recurring on every nixpkgs bump
+  # that touches blender/opensubdiv/openimagedenoise: cache.nixos.org deliberately carries no CUDA
+  # builds (the CUDA EULA makes them unfree, so Hydra won't), and the community CUDA caches key on
+  # THEIR nixpkgs rev, so an override computed against ours can never hit them (verified: miss on
+  # cache.nixos-cuda.org). Zero-compile alternative if this ever grates: the blender-bin flake
+  # (upstream's official binaries, GPU backends baked in) — see docs/packages.md.
+  #   NVIDIA-gated, not unconditional: the laptop's AMD APU gains nothing from CUDA, and Cycles'
+  # AMD path (rocmSupport → HIP/HIPRT) wants a supported discrete card, so it keeps the cached
+  # build — EEVEE/viewport still run on its GPU there, only final Cycles renders fall to the CPU.
+  #   Gated on videoDrivers, NOT config.detected.nvidia: no host has committed a facter.json yet,
+  # so `detected.nvidia` is false everywhere and would silently hand the desktop the CPU build.
+  #   Deliberately NOT trimmed to a single CUDA arch. A CYCLES_CUDA_BINARIES_ARCH=sm_120 cmakeFlag
+  # would cut the nine cubins (sm_50…sm_120) blender's CMake default builds down to this box's one,
+  # but any custom flag makes the derivation unique — and, more to the point, it invalidates the
+  # build already in the store, i.e. it buys a faster FUTURE rebuild at the price of an immediate
+  # 22-minute one. Not worth it: with idle-scheduled builds (nix.daemonCPUSchedPolicy, modules/
+  # common.nix) a background rebuild no longer hurts. Revisit only if bumps get painful anyway.
+  blender =
+    if lib.elem "nvidia" osConfig.services.xserver.videoDrivers
+    then pkgs.blender.override { cudaSupport = true; }
+    else pkgs.blender;
+in
 {
   home.packages = with pkgs; [
     kitty       # terminal
@@ -38,6 +64,8 @@
                       # branch over `-still`. GTK3 frontend, so it follows the gtk-3.0 dark theme.
     wineWow64Packages.stable # Wine, new WoW64 build (64-bit, runs 32-bit exes too): `wine program.exe`
     winetricks  # installs Windows DLLs/runtimes into a wine prefix
+    blender     # 3D suite. CUDA + OptiX (RT cores) Cycles on the NVIDIA host, cached CPU build
+                # on the AMD laptop — see the let-binding above for why it's conditional.
   ];
 
   # System dark mode + cursor for GTK apps. color-scheme is what the portal advertises, so

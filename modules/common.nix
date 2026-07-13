@@ -49,6 +49,17 @@ in
   };
   nix.settings.auto-optimise-store = true;
 
+  # Builds must never make the desktop unusable. Defaults are max-jobs=auto + cores=0 — every build
+  # is entitled to all 24 threads AND runs at normal priority, so it competes with Hyprland, a game,
+  # or a browser as an equal (a from-source blender, home/gui.nix, was what surfaced this: the box
+  # became unusable and the compile had to be killed). SCHED_IDLE fixes the interactivity without
+  # the permanent tax of capping cores: the kernel hands build threads only CPU that nothing else
+  # wants, so a build still saturates an idle machine and finishes just as fast, but yields
+  # instantly the moment anything interactive runs. IO likewise, so a big store write can't stall
+  # the desktop. Applies to nix-daemon's children = every build on every host.
+  nix.daemonCPUSchedPolicy = "idle";
+  nix.daemonIOSchedClass = "idle";
+
   nixpkgs.config.allowUnfree = true; # google-chrome, vscode, terraform, …
   # bitwarden-desktop (home/gui.nix) bundles Electron 39, which Nix now refuses to eval as
   # EOL — upstream hasn't bumped it yet (nixpkgs#529107). Permit it until they do. Inert on

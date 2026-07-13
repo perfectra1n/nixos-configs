@@ -44,6 +44,22 @@
       sha256 = "sha256-eowVEUJZ77XYNRIaYU3tckv5C+4xUn9aKxbt+Al0Hjk=";
     };
   };
+  snapx-core = {
+    pname = "snapx-core";
+    version = "0.4.0";
+    src = fetchurl {
+      url = "https://github.com/SnapXL/SnapX/releases/download/v0.4.0/snapx-core-0.4-3.0.fc42.x86_64.rpm";
+      sha256 = "sha256-u/X6Frl1tAKXBvJl/w0l4/AcFb3bJn7/6R5iu4f3mDY=";
+    };
+  };
+  snapx-ui = {
+    pname = "snapx-ui";
+    version = "0.4.0";
+    src = fetchurl {
+      url = "https://github.com/SnapXL/SnapX/releases/download/v0.4.0/snapx-ui-0.4-3.0.fc42.x86_64.rpm";
+      sha256 = "sha256-nxfqMqFRUt/L7oGeM+ThVQiLY/nz8ZywtSKfhBbW63I=";
+    };
+  };
   talosctl = {
     pname = "talosctl";
     version = "1.13.5";

@@ -71,6 +71,36 @@
         },
         "version": "17df0afc4c035f4d54a5b6f965635c79d0d13448"
     },
+    "snapx-core": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "snapx-core",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": null,
+            "sha256": "sha256-u/X6Frl1tAKXBvJl/w0l4/AcFb3bJn7/6R5iu4f3mDY=",
+            "type": "url",
+            "url": "https://github.com/SnapXL/SnapX/releases/download/v0.4.0/snapx-core-0.4-3.0.fc42.x86_64.rpm"
+        },
+        "version": "0.4.0"
+    },
+    "snapx-ui": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "snapx-ui",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": null,
+            "sha256": "sha256-nxfqMqFRUt/L7oGeM+ThVQiLY/nz8ZywtSKfhBbW63I=",
+            "type": "url",
+            "url": "https://github.com/SnapXL/SnapX/releases/download/v0.4.0/snapx-ui-0.4-3.0.fc42.x86_64.rpm"
+        },
+        "version": "0.4.0"
+    },
     "talosctl": {
         "cargoLock": null,
         "date": null,

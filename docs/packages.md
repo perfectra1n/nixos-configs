@@ -30,7 +30,29 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 ## GUI apps — `home/gui.nix` (graphical: D L)
 
 - Packages: `kitty`, `google-chrome`, `firefox`, `brave`, `vscode`, `nautilus`, `evolution`,
-  `copyq`, `handbrake`, `wineWow64Packages.stable`, `winetricks`.
+  `copyq`, `handbrake`, `wineWow64Packages.stable`, `winetricks`, `blender`.
+- `blender` is GPU-conditional (gated on `videoDrivers`, since no host has a `facter.json` yet so
+  `detected.nvidia` is false everywhere):
+  - **desktop** — `blender.override { cudaSupport = true; }`, so Cycles gets CUDA + OptiX on the
+    5090 (verified live: `refresh_devices()` reports CUDA + OPTIX). Upstream gates *both*
+    `WITH_CYCLES_CUDA_BINARIES` and `WITH_CYCLES_DEVICE_OPTIX` on that flag, so the stock build has
+    no GPU device at all in Cycles. A local build: ~22 min, 3.8 GiB closure. Cycles' cubins cover
+    sm_50…sm_120 — that arch list is blender's OWN CMake var (`CYCLES_CUDA_BINARIES_ARCH`), *not*
+    `nixpkgs.config.cudaCapabilities`, which nixpkgs never forwards to it. Left at the default on
+    purpose: pinning it to sm_120 would be a unique derivation, invalidating the build already in
+    the store to save time on a *future* rebuild. `nix.daemonCPUSchedPolicy = "idle"`
+    (`modules/common.nix`) is what keeps such rebuilds from hurting.
+  - **laptop** — the cached CPU-Cycles build. EEVEE/viewport still run on its GPU; only final
+    Cycles renders fall to the CPU. Blender's AMD path (`rocmSupport` → HIP/HIPRT, or nixpkgs'
+    `blender-hip`) targets discrete Radeons, not this APU.
+- **No CUDA build is ever cached, by design.** cache.nixos.org carries no CUDA packages — the CUDA
+  EULA makes them unfree, so Hydra won't build them (the override's `meta.license` is
+  `[ gpl2Plus, CUDA EULA ]`). The community CUDA caches (`cache.nixos-cuda.org`, ex
+  cuda-maintainers.cachix.org; the `blender-cuda` Cachix) key on *their* nixpkgs rev, so an
+  override computed against ours can never hit them — verified misses. Hence: local build.
+- Zero-compile alternative, if the rebuilds ever grate: the **`blender-bin` flake** (edolstra) ships
+  upstream's official binaries with CUDA/OptiX/HIP already baked in. Trade-off: an out-of-nixpkgs
+  binary + another flake input. See <https://wiki.nixos.org/wiki/Blender>.
 - Theming: dconf `prefer-dark` + `Posy_Cursor`; `gtk` (GTK3/4 dark hint); `qt` (adwaita-dark).
 - `home.activation.trustCustomCAs` imports `security.pki.certificateFiles` into `~/.pki/nssdb`
   for Chrome/Brave (inert when no custom CAs).
@@ -87,6 +109,17 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
   `zoom-us`, `playwright`, `playwright-test`, `playwright-mcp`.
 - Playwright env vars + `/opt/google/chrome/chrome` tmpfiles symlink.
 - Writes the `hypr/autostart.conf` exec-once fragment (see architecture.md).
+
+## SnapX — `modules/snapx.nix` (graphical: D L)
+
+- `snapx-ui`: SnapX (ShareX fork — capture, annotate, upload to anywhere), C#/Avalonia, GPL-3.
+  **On trial at 0.4.0-alpha; flameshot remains the default screenshot tool.**
+- Built from upstream's **Fedora RPMs** (nvfetcher-pinned, Renovate-bumped), run inside a
+  `buildFHSEnv` — NOT patchelf'd. `snapx-ui` is a self-contained .NET single-file bundle whose
+  runtime+DLLs sit past the last ELF section, so patchelf/strip overwrite them and the app
+  SIGSEGVs on launch; `dontFixup` is load-bearing. See the module header for the full why.
+- Captures via the **XDG Screenshot portal** (never raw X11), so on Hyprland it inherits the
+  grim wrapper from `modules/hyprland.nix`.
 
 ## Virtual camera — `modules/virtual-camera.nix` (graphical: D L)
 
