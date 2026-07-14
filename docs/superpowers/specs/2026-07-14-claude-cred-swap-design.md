@@ -23,10 +23,30 @@ The file has two independent top-level sections:
 Three fields make "just replace the refresh token" produce a working-looking but incorrect
 state. Each is a silent failure:
 
-1. **`accessToken` outlives the swap.** It stays valid until `expiresAt`, so Claude Code keeps
-   talking to the API as the *old* account after you've injected the new refresh token.
-   → We blank it (`""`) and set `expiresAt = 0`, forcing a refresh that re-mints a matching
-   access token from the new refresh token.
+1. **`accessToken` outlives the swap** — but must NOT be blanked. It stays valid until `expiresAt`,
+   so leaving the old one means Claude Code keeps talking to the API as the *old* account. The
+   obvious fix — set it to `""` — is **wrong**, and shipping it caused a real
+   `Not logged in · Please run /login`. CC's credential getter is:
+
+   ```js
+   let o = read()?.claudeAiOauth;
+   if (o?.accessToken) return o;   // empty string is falsy
+   return null;                     // → "Not logged in"
+   ```
+
+   An empty `accessToken` reads as *"no credentials at all"*, and CC never looks at the refresh
+   token. The dispatch below it is:
+
+   ```js
+   if (accessToken && expiresAt && expiresAt > Date.now())        → use the access token
+   else if (refreshToken && checkAndRefreshOAuthTokenIfNeeded())  → REFRESH   ← the goal
+   ```
+
+   `expiresAt = 0` is already falsy, so it alone fails the "use it" test and falls through to the
+   refresh branch. The access token therefore only needs to be **non-empty and dead**.
+   → We write a placeholder (`sk-ant-oat01-PENDING-REFRESH-claude-cred`) and set `expiresAt = 0`.
+   The placeholder is never sent (the expiry check rejects it first), and if some path ever did send
+   it, a 401 beats silently authenticating as the wrong account.
 
 2. **`refreshTokenExpiresAt` belongs to the outgoing account.** Leave it and you've paired
    token B with account A's expiry clock; if that timestamp is in the past, Claude Code can
@@ -131,11 +151,16 @@ claude-cred undo                # restore the most recent auto-backup, verbatim
 
 ```
 .claudeAiOauth.refreshToken      = <new token>
-.claudeAiOauth.accessToken       = ""      # account A's live token must not survive
-.claudeAiOauth.expiresAt         = 0       # forces a refresh on next launch
+.claudeAiOauth.accessToken       = "sk-ant-oat01-PENDING-REFRESH-claude-cred"
+                                           # NON-EMPTY (empty ⇒ CC reports "Not logged in") but dead
+.claudeAiOauth.expiresAt         = 0       # falsy ⇒ fails the "use it" test ⇒ CC refreshes
 del(.claudeAiOauth.refreshTokenExpiresAt)  # unknown for B; the refresh response will set it
 # mcpOAuth, scopes, subscriptionType, rateLimitTier: untouched
 ```
+
+`use <name>` applies the same normalization: a restored profile whose `accessToken` is empty gets the
+placeholder instead. (A profile's *expired* access token needs no special handling — non-empty plus a
+past expiry is exactly the state that routes CC to the refresh branch.)
 
 ## Guard rails
 
@@ -144,9 +169,25 @@ token verbatim into `~/.local/share/fish/fish_history`, in plaintext, forever. S
 **optional**: bare `set-refresh` prompts via `read --silent`, which never touches history. An inline
 argument still works (for scripting) but warns that the token was just logged.
 
-**A running Claude Code will clobber the swap.** It holds credentials in memory and rewrites the
-file on its own refresh schedule, so it can overwrite a fresh token with the old account's state
-minutes later — looking exactly like the script failed. Check `pgrep -x claude`; require confirmation.
+**A running Claude Code does NOT clobber the swap** — an earlier draft of this spec claimed it did,
+and blocked on `pgrep -x claude` with a confirmation prompt. That was wrong, and reading the shipped
+CC binary (2.1.209) disproves it:
+
+- every credential write goes through `mutate(u => ({...u, claudeAiOauth: {…}}))` — a
+  read-modify-write against the *current* file, so unrelated keys (`mcpOAuth`) are preserved;
+- the invalid-grant path is a **compare-and-swap**: `if (y.refreshToken !== c) return g` — it
+  explicitly declines to write when the on-disk token is no longer the one it was holding;
+- there is cache invalidation plus a path that notices the on-disk `accessToken` differs from its
+  in-memory copy and adopts the newer one;
+- writes land via `renameSync` (atomic).
+
+That is a credential store built for concurrent sessions — as it must be, since several `claude`
+processes routinely share this one file. Blocking on it was noise, and it fired on every single
+invocation for anyone who keeps Claude Code open.
+
+What remains true, and is what the tool now prints as a **non-blocking note**: a session that is
+already running keeps using the OLD account's in-memory access token until it refreshes or restarts.
+The swap is on disk; the running process simply hasn't noticed. **Restart Claude Code to pick it up.**
 
 **Atomic, never-world-readable writes.** Write to a temp file *in the same directory*, `touch`ed and
 `chmod 600`'d **before** any content lands in it (a redirect into an existing file does not reset its

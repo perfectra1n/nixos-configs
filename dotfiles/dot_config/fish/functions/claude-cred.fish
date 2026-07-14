@@ -129,22 +129,31 @@ end
 
 # ── guards ─────────────────────────────────────────────────────────────────────────────────────
 
-function __claude_cred_guard_running
+function __claude_cred_notice_running
+    # NOT a blocking guard. An earlier version refused to run while Claude Code was up, on the
+    # assumption that a live session would write its in-memory credentials back over the swap. That
+    # assumption is wrong, and reading the shipped CC binary says so:
+    #
+    #   * every credential write goes through `mutate(u => ({...u, claudeAiOauth: {…}}))` — a
+    #     read-modify-write against the CURRENT file, so other keys (mcpOAuth) are preserved;
+    #   * the invalid-grant path does a compare-and-swap — `if (y.refreshToken !== c) return g` —
+    #     i.e. it explicitly declines to write if the on-disk token is no longer the one it held;
+    #   * there's cache invalidation plus a path that notices the on-disk accessToken differs from
+    #     its in-memory copy and adopts the newer one;
+    #   * writes land via renameSync (atomic).
+    #
+    # That's a store built for concurrent sessions — which it must be, since people routinely run
+    # several `claude` processes against this one file. Blocking on it was pure noise.
+    #
+    # What IS true, and worth saying: a session already running keeps using the OLD account's
+    # in-memory access token until it refreshes or restarts. The swap is on disk; the running
+    # process hasn't noticed.
     set --query CLAUDE_CRED_FILE; and return 0
     set --local pids (pgrep -x claude 2>/dev/null)
     test (count $pids) -eq 0; and return 0
 
-    # A live Claude Code holds the credentials in memory and rewrites this file whenever it
-    # refreshes on its own schedule — so it can overwrite a fresh token with the OLD account's
-    # state minutes later, which looks exactly like the swap silently failed.
-    echo "claude-cred: Claude Code is running (pid: $pids)." >&2
-    echo "  It rewrites this file on its own refresh schedule and will clobber the swap." >&2
-    echo "  Quit it first." >&2
-    read --local --prompt-str 'Continue anyway? [y/N] ' reply
-    if not string match --quiet --ignore-case --regex '^y' -- "$reply"
-        echo "claude-cred: aborted." >&2
-        return 1
-    end
+    echo "claude-cred: note — "(count $pids)" Claude Code session(s) running." >&2
+    echo "  They keep using the OLD account until you restart them. Restart to pick this up." >&2
 end
 
 # ── active-profile pointer ─────────────────────────────────────────────────────────────────────
@@ -183,7 +192,10 @@ function __claude_cred_set_refresh --argument-names creds profiles backups
         echo "claude-cred: WARNING — that token is now in your fish history." >&2
         echo "  Next time run 'claude-cred set-refresh' with no argument for a silent prompt." >&2
     else
-        read --local --silent --prompt-str 'New refresh token: ' token
+        # NO --local here. `if`/`else` are block scopes in fish, so `read --local` would create the
+        # variable INSIDE this block and it would evaporate at `end` — the token reads fine, then
+        # vanishes. Bare `read` assigns to the function-scoped `token` declared above.
+        read --silent --prompt-str 'New refresh token: ' token
         echo
     end
 
@@ -197,18 +209,30 @@ function __claude_cred_set_refresh --argument-names creds profiles backups
         echo "claude-cred: note — token doesn't look like 'sk-ant-ort01-…'" >&2
     end
 
-    __claude_cred_guard_running; or return 1
+    __claude_cred_notice_running
     __claude_cred_capture_active $creds $profiles; or return 1
     set --local backup (__claude_cred_backup $creds $backups); or return 1
 
-    # accessToken is blanked and expiresAt zeroed together: the old access token stays VALID until
-    # expiresAt, so leaving either in place means Claude Code keeps talking to the API as the old
-    # account. refreshTokenExpiresAt describes the OUTGOING token — pairing it with the new one can
-    # convince Claude Code you're logged out before it ever tries the new token, so it's deleted and
-    # the refresh response repopulates it.
+    # The old access token must not survive (it stays VALID until its expiry, so leaving it means
+    # Claude Code keeps talking to the API as the OLD account) — but it must NOT be blanked either.
+    # CC's credential getter is:
+    #
+    #     let o = read()?.claudeAiOauth; if (o?.accessToken) return o; ... return null
+    #
+    # so an EMPTY accessToken reads as "no credentials at all" → "Not logged in · Please run /login",
+    # and CC never even looks at the refreshToken. (v1 of this function did exactly that. It's the
+    # bug you hit.) The dispatch below it is:
+    #
+    #     if (accessToken && expiresAt && expiresAt > Date.now())  → use the access token
+    #     else if (refreshToken && checkAndRefreshOAuthTokenIfNeeded()) → REFRESH   ← we want this
+    #
+    # expiresAt = 0 is already falsy, so it alone fails the "use it" test and falls through to the
+    # refresh branch. The accessToken therefore just has to be NON-EMPTY and dead: a placeholder is
+    # both (never sent — the expiry check rejects it first — and if some path ever did send it, a
+    # 401 beats silently authenticating as the wrong account).
     jq --arg t "$token" '
         .claudeAiOauth.refreshToken = $t
-        | .claudeAiOauth.accessToken = ""
+        | .claudeAiOauth.accessToken = "sk-ant-oat01-PENDING-REFRESH-claude-cred"
         | .claudeAiOauth.expiresAt = 0
         | del(.claudeAiOauth.refreshTokenExpiresAt)
     ' $creds | __claude_cred_write $creds; or return 1
@@ -298,12 +322,24 @@ function __claude_cred_use --argument-names creds profiles backups name
         return 0
     end
 
-    __claude_cred_guard_running; or return 1
+    __claude_cred_notice_running
     __claude_cred_capture_active $creds $profiles; or return 1
     set --local backup (__claude_cred_backup $creds $backups); or return 1
 
     # Splice the profile into .claudeAiOauth — mcpOAuth is left exactly as found.
-    jq --slurpfile p $src '.claudeAiOauth = $p[0]' $creds | __claude_cred_write $creds; or return 1
+    #
+    # A saved profile normally carries a real accessToken, and it's near-certainly EXPIRED by the
+    # time you switch back (~3h life), which is fine: non-empty + past expiry is exactly the state
+    # that sends CC down its refresh branch. But a profile saved while a set-refresh was pending
+    # could hold an empty one, and CC reads an empty accessToken as "not logged in" rather than
+    # "refresh me" — so normalize it to the same non-empty placeholder set-refresh uses.
+    jq --slurpfile p $src '
+        .claudeAiOauth = $p[0]
+        | if (.claudeAiOauth.accessToken // "") == ""
+          then .claudeAiOauth.accessToken = "sk-ant-oat01-PENDING-REFRESH-claude-cred"
+             | .claudeAiOauth.expiresAt = 0
+          else . end
+    ' $creds | __claude_cred_write $creds; or return 1
     __claude_cred_set_active $profiles $name
 
     echo "claude-cred: switched to '$name' (backup: $backup)"
@@ -344,7 +380,7 @@ function __claude_cred_undo --argument-names creds backups
         echo "claude-cred: no backups to restore" >&2
         return 1
     end
-    __claude_cred_guard_running; or return 1
+    __claude_cred_notice_running
 
     # Backups are verbatim whole-file copies (mcpOAuth included) — this is the "oh no" button, so it
     # restores byte-for-byte rather than patching.
