@@ -39,6 +39,16 @@ README.md
 .config/kopia
 .config/rclone
 
+# Claude Code's live login. Claude Code OWNS this file and rewrites it whenever it refreshes, so
+# it can never be a managed dotfile — and it holds a plaintext refresh token, which must never
+# reach this PUBLIC repo. Accounts are instead saved as age-encrypted profiles under
+# .claude/cred-profiles/ (see `claude-cred`), which ARE managed.
+.claude/.credentials.json
+# local undo buffer for `claude-cred undo` — pure churn
+.claude/cred-backups
+# which profile is live HERE; boxes can legitimately be on different accounts
+.claude/cred-profiles/.active
+
 # Auto-generated install receipt / lock files — not meaningful config
 .config/talos-pilot
 .config/helm/repositories.lock
