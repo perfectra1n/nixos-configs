@@ -56,6 +56,16 @@ in
     lazygit              # git TUI
     lazydocker           # docker TUI
     chezmoi              # dotfile manager (owns ~/.config)
+
+    # ── Secrets scanning (the leak gate — see .lefthook.toml) ──
+    # This repo is PUBLIC, so a leaked key or private hostname is a real incident. lefthook
+    # runs gitleaks on every commit + gitleaks/trufflehog on every push; these live here (not
+    # pentest.nix) so the gate works on EVERY host, server included. Broader audit scanners
+    # you point at OTHER people's code are in modules/pentest.nix instead.
+    lefthook             # git-hook manager; `mise run hooks` installs the hooks
+    gitleaks             # the gate engine — fast, deterministic, offline
+    trufflehog           # deeper scans that can VERIFY a credential is live (run by hand)
+    git-filter-repo      # remediation: excise a secret from history if one ever lands
     # btop flavored to the host's GPU so its GPU panel works. The vendor truth is
     # whichever of modules/{nvidia,amd}.nix the host imported (videoDrivers), read
     # via osConfig — NOT detected.* (no facter.json is committed yet, so those are

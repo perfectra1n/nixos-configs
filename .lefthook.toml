@@ -1,0 +1,52 @@
+# Git hooks for nixos-configs — the leak gate. Managed by lefthook (installed from
+# home/common.nix); `mise run hooks` installs it, and `mise run verify` re-installs it,
+# so a fresh clone is armed the first time it's verified.
+#
+# This repo is PUBLIC. The gate exists so a secret — or a private hostname — can't reach
+# github.com/perfectra1n/nixos-configs. It reads only tracked content and never decrypts
+# anything, so it needs no age key and runs fine on a fresh checkout.
+#
+# WHY gitleaks RUNS TWICE (this is the whole design, don't "simplify" it away):
+# gitleaks' default config applies a global STOPWORD list to every rule by case-insensitive
+# SUBSTRING match, and "true" is one of those stopwords. So under `[extend] useDefault = true`
+# a finding of `truenas.<domain>` is SILENTLY DROPPED — and the NAS here is a TrueNAS box,
+# which makes that the single most likely private hostname to leak. Declaring our own
+# [allowlist] MERGES with the default's stopwords rather than replacing them, so there is no
+# way to keep useDefault and still trust the hostname rules. Hence two passes:
+#   1. default rules  — no -c flag, so gitleaks uses its embedded defaults (stopwords ON,
+#      which is correct there: they cut real generic-api-key noise).
+#   2. domain rules   — -c .gitleaks-domains.toml, which does NOT extend the defaults, so
+#      no stopword can suppress a hostname.
+# A repo-root `.gitleaks.toml` is deliberately absent: gitleaks auto-loads that filename,
+# which would make pass 1 use it INSTEAD of the embedded defaults.
+#
+# --redact on the default pass but NOT the domain pass, on purpose: echoing a real API key
+# into scrollback is a second leak, but a hostname finding is useless unless you can see
+# WHICH host tripped it (allowlist it, or fix it).
+
+[pre-commit]
+parallel = true
+skip = ["merge", "rebase"]
+
+# Staged content only — kills a secret before it ever enters history.
+[pre-commit.commands.gitleaks]
+run = "gitleaks git --staged --redact --no-banner"
+
+[pre-commit.commands.gitleaks-domains]
+run = "gitleaks git --staged --no-banner -c .gitleaks-domains.toml"
+
+# Backstop before anything becomes public. History, not just the staged diff: a secret can
+# reach a commit via `--no-verify`, an amend, or a rebase that never hit pre-commit.
+[pre-push]
+parallel = true
+
+[pre-push.commands.gitleaks-history]
+run = "gitleaks git --redact --no-banner"
+
+[pre-push.commands.gitleaks-domains-history]
+run = "gitleaks git --no-banner -c .gitleaks-domains.toml"
+
+# Second opinion with a different rule engine — trufflehog's detectors overlap gitleaks' only
+# partially. --no-verification keeps it offline (no live credential checks from a git hook).
+[pre-push.commands.trufflehog]
+run = "trufflehog git file://. --no-verification --results=verified,unknown --fail"

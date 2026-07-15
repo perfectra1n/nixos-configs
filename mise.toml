@@ -6,7 +6,35 @@
 # and any errors) still prints. Override for one run with `mise run -o prefix <task>`.
 [settings]
 task_output = "quiet"
+
+# ── Leak-gate tooling, ALSO pinned here (see .lefthook.toml) ───────────────────────────────
+# These same three packages come from Nix (home/common.nix). This section is the ONE place in
+# the repo where a binary reaches your PATH from outside the Nix store, and mise's install dir
+# SHADOWS ~/.nix-profile/bin on PATH — so whatever is pinned here is what the leak gate actually
+# executes, regardless of what the flake installed.
 #
+# That makes silent version drift the real hazard: Renovate's built-in mise manager bumps these,
+# while nixpkgs moves on its own schedule via flake-inputs.txt. If they diverged, manifests/ would
+# claim one gitleaks while a different one ran the gate.
+#
+# So the versions below MUST equal the nixpkgs ones, and that is ENFORCED, not merely intended:
+# checks.x86_64-linux.mise-nixpkgs-versions in flake.nix parses this table with builtins.fromTOML,
+# compares each pin to pkgs.<name>.version, and fails `nix flake check` (and therefore CI) on any
+# mismatch. If a Renovate PR bumps one side, CI goes red until the other side catches up.
+[tools]
+lefthook = "2.1.5"
+gitleaks = "8.30.1"
+trufflehog = "3.95.8"
+#
+# What's automatable vs not:
+#   - apply / verify / hardware / dirs / update     → fully scripted below.
+#   - secrets:pull / secrets:pull-env               → refresh every Bitwarden-backed secret
+#     (two manifests in scripts/secrets-sync.py) into BOTH channels — sops secrets.yaml and the
+#     age-encrypted fish env vars: re-encrypt + commit. pull = both; pull-env = fish only.
+#   - secrets:key-bootstrap                         → fresh-install: pull the one age key
+#     from Bitwarden into sops-nix + chezmoi (single-key model, see .sops.yaml).
+#   - secrets:init / secrets:edit / secrets:key-install → mise drives them, but YOU supply
+#     the secret/decision (the token, the age key); editing secrets needs the key present.
 # What's automatable vs not:
 #   - apply / verify / hardware / dirs / update     → fully scripted below.
 #   - secrets:pull / secrets:pull-env               → refresh every Bitwarden-backed secret
@@ -78,6 +106,28 @@ sudo nixos-rebuild switch --flake ".#$host"
 # NOTE: apply OVERWRITES local uncommitted edits under ./dotfiles — commit WIP first.
 chezmoi apply || echo ">> apply failed — is the age key at ~/.config/age/age.agekey (mode 600)?"
 '''
+
+# Arm the leak gate (.lefthook.toml) with no command to remember. `enter` fires when mise
+# activates for this directory — which it does on every `cd` here, since mise is shell-hooked
+# via chezmoi — so a fresh clone installs its git hooks the moment you step into it. Costs ~0s
+# once the hooks exist (measured: 0.00s warm), so running it on every `cd` is free.
+#
+# `postinstall` mirrors kopiur, and now that [tools] exists it's a live trigger: `mise install`
+# on a fresh clone fetches lefthook and immediately arms the hooks. `enter` is still the stronger
+# of the two — it needs no command at all — so both are kept; `lefthook install` is idempotent
+# and free (measured 0.00s once the hooks exist), so the overlap costs nothing.
+#
+# Silent + fail-soft on purpose: before `mise install` (or a rebuild) lefthook isn't on PATH, and
+# a hook that errored on every `cd` would be intolerable. `mise run hooks` reports properly.
+# (A fresh clone's mise.toml is untrusted until `mise trust`, so this fires from that point on —
+# but you must trust it to run any task here anyway.)
+[hooks]
+enter = "lefthook install >/dev/null 2>&1 || true"
+postinstall = "lefthook install"
+
+[tasks.hooks]
+description = "Install the lefthook git hooks (the leak gate — see .lefthook.toml). Idempotent; the `enter` hook above does this automatically."
+run = "lefthook install"
 
 [tasks.verify]
 description = "Eval the flake + every host + refresh manifests (run before committing)"

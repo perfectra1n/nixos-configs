@@ -1,0 +1,67 @@
+title = "nixos-configs — private infrastructure hostname rules"
+
+# NO `[extend] useDefault = true` here, and that is the whole point.
+#
+# gitleaks' default config carries a GLOBAL stopword list that it applies to every rule
+# by case-insensitive SUBSTRING match. "true" is one of those stopwords — so with the
+# defaults merged in, a finding of `truenas.<domain>` is silently DROPPED, because the
+# secret contains "true". This repo's NAS is a TrueNAS box, which makes that the single
+# most likely private hostname to leak here. Verified: `truenas.example.internal` is
+# suppressed under useDefault, and fires without it.
+#
+# So the default key/token rules run as their OWN gitleaks pass (no -c flag → embedded
+# defaults, where the stopwords are genuinely useful for cutting generic-api-key noise),
+# and these hostname rules run as a second pass against this config alone.
+
+# ── Rule 1: novel-host tripwire ────────────────────────────────────────────────
+# Flags any URL host that isn't on the known-public allowlist. Requiring "://" is what
+# keeps it quiet: a bare-FQDN regex also matches ordinary code identifiers
+# (subprocess.run, Path.home, libssl.so, home-manager.nixosModules.home).
+#
+# The allowlist is HAND-CURATED on purpose. Generating it from what's already in the tree
+# would rubber-stamp anything already committed — including a domain that had leaked.
+# Adding a new upstream source is a one-line addition here, and that prompt ("is this
+# host public?") is a feature, not friction.
+[[rules]]
+id = "private-infra-url-host"
+description = "URL host not on the public allowlist — private infra hostnames are secrets in this repo"
+regex = '''(?i)\bhttps?://((?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,24})\b'''
+secretGroup = 1
+tags = ["domain", "private-infra"]
+
+  [rules.allowlist]
+  regexTarget = "match"
+  # flake.lock is GENERATED from flake.nix (Renovate-tracked; every input is a public
+  # upstream). Scanning the derived file only nags on each `nix flake update` — the
+  # human-authored flake.nix it derives from is still scanned.
+  paths = ['''flake\.lock''']
+  regexes = [
+    # forges + registries
+    '''(?i)https?://([a-z0-9-]+\.)*(github\.com|githubusercontent\.com|github\.io|gitlab\.com|gitlab\.io|git\.io|gitter\.im|git\.outfoxxed\.me)(/|$)''',
+    '''(?i)https?://([a-z0-9-]+\.)*(docker\.io|ghcr\.io|k8s\.io|googleapis\.com|opensuse\.org)(/|$)''',
+    # nix ecosystem
+    '''(?i)https?://([a-z0-9-]+\.)*(nixos\.org|nixos-cuda\.org|cachix\.org|nix-community\.org|flakehub\.com)(/|$)''',
+    # tooling / upstream project docs
+    '''(?i)https?://([a-z0-9-]+\.)*(hypr\.land|archlinux\.org|cachyos\.org|chezmoi\.io|fishshell\.com|jdx\.dev|starship\.rs)(/|$)''',
+    '''(?i)https?://([a-z0-9-]+\.)*(renovatebot\.com|cilium\.io|rook\.io|sched-ext\.com|i3wm\.org|openssl\.dev|git-scm\.com)(/|$)''',
+    '''(?i)https?://([a-z0-9-]+\.)*(cloudflare\.com|opendns\.com|nvidia\.com|phoronix\.com|nordtheme\.com)(/|$)''',
+    # reference links in docs/
+    '''(?i)https?://([a-z0-9-]+\.)*(stackoverflow\.com|devhints\.io|whatthecommit\.com|math\.utah\.edu|iu\.edu|kwindu\.eu)(/|$)''',
+    # RFC 2606 reserved names — safe by definition, used as placeholders in docs
+    '''(?i)https?://([a-z0-9-]+\.)*(example\.(com|org|net|internal)|localhost)(/|:|$)''',
+  ]
+
+# ── Rule 2: bare private-TLD hostname (no scheme) ──────────────────────────────
+# Catches `gitea.example.internal` in a comment or a Nix string, where rule 1 sees no URL.
+# `home`, `local` and `arpa` are deliberately NOT in this TLD list — they collide with
+# real identifiers (home-manager.nixosModules.home, Path.home).
+[[rules]]
+id = "private-tld-hostname"
+description = "Hostname on a private-use TLD — must never appear in cleartext in this public repo"
+regex = '''(?i)\b((?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:internal|intranet|corp|priv|private|lan|localdomain))\b'''
+secretGroup = 1
+tags = ["domain", "private-infra"]
+
+  [rules.allowlist]
+  regexTarget = "match"
+  regexes = ['''(?i)([a-z0-9-]+\.)*example\.(internal|com|org|net)''']

@@ -154,6 +154,31 @@
         if failures == [ ] then pkgs.runCommand "lib-secrets-ok" { } "touch $out"
         else throw "lib/secrets.nix FAILED: ${lib.generators.toPretty { } failures}";
 
+      # mise's [tools] pins vs nixpkgs. mise.toml pins the leak-gate tools (lefthook/gitleaks/
+      # trufflehog) that home/common.nix ALSO installs, and mise's install dir SHADOWS
+      # ~/.nix-profile/bin on PATH — so mise's copy is what the git hooks actually execute. If the
+      # two ever disagreed, manifests/ would advertise one gitleaks while a different one gated
+      # every commit, and Renovate WILL try: its built-in mise manager bumps mise.toml on its own
+      # schedule, while nixpkgs moves via flake-inputs.txt. This turns that silent divergence into
+      # a red CI run. Same eval-time `throw` as lib-secrets above, and for the same reason:
+      # `nix flake check --no-build` only EVALUATES checks, so a runCommand of assertions would be
+      # skipped by the very command meant to run it.
+      checks.x86_64-linux.mise-nixpkgs-versions =
+        let
+          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          inherit (nixpkgs) lib;
+          pinned = (builtins.fromTOML (builtins.readFile ./mise.toml)).tools or { };
+          drift = lib.filterAttrs (name: want: (pkgs.${name}.version or "<no such package>") != want) pinned;
+          fmt = name: want: "  ${name}: mise.toml pins ${want}, nixpkgs has ${pkgs.${name}.version or "<no such package>"}";
+        in
+        if drift == { } then pkgs.runCommand "mise-nixpkgs-versions-ok" { } "touch $out"
+        else throw ''
+          mise.toml [tools] has drifted from nixpkgs:
+          ${lib.concatStringsSep "\n" (lib.mapAttrsToList fmt drift)}
+          mise SHADOWS the Nix profile on PATH, so the pinned version is the one the leak gate runs.
+          Fix: align mise.toml with nixpkgs (or bump the flake so nixpkgs catches up), then re-run.
+        '';
+
       # Ops tooling as flake apps: shellcheck-gated at build time, runtime deps pinned,
       # runnable from anywhere via `nix run github:perfectra1n/nixos-configs#<name>`.
       # Scripts are BODIES only — writeShellApplication injects the shebang + set -euo pipefail.

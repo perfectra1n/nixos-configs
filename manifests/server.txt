@@ -960,6 +960,8 @@ git-minimal-2.54.0
 git.yazi-0-unstable-2026-05-09
 githash-0.1.7.0
 gitlab.md
+gitleaks-8.30.1
+gitleaks-8.30.1-go-modules
 gjs-1.88.0
 glance.md
 glib-2.88.1
@@ -1358,6 +1360,8 @@ ldacBT-2.0.2.3
 ldexp
 ldexp-builder
 ldns-1.9.0
+lefthook-2.1.5
+lefthook-2.1.5-go-modules
 lemmy.md
 lens-5.3.6
 leptonica-1.87.0
@@ -2524,6 +2528,7 @@ python3.13-furo-2025.12.19
 python3.13-gast-0.7.0
 python3.13-geoip2-5.2.0
 python3.13-gevent-25.9.1
+python3.13-git-filter-repo-2.47.0
 python3.13-gitdb-4.0.12
 python3.13-gitpython-3.1.50
 python3.13-google-re2-1.1.20251105
@@ -3599,6 +3604,8 @@ tremor-unstable-2018-03-16
 trezord.md
 trifecta-2.1.4
 trifecta-2.1.4-r2.cabal
+trufflehog-3.95.8
+trufflehog-3.95.8-go-modules
 twolame-2017-09-27
 typed-process-0.2.13.0
 typenum-1.19.0
