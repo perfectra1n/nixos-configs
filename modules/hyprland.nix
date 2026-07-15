@@ -94,6 +94,24 @@ in
     };
   };
 
+  # Drop Qt's compiled-QML cache on every switch, or DMS plugin updates silently no-op.
+  # Qt validates a cached compilation unit by (source path, mtime) — never by content. Nix
+  # pins every store file's mtime to epoch 1, and DMS loads plugins through the STABLE
+  # /etc/xdg/quickshell/dms-plugins/<id>/ symlink, so bumping a plugin changes NEITHER the
+  # cache key nor the timestamp: Qt keeps running the OLD compiled QML forever. DMS itself is
+  # immune — `quickshell -p` points at a hashed store path, so its key moves with its content.
+  # Only /etc/xdg-installed plugins (the ones above) are exposed.
+  # Diagnosed 2026-07-15: linuxWallpaperEngine's settings pane had been silently stuck on a
+  # 3-commits-old build, then went blank when a refactor moved SceneBrowserModal.qml into ui/
+  # and the stale unit's root-level type reference stopped resolving. It fails INVISIBLY:
+  # DMS collapses the failed loader to height 0 and clips its own "Failed to load settings"
+  # text, so nothing reaches the logs. Tell-tale is a QML error citing a line past EOF.
+  # Cost: DMS recompiles its QML on the first login after a switch (cache refills once).
+  # Fix upstream instead if DMS ever realpath()s plugin dirs before Qt.createComponent.
+  system.activationScripts.clearQuickshellQmlCache = ''
+    rm -rf /home/*/.cache/quickshell/qmlcache
+  '';
+
   # Electron/Chromium apps default to XWayland (blurry under fractional scale). This
   # makes them use the Wayland (Ozone) backend → crisp. Hint=auto, so it falls back
   # to X11 where there's no Wayland.
