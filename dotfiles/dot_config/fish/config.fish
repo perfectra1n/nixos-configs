@@ -26,7 +26,13 @@ test -f $FISHCONFIG/secrets.fish; and source $FISHCONFIG/secrets.fish
 # Check if the shell is interactive
 if status is-interactive
     if not set -q TMUX
-        if not set -q VSCODE_IPC_HOOK_CLI
+        # VS Code terminals must NOT auto-attach: its restored/hidden terminals were
+        # silently mounting session 0 as a second client, and a second client's
+        # terminal-probe replies land in TUIs as keystrokes (the yazi insta-quit
+        # saga). The old VSCODE_IPC_HOOK_CLI guard rotted — VS Code stopped setting
+        # it — so key on TERM_PROGRAM, the stable identity signal. Deliberate
+        # tmux-in-VS-Code goes through `tcode` (grouped session) instead.
+        if not test "$TERM_PROGRAM" = vscode
             tmux attach; or tmux new-session
         end
     end

@@ -51,9 +51,6 @@ in
     # yazi lives in programs.yazi below — the one HM `programs.*` we allow, because it
     # only writes ~/.config/yazi/plugins (code, not chezmoi's config files)
     mc                   # Midnight Commander — dual-pane TUI for bulk copy/move
-    chafa                # image→colored-text mosaics — yazi's preview fallback for tmux
-                         # sessions mirrored to mixed terminals (kitty + VS Code share no
-                         # graphics protocol; the y.fish wrapper in chezmoi picks this)
     git
     delta                # git diff pager
     lazygit              # git TUI
