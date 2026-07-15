@@ -217,11 +217,11 @@
     "network-indicator": {
       "flake": false,
       "locked": {
-        "lastModified": 1783284723,
-        "narHash": "sha256-K/zew6OKerSdNv+CJWZiMVlgEQ5PLDrGcxb8vpV2ouc=",
+        "lastModified": 1783891814,
+        "narHash": "sha256-gRs4E4fQenoqDHVNMLq+xNKPBu4CUNdOK/WaszKWnls=",
         "owner": "perfectra1n",
         "repo": "Network-Indicator",
-        "rev": "924e6ad1c9adff10e165453d0aa69b42aa1f330d",
+        "rev": "d197967a2cda718ff7a883083b486b20dcc562c4",
         "type": "github"
       },
       "original": {

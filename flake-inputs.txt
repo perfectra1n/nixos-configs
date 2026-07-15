@@ -18,7 +18,7 @@ home-manager = "63d02d1c19f1c2b47a5bc7e55c620b6af7b218a6"
 hyprswitch = "61ddaa30563c1f091ca5fbe5d7203c19f42b519c"
 
 # renovate: datasource=git-refs depName=network-indicator packageName=https://github.com/perfectra1n/Network-Indicator branch=reliability-hardening
-network-indicator = "924e6ad1c9adff10e165453d0aa69b42aa1f330d"
+network-indicator = "d197967a2cda718ff7a883083b486b20dcc562c4"
 
 # renovate: datasource=git-refs depName=nixpkgs packageName=https://github.com/NixOS/nixpkgs branch=nixos-unstable
 nixpkgs = "d407951447dcd00442e97087bf374aad70c04cea"
