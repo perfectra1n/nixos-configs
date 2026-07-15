@@ -122,21 +122,32 @@
     # portrait is 2560 tall (scale 1), so to put its midpoint at 720: y = 720 - 2560/2 = -560.
     # It overhangs ~560px above and below the Alienware. Cursor crosses straight across instead
     # of jumping. Nudge -416 up/down to taste (more negative = Dell moves UP).
-    # Names/modes from `hyprctl monitors all`; re-check after any cable/port swap.
     #
-    # CONNECTOR CHOICE: the Alienware is on DP-1 on purpose. hyprsome namespaces workspaces by
-    # Hyprland monitor *id* (id 0 -> ws 1-10, id 1 -> ws 11-20), and at COLD BOOT ids follow DRM
-    # connector order, so the lowest-numbered connected port wins id 0. Putting the MAIN display
-    # on DP-1 (the lowest port) makes it monitor id 0 = hyprsome's primary, so new windows/games
-    # default to it instead of the portrait Dell. Keep the Alienware on the lowest DP if you
-    # re-cable. NOTE: the Dell would NOT link on DP-3 (dead/marginal); DP-1+DP-2 are the good
-    # ports. Live hotplug can assign ids out of connector order — only a cold boot is canonical.
+    # MATCH BY `desc:`, NEVER BY PORT NAME. This box has TWO DRM cards — the RTX 5090 (nvidia)
+    # and the Ryzen's Raphael iGPU (amdgpu) — sharing one DP-x name pool, and the split is not
+    # stable across cold boots: the Alienware has been DP-6, then DP-1, now DP-4, while the
+    # iGPU's own (permanently disconnected) outputs hold whichever names are left. A port-name
+    # rule that loses that race silently binds to a DEAD iGPU connector, so both real panels
+    # match no rule and fall back to Hyprland defaults (60Hz, scale 1, no transform, auto-placed
+    # left-to-right) — the layout looks "smashed" and hdr-toggle.sh pushes HDR at a phantom
+    # output. `desc:` matches the EDID make/model/serial, which no probe order can renumber.
+    # Strings come from the `description` field of `hyprctl monitors all`; re-check only when a
+    # panel is actually replaced — re-cabling and port swaps no longer matter.
     #
-    # DP-1 scale 1.5: at scale 1 a 31.5" 4K panel renders the full 3840x2160 logically,
+    # hyprsome still cares about ports: it namespaces workspaces by Hyprland monitor *id*
+    # (id 0 -> ws 1-10, id 1 -> ws 11-20), and at COLD BOOT ids follow DRM connector order, so
+    # the lowest-numbered CONNECTED port wins id 0. Keep the Alienware on the lower of the two
+    # good nvidia DPs so it stays id 0 = hyprsome's primary and new windows/games default to it
+    # instead of the portrait Dell. NOTE: the Dell would NOT link on the 5090's remaining DP
+    # (dead/marginal). Live hotplug can assign ids out of connector order — only a cold boot is
+    # canonical.
+    #
+    # Alienware scale 1.5: at scale 1 a 31.5" 4K panel renders the full 3840x2160 logically,
     # so the UI (incl. DMS) is microscopic — DMS honours the Hyprland scale, the scale was
     # just wrong. 1.5 -> logical 2560x1440, which divides the mode into whole px (3840/1.5,
     # 2160/1.5 both integer) so Hyprland won't nudge + warn. Drop back to 1.25 (-> 3072x1728)
-    # if the UI is now too big. DP-2 stays scale 1; 1440p portrait at this size is already comfortable.
+    # if the UI is now too big. The Dell stays scale 1; 1440p portrait at this size is already
+    # comfortable.
     #
     # HDR10 on the AW3225QF (QD-OLED) only — unlocks the panel's high peak luminance that SDR
     # firmware-caps at ~250 nits. The Dell stays SDR.
@@ -144,14 +155,14 @@
     #   cm, hdr         = wide gamut + PQ/ST2084 transfer (HDR10; no Dolby Vision on Wayland)
     #   sdrbrightness   = brightness multiplier for SDR content in HDR mode — the dimness knob
     #   sdrsaturation   = SDR saturation in HDR mode (raise slightly if colors look pale)
-    # Tune sdrbrightness live (no rebuild): hyprctl keyword monitor "<full DP-1 line>".
+    # Tune sdrbrightness live (no rebuild): hyprctl keyword monitor "<full Alienware line>".
     # sdrbrightness 12.5 ~ near-peak SDR white; sdrsaturation 1.2 counters SDR-in-HDR washout.
     # Tuned by eye — drop sdrbrightness if too bright/fatiguing. Do NOT add the old
     # xx_color_management_v4 / ENABLE_HDR_WSI / cm_auto_hdr env vars — cm-v4 is stable now
     # and they break it.
     "hypr/monitors.conf".text = ''
-      monitor = DP-1, 3840x2160@240, 0x0, 1.5, bitdepth, 10, cm, hdr, sdrbrightness, 12.5, sdrsaturation, 1.2
-      monitor = DP-2, 2560x1440@144, -1440x-560, 1, transform, 1
+      monitor = desc:Dell Inc. AW3225QF 5K46YZ3, 3840x2160@240, 0x0, 1.5, bitdepth, 10, cm, hdr, sdrbrightness, 12.5, sdrsaturation, 1.2
+      monitor = desc:Dell Inc. S2719DGF 8H2YBY2, 2560x1440@144, -1440x-560, 1, transform, 1
     '';
     # Mouse feel (host-specific). sensitivity 0 = no accel change; flat = raw 1:1 movement.
     "hypr/input.conf".text = ''
