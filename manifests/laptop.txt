@@ -3407,8 +3407,8 @@ libpwquality-1.4.5
 libqmi-1.38.0
 libqrtr-glib-1.2.2
 libraqm-0.10.5
-libratbag-0.18-unstable-b23167c
-libratbag-0.18-unstable-b23167c_fish-completions
+libratbag-0.18-unstable-03bf0a3
+libratbag-0.18-unstable-03bf0a3_fish-completions
 libraw-0.22.1
 libraw1394-2.1.2
 libre-graph-api-cpp-qt-client-1.0.4

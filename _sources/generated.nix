@@ -24,13 +24,13 @@
   };
   libratbag = {
     pname = "libratbag";
-    version = "b23167c644d8f78b477a5a12668b9edf22da1616";
+    version = "03bf0a3e4da90f53aa1a0b582f41e3caed2b31bc";
     src = fetchFromGitHub {
       owner = "perfectra1n";
       repo = "libratbag";
-      rev = "b23167c644d8f78b477a5a12668b9edf22da1616";
+      rev = "03bf0a3e4da90f53aa1a0b582f41e3caed2b31bc";
       fetchSubmodules = false;
-      sha256 = "sha256-MDraqC1iZiKxszM1PZ0TSvJ4lGATGAi9ryExHzESqrM=";
+      sha256 = "sha256-qdSJFNBCAkC7ulW2Y4cB5OWu+fJEFOLyuk7QZCLGR8A=";
     };
   };
   nvbroadcast = {
