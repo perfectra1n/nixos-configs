@@ -35,6 +35,11 @@ in
     firefox
     brave
     vscode      # unfree; swap for `vscodium` for the MS-free build
+    dbeaver-bin # universal DB GUI (Postgres/SQLite/MySQL/…); the binary is `dbeaver`, not
+                # `dbeaver-bin`. Attr is `dbeaver-bin` and NOT `dbeaver` — upstream's switch to
+                # prebuilt binaries took the old name with it, so plain `dbeaver` no longer
+                # evaluates. Apache-2.0 despite the -bin, so no unfree gate. Its state lives in
+                # ~/.local/share/DBeaverData, nowhere near chezmoi. CLIs are in home/common.nix.
     nautilus            # file manager ($fileManager in hyprland.conf). GTK4/libadwaita, so
                         # it follows the portal color-scheme + DMS's matugen gtk-4.0 colors.
     papirus-icon-theme  # actual icons. `nautilus` does NOT propagate an icon theme into the

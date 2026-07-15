@@ -107,7 +107,6 @@ in
     cilium-cli           # install/manage the Cilium eBPF CNI + Hubble on k8s clusters
     talhelper            # Talos config templating
     sops                 # secrets management
-    postgresql           # `psql` client (the package bundles the client; we don't run a server here)
     bitwarden-cli        # `bw` — Bitwarden vault CLI
     ansible
     terraform            # BSL-licensed upstream (unfree); coexists with opentofu — different binaries
@@ -119,7 +118,6 @@ in
     snowflake-cli        # Snowflake data-warehouse CLI; the binary is `snow`, not `snowflake-cli`
     claude-code          # nixpkgs lags releases; swap for the flake if you want latest
     beads                # `bd` — graph-based issue tracker / memory for AI coding agents
-    dolt                 # version-controlled SQL database, git-style CLI
     mise                 # version manager; activated via chezmoi (fish/conf.d/mise.fish)
     kopia                # backup/snapshot tool — the CLI bundles the web UI (`kopia server
                          # start --ui`, served on localhost:51515); the standalone KopiaUI
@@ -127,6 +125,20 @@ in
     wireguard-tools      # `wg` + `wg-quick` VPN CLI; kernel module is in-tree, so just
                          # `sudo wg-quick up <conf>`. For an always-on tunnel managed by the
                          # system, use NixOS `networking.wireguard.interfaces` in a module instead.
+
+    # ── Databases ──
+    # Clients only — no host here runs a DB server; these point at remote/containerised ones and
+    # at local files. pgcli/litecli DO keep config under ~/.config/{pgcli,litecli}/, but they
+    # write it themselves at first run and nothing declarative owns it — so no chezmoi collision
+    # (cf. the gtk-3.0/settings.ini clobber in CLAUDE.md). The GUI (dbeaver-bin) is in home/gui.nix.
+    postgresql           # bundles `psql` (client); we don't run a server here
+    pgcli                # psql++ — autocomplete + syntax highlighting
+    sqlite-interactive   # the `sqlite3` REPL (+ readline for history/editing). NOT plain `sqlite`:
+                         # that output is library-only — no bin/ whatsoever — which is exactly why
+                         # the sqlite-3.x sitting in every manifest (pulled in transitively) has
+                         # never put `sqlite3` on PATH. `interactive = true` is what builds the CLI.
+    litecli              # pgcli's sibling for SQLite — same authors, same UX
+    dolt                 # version-controlled SQL database, git-style CLI
 
     # ── Media ──
     ffmpeg

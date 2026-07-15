@@ -908,6 +908,7 @@ generically-0.1.1-r5.cabal
 generics-sop-0.5.1.4
 generics-sop-0.5.1.4-r3.cabal
 gengetopt-2.23
+geos-3.14.1
 getc
 getc-builder
 getchar
@@ -1487,6 +1488,7 @@ libpfm-4.13.0
 libpipeline-1.5.8
 libpng-apng-1.6.58
 libpq-18.4
+libpq.sgml
 libpsl-0.21.5
 libpthread-stubs-0.5
 libpulseaudio-17.0
@@ -1613,6 +1615,7 @@ linux-headers-static-6.18.7
 linux-pam-1.7.1
 linux-pam-1.7.1_fish-completions
 linux-raw-sys-0.11.0
+litecli-1.17.1
 litemap-0.8.1
 livebook.md
 lld-20.1.8
@@ -2288,6 +2291,7 @@ portaudio-190700_20210406
 posix
 posix-builder
 postgresql-17.10
+postgresql-test-hook
 postgresql.md
 potential_utf-0.1.4
 potrace-1.16
@@ -2372,6 +2376,7 @@ python3.13-aiofiles-25.1.0
 python3.13-aiohappyeyeballs-2.6.1
 python3.13-aiohttp-3.13.5
 python3.13-aioitertools-0.13.0
+python3.13-aioquic-1.3.0
 python3.13-aiosignal-1.4.0
 python3.13-aiosmtpd-1.4.6
 python3.13-aiosqlite-0.21.0
@@ -2397,6 +2402,7 @@ python3.13-asttokens-3.0.1
 python3.13-astunparse-1.6.3
 python3.13-async-generator-1.10
 python3.13-async-timeout-5.0.1
+python3.13-asyncssh-2.22.0
 python3.13-atpublic-5.0
 python3.13-attrs-26.1.0
 python3.13-autocommand-2.2.2
@@ -2438,14 +2444,17 @@ python3.13-cffi-2.0.0
 python3.13-cfn-lint-1.43.3
 python3.13-chalice-1.33.0
 python3.13-chameleon-4.6.0
+python3.13-changelog-chug-0.0.3
 python3.13-chardet-5.2.0
 python3.13-charset-normalizer-3.4.7
+python3.13-cli-helpers-2.14.0
 python3.13-click-8.3.1
 python3.13-cloudpickle-3.1.2
 python3.13-cmake-4.1.2
 python3.13-colorama-0.4.6
 python3.13-colour-0.1.5
 python3.13-commentjson-0.9.0
+python3.13-configobj-5.0.9
 python3.13-configparser-7.2.0
 python3.13-constantly-23.10.4
 python3.13-contourpy-1.3.3
@@ -2503,6 +2512,7 @@ python3.13-fastapi-0.136.3
 python3.13-fastapi-cli-0.0.20
 python3.13-faust-cchardet-2.1.19
 python3.13-feedgen-1.0.0
+python3.13-fido2-2.1.1
 python3.13-filelock-3.20.3
 python3.13-filetype-1.2.0
 python3.13-fixtures-4.2.8
@@ -2605,6 +2615,7 @@ python3.13-lark-1.3.1
 python3.13-lazy-object-proxy-1.12.0
 python3.13-legacy-cgi-2.6.4
 python3.13-libclang-21.1.8
+python3.13-libnacl-2.1.0
 python3.13-libpass-1.9.3
 python3.13-librt-0.9.0
 python3.13-lingua-4.15.0
@@ -2612,6 +2623,7 @@ python3.13-linkify-it-py-2.0.3
 python3.13-litestar-2.21.1
 python3.13-litestar-htmx-0.5.0
 python3.13-littleutils-0.2.4
+python3.13-lockfile-0.12.2
 python3.13-lxml-6.0.2
 python3.13-mako-1.3.10
 python3.13-markdown-3.10.2
@@ -2679,6 +2691,8 @@ python3.13-pendulum-3.1.0-unstable-2025-10-28
 python3.13-pep517-0.13.1
 python3.13-pexpect-4.9.0
 python3.13-pg8000-1.31.5
+python3.13-pgcli-4.5.0
+python3.13-pgspecial-2.2.1
 python3.13-phonenumbers-9.0.22
 python3.13-pickleshare-0.7.5
 python3.13-pikepdf-10.5.1
@@ -2697,6 +2711,7 @@ python3.13-polib-1.2.0
 python3.13-polyfactory-3.3.0
 python3.13-pooch-1.8.2
 python3.13-portend-3.2.1
+python3.13-pproxy-2.7.9
 python3.13-pretend-1.0.9
 python3.13-priority-2.0.0
 python3.13-prompt-toolkit-3.0.51
@@ -2704,6 +2719,9 @@ python3.13-prompt-toolkit-3.0.52
 python3.13-propcache-0.4.1
 python3.13-proxy-py-2.4.10
 python3.13-psutil-7.2.2
+python3.13-psycopg-3.3.4
+python3.13-psycopg-c-3.3.4
+python3.13-psycopg-pool-3.3.4
 python3.13-psycopg2-2.9.11
 python3.13-ptyprocess-0.7.0
 python3.13-pure-eval-0.2.3
@@ -2739,6 +2757,7 @@ python3.13-pyhamcrest-2.1.0
 python3.13-pyjwt-2.13.0
 python3.13-pylama-8.4.1
 python3.13-pylibmc-1.6.3
+python3.13-pylsqpack-0.3.23
 python3.13-pymemcache-4.0.0
 python3.13-pymongo-4.16.0
 python3.13-pymysql-1.1.2
@@ -2793,12 +2812,14 @@ python3.13-pytest-timeout-2.4.0
 python3.13-pytest-trio-0.8.0
 python3.13-pytest-vcr-1.0.2
 python3.13-pytest-xdist-3.8.0
+python3.13-python-daemon-3.1.2
 python3.13-python-dateutil-2.8.2
 python3.13-python-dateutil-2.9.0.post0
 python3.13-python-dbusmock-0.37.2
 python3.13-python-dotenv-1.2.2
 python3.13-python-memcached-1.62
 python3.13-python-multipart-0.0.29
+python3.13-python-pkcs11-0.9.3
 python3.13-python-ulid-3.1.0
 python3.13-python-xmp-toolkit-2.0.2
 python3.13-pythran-0.18.1
@@ -2846,6 +2867,7 @@ python3.13-setuptools-80.10.1
 python3.13-setuptools-rust-1.12.0
 python3.13-setuptools-scm-9.2.2
 python3.13-sh-2.2.2
+python3.13-shapely-2.1.2
 python3.13-shellingham-1.5.4
 python3.13-shtab-1.8.0
 python3.13-simplejson-3.20.2
@@ -2880,6 +2902,7 @@ python3.13-sqlalchemy-2.0.49
 python3.13-sqlalchemy-utils-0.41.2
 python3.13-sqlparse-0.5.5
 python3.13-sse-starlette-3.2.0
+python3.13-sshtunnel-0.4.0
 python3.13-stack-data-0.6.3
 python3.13-standard-cgi-3.13.0
 python3.13-starlette-1.1.0
@@ -2898,6 +2921,7 @@ python3.13-tempora-5.8.1
 python3.13-tenacity-9.1.4
 python3.13-testcontainers-4.14.2
 python3.13-testpath-0.6.0
+python3.13-testscenarios-0.5.0
 python3.13-testtools-2.7.2
 python3.13-textfsm-2.1.0
 python3.13-time-machine-3.2.0
@@ -2931,6 +2955,7 @@ python3.13-typing-inspect-0.9.0-unstable-2025-10-20
 python3.13-typing-inspection-0.4.2
 python3.13-typogrify-2.1.0
 python3.13-tzdata-2026.2
+python3.13-tzlocal-5.3.1
 python3.13-u-msgpack-python-2.8.0
 python3.13-uc-micro-py-1.0.3
 python3.13-uharfbuzz-0.53.2
@@ -3306,6 +3331,7 @@ splitmix-0.1.3.2
 sprintf
 sprintf-builder
 sqlite-3.51.2
+sqlite-interactive-3.51.2
 sratom-0.6.22
 src
 srt-1.5.4

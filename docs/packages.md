@@ -12,10 +12,17 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 | CLI tools | `bat`, `fd`, `ripgrep`, `jq`, `nnn`, `git`, `delta`, `lazygit`, `lazydocker`, `chezmoi`, `btop`, `ncdu`, `yq-go`, `hugo` |
 | Editor (neovim + LazyVim deps) | `neovim`, `gcc`, `nodejs`, `lua-language-server`, `stylua`, `tree-sitter` |
 | Dev / ops | `python3` (+pip, requests), `k9s`, `kubernetes-helm`, `kustomize`, `krew`, `cilium-cli`, `talhelper`, `sops`, `ansible`, `opentofu`, `tea`, `awscli2`, `claude-code`, `mise` |
+| Databases | `postgresql` (→`psql`), `pgcli`, `sqlite-interactive` (→`sqlite3`), `litecli`, `dolt` |
 | Media | `ffmpeg`, `imagemagick`, `yt-dlp` |
 
 > `opentofu` is this repo's deliberate FOSS choice over duck's `terraform` (BSL). `mise` is
 > a bare package activated by chezmoi, not `programs.mise` (chezmoi boundary).
+
+> Databases are **clients only** — no host runs a server, so the headless server gets them too
+> (handy over SSH). `sqlite-interactive`, not `sqlite`: the latter is library-only and ships no
+> `bin/` at all, so it would put nothing on PATH. Don't be fooled by `sqlite-3.x` appearing in
+> every `manifests/*.txt` — that's a transitive dep of other packages, not a usable CLI. The
+> DBeaver GUI is graphical-only (`home/gui.nix`).
 
 ## System base — `modules/common.nix` (every host: D L S)
 
@@ -29,8 +36,10 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 
 ## GUI apps — `home/gui.nix` (graphical: D L)
 
-- Packages: `kitty`, `google-chrome`, `firefox`, `brave`, `vscode`, `nautilus`, `evolution`,
-  `copyq`, `handbrake`, `wineWow64Packages.stable`, `winetricks`, `blender`.
+- Packages: `kitty`, `google-chrome`, `firefox`, `brave`, `vscode`, `dbeaver-bin`, `nautilus`,
+  `evolution`, `copyq`, `handbrake`, `wineWow64Packages.stable`, `winetricks`, `blender`.
+- `dbeaver-bin` (not `dbeaver` — renamed upstream with the prebuilt-binary switch) is the GUI
+  counterpart to the Databases row above; Apache-2.0, so no unfree gate.
 - `blender` is GPU-conditional (gated on `videoDrivers`, since no host has a `facter.json` yet so
   `detected.nvidia` is false everywhere):
   - **desktop** — `blender.override { cudaSupport = true; }`, so Cycles gets CUDA + OptiX on the
