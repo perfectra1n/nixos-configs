@@ -88,7 +88,7 @@ FISHENV_MANIFEST = [
     # the key is the mcp_bearer field verbatim, the base is mcp_url with the trailing /mcp stripped
     # (mcpbase kind). MEMINI_NAMESPACE (=default) lives in the PUBLIC fish conf.d, not here: not a secret.
     ("MEMINI_BASE_URL",              "Memini MCP",           "mcpbase", "mcp_url"),
-    ("MEMINI_API_KEY",               "Memini MCP",           "field",   "mcp_bearer"),
+    ("MEMINI_API_KEY",               "Memini MCP",           "field",   "jon_dev"),
     # Private domains — kept out of the (public) repo; fish functions reference these vars.
     ("MAIN_GITEA_HOST",              "Main Gitea",           "host",  ""),
     ("HOMELAB_SSH_DOMAIN",           "Homelab Domains",      "field", "ssh_domain"),

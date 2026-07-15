@@ -9,7 +9,9 @@
     "monitorPlaylists": {},
     "monitorScenes": {
       "DP-1": "897016354",
-      "DP-2": "897016354"
+      "DP-2": "897016354",
+      "DP-4": "897016354",
+      "DP-5": "897016354"
     },
     "sceneSettings": {
       "897016354": {
@@ -42,6 +44,7 @@
     "perAppTraffic": true
   },
   "dockerManager": {
-    "enabled": true
+    "enabled": true,
+    "groupByCompose": false
   }
 }
