@@ -63,5 +63,5 @@ fetch.url = "https://github.com/SnapXL/SnapX/releases/download/v$ver/snapx-ui-0.
 # nixpkgs ships a libratbag release with both. See modules/peripherals.nix for the full WHY.
 [libratbag]
 # renovate: datasource=git-refs depName=https://github.com/perfectra1n/libratbag branch=hidpp20-multi-quirk-g502xplus
-src.manual = "b23167c644d8f78b477a5a12668b9edf22da1616"
+src.manual = "03bf0a3e4da90f53aa1a0b582f41e3caed2b31bc"
 fetch.github = "perfectra1n/libratbag"
