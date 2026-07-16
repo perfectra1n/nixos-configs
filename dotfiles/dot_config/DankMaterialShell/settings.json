@@ -550,7 +550,7 @@
       "all"
     ],
     "lockScreen": [
-      "DP-2"
+      "S2719DGF"
     ]
   },
   "showOnLastDisplay": {
@@ -572,7 +572,7 @@
       "position": 1,
       "screenPreferences": [
         {
-          "name": "DP-3",
+          "name": "DP-4",
           "model": "AW3225QF"
         }
       ],
@@ -752,7 +752,7 @@
       "currentFilePath": "notepad-files/untitled-1781973370635.txt",
       "currentFileExtension": "txt",
       "sourceContent": "asdf",
-      "updatedAt": 1784135865038
+      "updatedAt": 1784145609348
     }
   },
   "clipboardClickToPaste": false,
