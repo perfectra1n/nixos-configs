@@ -85,7 +85,7 @@
           natural_scroll = false
           tap-to-click = true
           disable_while_typing = true
-          scroll_factor = 0.5   # halve the default touchpad scroll distance (1.0 was too fast)
+          scroll_factor = 0.3   # 0.5 (half of the 1.0 default) still scrolled too fast; 0.3 tames it
         }
       }
     '';
