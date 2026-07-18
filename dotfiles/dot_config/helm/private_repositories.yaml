@@ -91,3 +91,21 @@ repositories:
   password: ""
   url: https://bjw-s-labs.github.io/helm-charts
   username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: pihole-tmp
+  pass_credentials_all: false
+  password: ""
+  url: https://mojo2600.github.io/pihole-kubernetes
+  username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: immich-tmp
+  pass_credentials_all: false
+  password: ""
+  url: https://immich-app.github.io/immich-charts
+  username: ""
