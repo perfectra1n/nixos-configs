@@ -38,7 +38,7 @@ in
     nethogs
     flux
     #nsys
-    py-spy
+    #py-spy # can't read thread names from py3.14 (now nixpkgs default) → test failure; re-add when benfred/py-spy#819 lands
     perf
     #pidstat
 
