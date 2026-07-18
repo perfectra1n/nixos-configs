@@ -16,8 +16,9 @@ name: Renovate
 
 on:
   schedule:
-    - cron: "0 6 * * 1" # weekly Monday 06:00 UTC — this cron is the ONLY cadence gate; renovate.json
-                        # rules carry no `schedule:` so a manual workflow_dispatch opens PRs any day.
+    - cron: "0 14 * * *" # daily 14:00 UTC (7am PDT / 6am PST) — this cron is the ONLY cadence gate;
+                         # renovate.json rules carry no `schedule:` so a manual workflow_dispatch
+                         # opens PRs any day.
   workflow_dispatch: # manual trigger for the first run / debugging
     inputs:
       logLevel:
