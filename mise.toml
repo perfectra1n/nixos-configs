@@ -22,7 +22,7 @@ task_output = "quiet"
 # compares each pin to pkgs.<name>.version, and fails `nix flake check` (and therefore CI) on any
 # mismatch. If a Renovate PR bumps one side, CI goes red until the other side catches up.
 [tools]
-lefthook = "2.1.5"
+lefthook = "2.1.10"
 gitleaks = "8.30.1"
 trufflehog = "3.95.9"
 #
