@@ -90,6 +90,7 @@
             ./modules/common.nix
             ./modules/facter.nix
             ./modules/system-diff.nix
+            ./modules/nix-cache.nix # LAN attic binary cache: sops-rendered substituter + watch-store push (inert until secrets land)
             ./hosts/${hostName}
             inputs.sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager

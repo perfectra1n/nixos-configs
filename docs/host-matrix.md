@@ -1,8 +1,8 @@
 # Host × module matrix
 
 Which modules each host opts into (defined in `flake.nix`'s `mkHost` calls). `common`,
-`facter`, `hosts/<name>`, sops-nix, home-manager, and `home/common.nix` are implicit on
-**every** host and omitted from the table.
+`facter`, `system-diff`, `nix-cache`, `hosts/<name>`, sops-nix, home-manager, and
+`home/common.nix` are implicit on **every** host and omitted from the table.
 
 | Module / home import | desktop | laptop | server |
 |----------------------|:-------:|:------:|:------:|

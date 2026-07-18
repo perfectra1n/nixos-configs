@@ -136,6 +136,27 @@ time is fine — e.g. the CachyOS kernel and DMS's quickshell only build on a re
 > Chaotic is added solely for the CachyOS kernel on the NVIDIA desktop; the laptop runs scx
 > on the stock kernel.
 
+## LAN binary cache (`modules/nix-cache.nix`)
+
+Every host pulls from — and pushes its own builds to — a self-hosted
+[attic](https://github.com/zhaofengli/attic) cache on the homelab LAN (think
+`nixcache.example.internal`; the real hostname is deliberately not in this repo).
+
+- **Pull**: the substituter URL is a private hostname, and this repo is public with a
+  gitleaks gate — so the URL is a sops secret, rendered at activation into a nix.conf
+  fragment that the committed config pulls in via a constant `!include` line. Only the
+  cache's *public key* is committed. Gotcha: Nix orders substituters by **priority, not
+  config order** (cache.nixos.org = 40), so the URL carries `?priority=10` to put the LAN
+  cache first.
+- **Push**: an `attic watch-store` systemd service uploads new store paths as they
+  appear. It skips anything signed by upstream keys (cache.nixos.org, chaotic), so only
+  local builds land in the cache.
+- **Degradation**: off-LAN, `connect-timeout = 5` bounds the stall, Nix disables the
+  unreachable substituter for the invocation, and `fallback = true` converts a broken
+  download into a local build. A missing fragment (fresh install, secrets not yet
+  pulled) is byte-identical to stock behavior — the module is inert until
+  `mise run secrets:pull` lands the `nix/*` keys.
+
 ## Why `modules/chromium-cm-fix.nix` exists
 
 Chromium ≥141 declares its SDR UI as sRGB over `wp_color_manager_v1`, so Hyprland renders

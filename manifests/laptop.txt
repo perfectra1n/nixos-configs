@@ -267,6 +267,10 @@ atomic-counter-0.1.2.4
 atomicparsley-20240608.083822.1ed9031
 attachment.cgi?id=148912
 attachment.cgi?id=186451
+attic-0-unstable-2026-06-26
+attic-0-unstable-2026-06-26-vendor
+attic-0-unstable-2026-06-26-vendor-staging
+attic-0-unstable-2026-06-26_fish-completions
 attoparsec-0.14.4
 attoparsec-0.14.4-r6.cabal
 attoparsec-aeson-2.2.2.0

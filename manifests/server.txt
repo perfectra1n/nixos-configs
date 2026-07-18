@@ -167,6 +167,10 @@ atoi-builder
 atomicparsley-20240608.083822.1ed9031
 attachment.cgi?id=148912
 attachment.cgi?id=186451
+attic-0-unstable-2026-06-26
+attic-0-unstable-2026-06-26-vendor
+attic-0-unstable-2026-06-26-vendor-staging
+attic-0-unstable-2026-06-26_fish-completions
 attoparsec-0.14.4
 attoparsec-0.14.4-r6.cabal
 attoparsec-aeson-2.2.2.0
@@ -1032,7 +1036,9 @@ gnutar-musl-get-version-1.12
 gnutar-static-1.35
 gnutar-static-get-version-1.35
 gnutls-3.8.13
+go-1.22.12-linux-amd64-bootstrap
 go-1.24.13-linux-amd64-bootstrap
+go-1.25.11
 go-1.26.4
 go-md2man-2.0.7
 go-md2man-2.0.7-go-modules
@@ -3308,6 +3314,8 @@ sop-core-0.5.0.2-r6.cabal
 sops-3.13.1
 sops-3.13.1-go-modules
 sops-3.13.1_fish-completions
+sops-install-secrets-0.0.1
+sops-install-secrets-0.0.1-go-modules
 sord-0.16.20
 sound-theme-freedesktop-0.8
 sound-theme-freedesktop-0.8_fish-completions

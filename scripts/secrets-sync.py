@@ -61,6 +61,11 @@ SOPS_MANIFEST = [
     ("docker/duck_gitea_auth", "Duck Gitea",                  "basicauth", "perf3ct:API Key (Main)"),
     ("docker/ghcr_auth",       "Github",                      "basicauth", "perfectra1n:Updated Super Token (API key)"),
     ("docker/dockerhub_auth",  "Dockerhub / hub.docker.com",  "basicauth", "@:Access Token"),
+    # LAN attic binary cache (modules/nix-cache.nix). The URL carries ?priority=10 on purpose:
+    # Nix orders substituters by priority, not config order, and 10 beats cache.nixos.org's 40.
+    ("nix/cache_substituter_url", "Nix Binary Cache",         "field",     "substituter_url"),
+    ("nix/attic_endpoint",        "Nix Binary Cache",         "field",     "endpoint"),
+    ("nix/attic_push_token",      "Nix Binary Cache",         "field",     "push_token"),
 ]
 
 # Shell env vars -> the age-encrypted secrets.fish. Mostly `field` (full URLs/tokens taken
