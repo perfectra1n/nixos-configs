@@ -1921,9 +1921,9 @@ dms-idle-inhibit-watchdog
 dms-plugin-hyprlandSubmapIndicator-1.0.0
 dms-plugin-linuxWallpaperEngine-1.1.0
 dms-plugins-851e06c
-dms-shell-1.5.0+date=2026-07-08_bdfd565
-dms-shell-1.5.0+date=2026-07-08_bdfd565-go-modules
-dms-shell-1.5.0+date=2026-07-08_bdfd565_fish-completions
+dms-shell-1.5.2+date=2026-07-18_74896fb
+dms-shell-1.5.2+date=2026-07-18_74896fb-go-modules
+dms-shell-1.5.2+date=2026-07-18_74896fb_fish-completions
 dms-wallpaperengine-714ccb7
 dns-root-data-2025-04-14
 dnsmasq-2.93
