@@ -39,7 +39,14 @@ empirically on v2.70.5:
 | app rewrites file, then `apply` | app's version **untouched** |
 | `chezmoi status` afterwards | **clean** — excluded from the dirty check |
 | `apply --force` | **still** does not re-seed; `create_` is absolute |
-| `chezmoi re-add` | captures the app's version, preserving all three attributes |
+| `chezmoi re-add` | **silent no-op** — does *not* update the source |
+| `chezmoi add --create --encrypt` | updates the source, attributes preserved |
+
+`re-add` being inert on `create_` entries is consistent (`create_` is the attribute that tells
+chezmoi to stop tracking content) but it **fails open**: no error, no diff, and the stale source
+ships to the next box. Verify a re-capture by decrypting the **source** — `age -d -i
+~/.config/age/age.agekey <file>.age` — never with `chezmoi cat`, which reports the *target's*
+content and therefore cannot detect a missed update.
 
 This is the same family as the DMS `settings.json` and kubeconfig/talosconfig convention
 (live-writable snapshots, never `readonly_`), but `create_` rather than a plain
@@ -147,7 +154,8 @@ Failure modes: a missing age key fails `chezmoi apply` loudly at decrypt (existi
 behavior); a missing `~/.config/rclone/rclone.conf` leaves each unit *skipped*, not failed;
 an unreachable remote hits `Restart=on-failure` and then the start limit rather than
 looping forever; a revoked OAuth token fails the unit, and recovery is `rclone config
-reconnect AtvikGoogleDrive:` followed by `chezmoi re-add` to re-capture.
+reconnect AtvikGoogleDrive:` followed by `chezmoi add --create --encrypt
+~/.config/rclone/rclone.conf` to re-capture (**not** `re-add` — see above).
 
 Verify:
 

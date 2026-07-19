@@ -87,8 +87,14 @@ README.md
 # means "seed if absent, then never touch again": chezmoi writes it once on a fresh box, then
 # leaves rclone's churn alone and stays clean in `chezmoi status`.
 #
-# Re-capture an intentional change (a re-auth, or a NEW remote) with `chezmoi re-add`, which
-# preserves the create_/encrypted_/private_ attributes. CAVEAT: because create_ never overwrites
+# Re-capture an intentional change (a re-auth, or a NEW remote) with
+#     chezmoi add --create --encrypt ~/.config/rclone/rclone.conf
+# NOT `chezmoi re-add` — on a create_ entry re-add is a SILENT NO-OP (verified v2.70.5). That is
+# consistent (create_ is precisely the attribute that tells chezmoi to stop tracking the content)
+# but it fails open: you get no error, no diff, and the stale source ships to the next box. Verify
+# a re-capture by decrypting the SOURCE (`age -d -i ~/.config/age/age.agekey <file>.age`), not with
+# `chezmoi cat`, which reports the target's content and so cannot detect a missed update.
+# CAVEAT: because create_ never overwrites
 # an existing target — not even with `apply --force` — a newly added remote does NOT reach an
 # already-provisioned box. There, re-seed explicitly:
 #     rm ~/.config/rclone/rclone.conf && chezmoi apply
