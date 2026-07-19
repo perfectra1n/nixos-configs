@@ -37,7 +37,6 @@ README.md
 .config/tea
 .config/argocd
 .config/kopia
-.config/rclone
 
 # Claude Code's live login. Claude Code OWNS this file and rewrites it whenever it refreshes, so
 # it can never be a managed dotfile — and it holds a plaintext refresh token, which must never
@@ -76,6 +75,27 @@ README.md
 .kube/**
 !.kube
 !.kube/config
+
+# ~/.config/rclone used to sit in the "regenerate via the tool's own login" group above. It no
+# longer does: rclone.conf is now managed age-encrypted, because the mounts in
+# modules/rclone-mounts.nix need it present at login and re-running `rclone config` by hand on
+# every box (incl. the Google Drive OAuth dance) is exactly the toil this repo exists to remove.
+#
+# The source uses chezmoi's create_ attribute, NOT the live-snapshot rules used by DMS/.kube
+# above. rclone rewrites this file roughly HOURLY to persist refreshed OAuth access tokens, so a
+# plain managed file would report dirty forever and prompt to overwrite on every apply. create_
+# means "seed if absent, then never touch again": chezmoi writes it once on a fresh box, then
+# leaves rclone's churn alone and stays clean in `chezmoi status`.
+#
+# Re-capture an intentional change (a re-auth, or a NEW remote) with `chezmoi re-add`, which
+# preserves the create_/encrypted_/private_ attributes. CAVEAT: because create_ never overwrites
+# an existing target — not even with `apply --force` — a newly added remote does NOT reach an
+# already-provisioned box. There, re-seed explicitly:
+#     rm ~/.config/rclone/rclone.conf && chezmoi apply
+# That is safe: the seed carries the refresh_token, and rclone mints fresh access tokens from it.
+.config/rclone/**
+!.config/rclone
+!.config/rclone/rclone.conf
 
 # homelab-ops expects a gitignored ./kubeconfig at its root — managed as a symlink to
 # the encrypted ~/.kube/config so context switches and cert refreshes stay in one file.

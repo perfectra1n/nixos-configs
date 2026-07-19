@@ -39,7 +39,7 @@ let
 in
 {
   inherit ready;
-  paths = walked.paths; # e.g. [ "nextcloud/rclone_conf" "smb/main_smb_creds" ... ]
+  paths = walked.paths; # e.g. [ "chezmoi/gitea_token" "smb/main_smb_creds" ... ]
 
   # Folds in `ready`, so call sites collapse to one condition instead of the old
   # `secretsReady && secretPresent` pair.

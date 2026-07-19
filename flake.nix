@@ -118,7 +118,7 @@
         ./modules/virtual-camera.nix # v4l2loopback /dev/video10 — the node the virtual camera(s) produce into
         ./modules/peripherals.nix # gaming mice (Piper/ratbagd), RGB (OpenRGB), QMK/VIA keyboards (Vial)
         ./modules/noise-suppression.nix # DeepFilterNet mic denoise (Broadcast-like virtual source)
-        ./modules/nextcloud-vfs.nix # rclone WebDAV files-on-demand mount (activates once the sops secret lands)
+        ./modules/rclone-mounts.nix # rclone files-on-demand mounts: Nextcloud + Google Drive (activate once chezmoi deploys ~/.config/rclone/rclone.conf)
         ./modules/smb-mounts.nix # CIFS mount of //192.168.2.155/main_smb (on-demand automount; activates once the sops creds land)
         ./modules/dotfiles.nix # chezmoi bootstrap: sops token + chezmoi.toml (orchestration in mise.toml — `mise run apply`)
         ./modules/git-credentials.nix # sops-rendered ~/.git-credentials for GitHub + both Gitea (helper line lives in chezmoi gitconfig)

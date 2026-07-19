@@ -334,7 +334,7 @@ in
       ticktick            # TickTick to-do / task manager
       spotify
       # Nextcloud desktop sync client removed — replaced by the rclone WebDAV files-on-demand
-      # mount in modules/nextcloud-vfs.nix (~/NextcloudVFS). See docs/host-matrix.md.
+      # mount in modules/rclone-mounts.nix (/mnt/FullerNextcloud). See docs/host-matrix.md.
       owncloud-client     # ownCloud desktop sync client
       obs-studio-nvenc    # screen recording / streaming (PipeWire screencast on Wayland).
                           # Wrapped to add /run/opengl-driver/lib so NVENC works (see let-binding).

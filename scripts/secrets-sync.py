@@ -41,7 +41,7 @@ from pathlib import Path
 #                      selector is "<user>:<field name>", split on the FIRST colon. <user>="@"
 #                      resolves the username FROM the item (login Username, else a "User Name" field).
 #   kind=note       -> value is the item's secure-note body VERBATIM — for MULTILINE file contents
-#                      (rclone conf, smb creds) that a single-line custom field can't carry.
+#                      (smb creds) that a single-line custom field can't carry.
 #   kind=mcpbase    -> the named field `selector` (an MCP URL) with a trailing "/mcp" removed — for
 #                      plugins that append /mcp themselves (e.g. memini's bundled .mcp.json). Lets one
 #                      stored mcp_url feed both a full-URL client and a base-URL one, no second field.
@@ -50,7 +50,10 @@ from pathlib import Path
 # refreshes all of them; `secrets:edit` is only for out-of-band experiments.
 SOPS_MANIFEST = [
     ("chezmoi/gitea_token",    "Main Gitea",                  "field",     "Personal Access Token 1"),
-    ("nextcloud/rclone_conf",  "Nextcloud rclone.conf",       "note",      ""),
+    # nextcloud/rclone_conf was dropped 2026-07-19: the rclone config moved to chezmoi
+    # (dot_config/rclone/create_encrypted_private_rclone.conf.age) because Google Drive's OAuth
+    # refresh needs a WRITABLE config, which a read-only sops secret can never be. The Bitwarden
+    # note itself is left alone as a backup; it just no longer feeds secrets.yaml.
     ("smb/main_smb_creds",     "Main SMB Credentials",        "note",      ""),
     ("git/github_token",       "Github",                      "field",     "Updated Super Token (API key)"),
     ("git/main_gitea_token",   "Main Gitea",                  "field",     "Personal Access Token 1"),

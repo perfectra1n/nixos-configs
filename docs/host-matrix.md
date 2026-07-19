@@ -18,7 +18,7 @@ Which modules each host opts into (defined in `flake.nix`'s `mkHost` calls). `co
 | `modules/nvbroadcast.nix` | ✅ | — | — |
 | `modules/peripherals.nix` | ✅ | ✅ | — |
 | `modules/noise-suppression.nix` | ✅ | ✅ | — |
-| `modules/nextcloud-vfs.nix` | ✅ | ✅ | — |
+| `modules/rclone-mounts.nix` | ✅ | ✅ | — |
 | `inputs.chaotic.nixosModules.default` | ✅ | — | — |
 | `modules/server.nix` | — | — | ✅ |
 | `home/gui.nix` (homeModules) | ✅ | ✅ | — |
