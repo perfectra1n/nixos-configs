@@ -17,6 +17,26 @@ in
   # remaps, LEDs, onboard profiles. Speaks libratbag, covering Logitech/SteelSeries/Roccat/etc.
   services.ratbagd.enable = true;
 
+  # ── 1:1 wheel scrolling: disable libinput high-resolution scroll on all mice ──
+  # Modern mice (the G502 X PLUS above included) emit REL_WHEEL_HI_RES — the v120 model where one
+  # physical detent = 120 units delivered as several fractional events. Apps that consume that
+  # smooth stream (GTK4, Chromium, XWayland) scroll imprecisely. This quirk masks the hi-res axis
+  # so libinput falls back to the legacy REL_WHEEL the kernel still emits alongside it → exactly
+  # one event per physical detent. Chosen over Solaar's HID++ hi-res toggle for the same reasons
+  # Solaar lost to libratbag: no daemon (static file), MatchUdevType=mouse covers wired AND
+  # wireless by device class (and excludes touchpads), and it never touches the HID++ 0x2121 wheel
+  # mode, avoiding the mode-change event Solaar swallows as an "ignored first scroll". Needs
+  # libinput >= 1.30 (the quirk regressed in 1.29; we pin 1.31+). A parse error SILENTLY disables
+  # ALL quirks. ⚠ libinput reads quirk files only at context creation (Hyprland startup), never on
+  # hotplug — a rebuild changing this needs a RELOG to take effect, not a mouse re-plug. Verify a
+  # fresh context matches: `sudo libinput quirks list /dev/input/eventN` (expect the AttrEventCode
+  # line).
+  environment.etc."libinput/local-overrides.quirks".text = ''
+    [Disable hi-res wheel on all mice]
+    MatchUdevType=mouse
+    AttrEventCode=-REL_WHEEL_HI_RES;-REL_HWHEEL_HI_RES;
+  '';
+
   # RGB lighting across vendors (mouse, RAM, mobo, fans). The module installs the udev rules,
   # loads i2c-dev for SMBus controllers, and runs the OpenRGB server; the GUI is the package.
   services.hardware.openrgb.enable = true;

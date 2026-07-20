@@ -2097,6 +2097,7 @@ etc-bashrc
 etc-fstab
 etc-hostname
 etc-ipsec.secrets
+etc-libinput-local-overrides.quirks
 etc-lsb-release
 etc-nanorc
 etc-netgroup
