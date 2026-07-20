@@ -2,6 +2,9 @@
 # One git-refs pin per top-level flake input; Renovate bumps each branch HEAD and the
 # flake-inputs packageRule re-locks flake.lock via 'nix flake update <input>'. See renovate.json.
 
+# renovate: datasource=git-refs depName=blender-bin packageName=https://github.com/edolstra/nix-warez branch=master
+blender-bin = "32a73188c4026cea3f8ed97078ace45bf9f7f578"
+
 # renovate: datasource=git-refs depName=chaotic packageName=https://github.com/chaotic-cx/nyx branch=nyxpkgs-unstable
 chaotic = "20f7c6dde5c9b961c5e7bd8ebf25a745f6757a72"
 

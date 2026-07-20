@@ -20,16 +20,12 @@
   # to GCC for this reason; the ~1% LTO delta isn't worth a local kernel+toolchain rebuild here.
   boot.kernelPackages = pkgs.linuxPackages_cachyos-gcc;
 
-  # A nixpkgs cudaSupport build is back (blender, home/gui.nix — Cycles CUDA + OptiX on the 5090),
-  # so the pin returns with it. RTX 5090 = Blackwell, sm_120 / capability 12.0.
-  #   Scope, measured — NOT what the old note here predicted: this constrains the nixpkgs packages
-  # that build their OWN cuda kernels (of blender's closure, only opensubdiv — openimagedenoise's
-  # drv is byte-identical with and without it). It does NOT constrain Cycles' kernels: nixpkgs
-  # never passes CYCLES_CUDA_BINARIES_ARCH, so blender's CMake default wins and ships cubins for
-  # sm_50…sm_120 regardless. Restricting those needs a cmakeFlag on the override, not this.
-  # (NV Broadcast's CUDA is unaffected — prebuilt pip wheels, modules/nvbroadcast.nix.)
-  # Reaches home-manager's pkgs too: flake.nix sets home-manager.useGlobalPkgs = true.
-  nixpkgs.config.cudaCapabilities = [ "12.0" ];
+  # No nixpkgs.config.cudaCapabilities pin: it existed solely for the blender cudaSupport
+  # build (dropped 2026-07, home/gui.nix — the recurring uncached local rebuild wasn't worth
+  # it; this host's blender is now the prebuilt blender-bin flake). Nothing on this host
+  # builds CUDA kernels via nixpkgs now; NV Broadcast's CUDA is prebuilt pip wheels
+  # (modules/nvbroadcast.nix). If a cudaSupport package ever returns, bring the pin back:
+  # RTX 5090 = Blackwell, capability "12.0".
 
   # UEFI boot — adjust to match the real machine's firmware (see hosts/server for BIOS).
   boot.loader.systemd-boot.enable = true;

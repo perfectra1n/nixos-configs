@@ -2691,7 +2691,7 @@ python3.14-smartypants-2.0.2
 python3.14-smmap-6.0.0
 python3.14-sniffio-1.3.1
 python3.14-snowballstemmer-3.0.1
-python3.14-snowflake-connector-python-4.3.0
+python3.14-snowflake-connector-python-4.4.0
 python3.14-snowflake-core-1.12.1
 python3.14-socksio-1.0.0
 python3.14-sortedcontainers-2.4.0

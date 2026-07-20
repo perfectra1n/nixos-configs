@@ -42,26 +42,26 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
   counterpart to the Databases row above; Apache-2.0, so no unfree gate.
 - `blender` is GPU-conditional (gated on `videoDrivers`, since no host has a `facter.json` yet so
   `detected.nvidia` is false everywhere):
-  - **desktop** — `blender.override { cudaSupport = true; }`, so Cycles gets CUDA + OptiX on the
-    5090 (verified live: `refresh_devices()` reports CUDA + OPTIX). Upstream gates *both*
-    `WITH_CYCLES_CUDA_BINARIES` and `WITH_CYCLES_DEVICE_OPTIX` on that flag, so the stock build has
-    no GPU device at all in Cycles. A local build: ~22 min, 3.8 GiB closure. Cycles' cubins cover
-    sm_50…sm_120 — that arch list is blender's OWN CMake var (`CYCLES_CUDA_BINARIES_ARCH`), *not*
-    `nixpkgs.config.cudaCapabilities`, which nixpkgs never forwards to it. Left at the default on
-    purpose: pinning it to sm_120 would be a unique derivation, invalidating the build already in
-    the store to save time on a *future* rebuild. `nix.daemonCPUSchedPolicy = "idle"`
-    (`modules/common.nix`) is what keeps such rebuilds from hurting.
-  - **laptop** — the cached CPU-Cycles build. EEVEE/viewport still run on its GPU; only final
-    Cycles renders fall to the CPU. Blender's AMD path (`rocmSupport` → HIP/HIPRT, or nixpkgs'
-    `blender-hip`) targets discrete Radeons, not this APU.
-- **No CUDA build is ever cached, by design.** cache.nixos.org carries no CUDA packages — the CUDA
-  EULA makes them unfree, so Hydra won't build them (the override's `meta.license` is
-  `[ gpl2Plus, CUDA EULA ]`). The community CUDA caches (`cache.nixos-cuda.org`, ex
-  cuda-maintainers.cachix.org; the `blender-cuda` Cachix) key on *their* nixpkgs rev, so an
-  override computed against ours can never hit them — verified misses. Hence: local build.
-- Zero-compile alternative, if the rebuilds ever grate: the **`blender-bin` flake** (edolstra) ships
-  upstream's official binaries with CUDA/OptiX/HIP already baked in. Trade-off: an out-of-nixpkgs
-  binary + another flake input. See <https://wiki.nixos.org/wiki/Blender>.
+  - **desktop** — the **`blender-bin` flake** (edolstra's nix-warez): upstream's official
+    binaries with CUDA + OptiX Cycles baked in, zero local compiling. `packages.default` =
+    upstream's newest, so Renovate lock bumps track it. Accepted trade-off (user call,
+    2026-07-20: GPU Cycles beats version freshness): it trails nixpkgs — 5.0.1 vs 5.1.2 when
+    added. See <https://wiki.nixos.org/wiki/Blender>.
+  - **laptop** — the cached nixpkgs CPU-Cycles build, NEWER than the desktop's. Its AMD APU
+    can't do GPU Cycles either way (HIP wants a supported discrete Radeon), so blender-bin
+    would cost it freshness for nothing. EEVEE/viewport still run on the GPU on both hosts.
+  - **History (tried and dropped, same day 2026-07-20):**
+    `blender.override { cudaSupport = true; }` — CUDA + OptiX Cycles verified working on the
+    5090, but the cost recurred forever: **no CUDA build is ever cached, by design** —
+    cache.nixos.org carries none (the CUDA EULA makes them unfree, so Hydra won't build them),
+    and the community CUDA caches (`cache.nixos-cuda.org`, the `blender-cuda` Cachix) key on
+    *their* nixpkgs rev, so an override computed against ours can never hit them (verified
+    misses). Every nixpkgs bump therefore meant a local rebuild of blender (~22 min, 3.8 GiB
+    closure) PLUS its CUDA-tainted dep chain — `opensubdiv` (the one dep that builds its own
+    CUDA kernels) and, above it, the very large `openusd` (Pixar's Universal Scene Description,
+    Blender's USD import/export lib — no CUDA of its own, rebuilt only because its opensubdiv
+    input changed). The desktop's `nixpkgs.config.cudaCapabilities = [ "12.0" ]` pin left with
+    the override (`hosts/desktop/default.nix` keeps a note).
 - Theming: dconf `prefer-dark` + `Posy_Cursor`; `gtk` (GTK3/4 dark hint); `qt` (adwaita-dark).
 - `home.activation.trustCustomCAs` imports `security.pki.certificateFiles` into `~/.pki/nssdb`
   for Chrome/Brave (inert when no custom CAs).

@@ -56,6 +56,18 @@
       flake = false;
     };
 
+    # blender-bin — upstream's OFFICIAL Blender binaries (edolstra's nix-warez), CUDA/OptiX/HIP
+    # Cycles backends baked in. The NVIDIA desktop's blender (home/gui.nix): the only zero-compile
+    # route to GPU Cycles, since a nixpkgs cudaSupport build can never be cached (CUDA EULA keeps
+    # it off Hydra, community caches key on their own nixpkgs rev) and rebuilding blender +
+    # opensubdiv + openusd locally on every bump was rejected. Trade-off, accepted deliberately:
+    # it trails nixpkgs (5.0.1 vs 5.1.2 when added). Follows our nixpkgs safely — it uses nixpkgs
+    # only for the unpack/patchelf wrapper (no compilation, no binary cache to miss).
+    blender-bin = {
+      url = "github:edolstra/nix-warez?dir=blender";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # NOTE: hardware detection uses nixpkgs' built-in `hardware.facter` module
     # (the standalone nixos-facter-modules flake was upstreamed into nixpkgs and
     # is deprecated). A per-host facter.json replaces the fragile
@@ -91,6 +103,7 @@
             ./modules/facter.nix
             ./modules/system-diff.nix
             ./modules/nix-cache.nix # LAN attic binary cache: sops-rendered substituter + watch-store push (inert until secrets land)
+            ./modules/snowflake-py314-fix.nix # snowflake-connector-python 4.4.0 bump until nixpkgs#511615 lands (snow is on every host via home/common.nix)
             ./hosts/${hostName}
             inputs.sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager
