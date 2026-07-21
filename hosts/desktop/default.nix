@@ -59,6 +59,14 @@
     "d /data/steam 0755 ${username} users -"
   ];
 
+  # Docker's data-root lives on /data, not the root NVMe: container volumes (tyrfing's
+  # postgres in particular) burst-write hard enough to stall the root disk that also
+  # backs $HOME — which presented as "the network drops under load" (it was app IO stalls,
+  # not the network). RequiresMountsFor keeps a nofail-degraded boot (dead /data) from
+  # silently recreating an empty data-root on / — Docker just stays down until /data is back.
+  virtualisation.docker.daemon.settings."data-root" = "/data/docker";
+  systemd.services.docker.unitConfig.RequiresMountsFor = [ "/data/docker" ];
+
   # VMware Workstation host (builds vmmon/vmnet kernel modules against the running kernel —
   # here the CachyOS one). unfree. Provides `vmware` + the networking/USB-arbitrator services.
   virtualisation.vmware.host.enable = true;
