@@ -151,6 +151,12 @@ in
     source = lib.getExe pkgs.nethogs;
   };
 
+  # ── mtr without sudo ──
+  # Same raw-socket problem as nethogs, but nixpkgs already ships the module: this
+  # installs mtr AND wraps its mtr-packet helper with cap_net_raw, so plain
+  # `mtr <host>` works rootless. That's why mtr is NOT in home/common.nix's list.
+  programs.mtr.enable = true;
+
   # ── FHS-style /bin and /usr/bin via envfs ──
   # Maps /bin/* and /usr/bin/* to whatever is on PATH, so Debian-style shebangs in
   # chezmoi scripts (#!/bin/bash, #!/usr/bin/perl) work without rewriting them.

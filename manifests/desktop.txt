@@ -2907,6 +2907,8 @@ inxi-3.3.41-1
 ioctl3
 ioctl3-builder
 ipa-priv-key.pem
+ipcalc-1.0.3
+iperf-3.21
 iproute-1.7.15
 iproute2-7.1.0
 iproute2-7.1.0_fish-completions
@@ -3944,6 +3946,8 @@ mtdev-1.1.7
 mtl-compat-0.2.2
 mtools-4.0.49
 mtools-4.0.49_fish-completions
+mtr-0.96
+mtr-0.96_fish-completions
 mujs-1.3.6
 muparser-2.3.5
 mupdf-1.27.2
@@ -3982,7 +3986,6 @@ net-snmp-5.9.5.2
 net-tools-2.10
 netbird.md
 netcat-gnu-0.7.1
-netcat-gnu-0.7.1_fish-completions
 nethogs-0.9.0
 netpbm-11.14.0
 netstat-net-tools-2.10
@@ -6789,6 +6792,7 @@ security-wrapper-fusermount3-x86_64-unknown-linux-musl
 security-wrapper-gamemoded-x86_64-unknown-linux-musl
 security-wrapper-gamescope-x86_64-unknown-linux-musl
 security-wrapper-mount-x86_64-unknown-linux-musl
+security-wrapper-mtr-packet-x86_64-unknown-linux-musl
 security-wrapper-nethogs-x86_64-unknown-linux-musl
 security-wrapper-newgidmap-x86_64-unknown-linux-musl
 security-wrapper-newgrp-x86_64-unknown-linux-musl
@@ -7192,6 +7196,7 @@ tccdefs-unstable-2025-12-03-builder
 tcl-8.6.16
 tcl-package-hook
 tcl-requires-check-hook
+tcpdump-4.99.6
 tdarr.md
 tdb-1.4.15
 tde2e-1.8.66
@@ -7344,6 +7349,7 @@ toupper
 toupper-builder
 tpm2-tss-4.1.3
 tpm2.md
+traceroute-2.1.6
 tracing-0.1.44
 tracing-attributes-0.1.31
 tracing-core-0.1.36
@@ -7679,6 +7685,7 @@ which-2.25
 which-2.25-binlore
 which-2.25_fish-completions
 whisper-cpp-1.8.7
+whois-5.6.6
 wildmidi-0.4.6
 winapi-util-0.1.11
 winapi-util-0.1.9

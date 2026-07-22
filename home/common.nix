@@ -35,12 +35,27 @@ in
     fishPlugins.z        # jethrokuan/z
     tmux
 
-    nethogs
     flux
     #nsys
     #py-spy # can't read thread names from py3.14 (now nixpkgs default) → test failure; re-add when benfred/py-spy#819 lands
     perf
     #pidstat
+
+    # ── Network debugging ──
+    # Everyday diagnosis, on EVERY host (server included) — the offensive/capture stack
+    # (nmap, wireshark, …) is modules/pentest.nix, which the server never imports.
+    # mtr is absent on purpose: modules/common.nix enables programs.mtr so its raw-socket
+    # helper gets a capability wrapper (same treatment as nethogs below).
+    nethogs              # per-process bandwidth top — rootless via the cap wrapper in modules/common.nix
+    dnsutils             # bind's client set: dig, nslookup, delv, nsupdate
+    traceroute           # the NixOS base only ships iputils' tracepath, not traceroute itself
+    tcpdump              # capture on headless boxes (`sudo tcpdump -i …`); GUI hosts get wireshark via pentest.nix
+    iperf3               # throughput testing — `iperf3 -s` on one end, `-c <host>` on the other
+    socat                # bidirectional relay: test/forward arbitrary sockets, serial, TLS
+    netcat-gnu           # `nc` — quick port checks + ad-hoc listeners
+    whois
+    ipcalc               # subnet math: CIDR splits, network/broadcast/host ranges
+    ethtool              # NIC link state/speed/offloads (reads work unprivileged; writes need sudo)
 
     # ── CLI tools ──
     bat
