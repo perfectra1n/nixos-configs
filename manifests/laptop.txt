@@ -1698,6 +1698,9 @@ code
 code-page-0.2.1
 code-r55
 codec2-1.2.0
+codex-0.144.4
+codex-0.144.4-vendor
+codex-0.144.4-vendor-staging
 coinmp-1.8.4
 colm-0.13.0.7
 colorchoice-1.0.4
@@ -3451,6 +3454,7 @@ librsvg-2.62.3
 librsvg-deps-2.62.3-vendor
 librsvg-deps-2.62.3-vendor-staging
 librsync-2.3.4
+librusty_v8-146.4.0
 libsamplerate-0.2.2
 libsass-3.6.6
 libsciter-4.4.8.23-bis
@@ -3525,6 +3529,7 @@ libvpx-1.12.0
 libvpx-1.16.0
 libwacom-2.19.0
 libwebp-1.6.0
+libwebrtc.version
 libwnck-43.3
 libwpd-0.10.3
 libwpe-1.16.3
@@ -3612,6 +3617,7 @@ litecli-1.17.1
 litemap-0.8.1
 live555-2026.01.12
 livebook.md
+livekit-libwebrtc-137-unstable-2026-03-12
 lksctp-tools-1.0.21
 lld-20.1.8
 lld-21.1.8

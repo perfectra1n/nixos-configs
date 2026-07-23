@@ -132,6 +132,8 @@ in
     saml2aws             # fetch temporary AWS STS creds via a SAML IdP (Okta/ADFS/etc.) for `aws`
     snowflake-cli        # Snowflake data-warehouse CLI; the binary is `snow`, not `snowflake-cli`
     claude-code          # nixpkgs lags releases; swap for the flake if you want latest
+    codex                # OpenAI's Codex CLI (claude-code's sibling agent); config/auth live in
+                         # ~/.codex (config.toml) — chezmoi-owned once captured, nothing here writes it
     beads                # `bd` — graph-based issue tracker / memory for AI coding agents
     mise                 # version manager; activated via chezmoi (fish/conf.d/mise.fish)
     kopia                # backup/snapshot tool — the CLI bundles the web UI (`kopia server
