@@ -1,8 +1,10 @@
 # `claude-cred` — swap Claude Code credentials from fish
 
 **Date:** 2026-07-14
-**Status:** implemented — `dotfiles/dot_config/fish/functions/claude-cred.fish`
-(+ completions, + three `.chezmoiignore` entries)
+**Status:** partially superseded by
+[2026-07-23-claude-cred-email-identity-design.md](2026-07-23-claude-cred-email-identity-design.md)
+(email-verified identity, v2 profile format, hard token validation, self-exchange). The write
+mechanics, mcpOAuth rules, placeholder lore, and ownership decisions below still hold.
 
 ## Problem
 

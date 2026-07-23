@@ -44,6 +44,10 @@ tags = ["domain", "private-infra"]
     # tooling / upstream project docs
     '''(?i)https?://([a-z0-9-]+\.)*(hypr\.land|archlinux\.org|cachyos\.org|chezmoi\.io|fishshell\.com|jdx\.dev|starship\.rs)(/|$)''',
     '''(?i)https?://([a-z0-9-]+\.)*(renovatebot\.com|cilium\.io|rook\.io|sched-ext\.com|i3wm\.org|openssl\.dev|git-scm\.com)(/|$)''',
+    # Anthropic's public API + OAuth endpoints — the same hosts the shipped Claude Code binary
+    # calls. claude-cred talks to api.anthropic.com (identity) and console.anthropic.com (token
+    # exchange); the OAuth client_id it sends is likewise a public identifier, not a secret.
+    '''(?i)https?://([a-z0-9-]+\.)*(anthropic\.com)(/|$)''',
     '''(?i)https?://([a-z0-9-]+\.)*(cloudflare\.com|opendns\.com|nvidia\.com|phoronix\.com|nordtheme\.com)(/|$)''',
     # reference links in docs/
     '''(?i)https?://([a-z0-9-]+\.)*(stackoverflow\.com|devhints\.io|whatthecommit\.com|math\.utah\.edu|iu\.edu|kwindu\.eu)(/|$)''',
