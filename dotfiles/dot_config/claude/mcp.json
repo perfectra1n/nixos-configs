@@ -31,6 +31,10 @@
       "headers": {
         "Authorization": "Bearer ${PROTONDB_MCP_BEARER}"
       }
+    },
+    "konflate": {
+      "type": "http",
+      "url": "${KONFLATE_MCP_URL}"
     }
   }
 }

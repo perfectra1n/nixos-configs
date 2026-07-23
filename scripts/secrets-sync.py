@@ -90,6 +90,10 @@ FISHENV_MANIFEST = [
     ("KUBESEARCH_MCP_BEARER",        "Kubesearch MCP",       "field", "mcp_bearer"),
     ("PROTONDB_MCP_URL",             "ProtonDB MCP",         "field", "mcp_url"),
     ("PROTONDB_MCP_BEARER",          "ProtonDB MCP",         "field", "mcp_bearer"),
+    # konflate's MCP is unauthenticated by design — it's reachable only via envoy-internal
+    # (the public route 404s /mcp), so there is no bearer row. The URL is vault-backed
+    # anyway because it carries the internal hostname, which stays out of this public repo.
+    ("KONFLATE_MCP_URL",             "Konflate MCP",         "field", "mcp_url"),
     # memini is PLUGIN-ONLY (no manual server in mcp.json): the memini@memini plugin bundles its own
     # MCP server + hooks + skills, all reading config from the SHELL ENV. It wants the base URL WITHOUT
     # /mcp (it re-appends /mcp itself) + MEMINI_API_KEY. Both derive from the one "Memini MCP" item —
