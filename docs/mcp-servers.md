@@ -100,7 +100,7 @@ Two load-bearing details:
   as literal text in `mcp.json`. Keep the repo copy of `mcp.json` `${VAR}`-only — a pasted token
   there would be committed in plaintext.
 
-### Two header shapes
+### Three block shapes
 
 Most servers need only a bearer (one `mcp_url` + one `mcp_bearer`). A few need extra headers —
 the Trilium servers add `X-Trilium-Url` / `X-Trilium-Token`, which is just more `${VAR}`s in the
@@ -113,7 +113,21 @@ block backed by more manifest rows and more Bitwarden fields. Same pattern, more
   "url": "${MEMINI_MCP_URL}",
   "headers": { "Authorization": "Bearer ${MEMINI_MCP_BEARER}" }
 }
+
+// no header, but the URL itself is private — still a ${VAR} (konflate)
+"konflate": { "type": "http", "url": "${KONFLATE_MCP_URL}" }
+
+// nothing secret at all: public host, auth injected by Claude Code itself (claude-design)
+"claude-design": { "type": "http", "url": "https://api.anthropic.com/v1/design/mcp" }
 ```
+
+The discriminator for "does this need the secret channel" is **not** "does it need auth" — konflate
+is unauthenticated yet still `${VAR}`-ed. It's **is any part of the connection string a secret**, token
+*or* hostname. `claude-design` is the one server where neither is: `api.anthropic.com` is public, and
+Claude Code supplies first-party auth for its own API host, so the block carries no headers. It is
+therefore a **one-artifact** server — literal URL, no Bitwarden item, no manifest rows. Nothing
+cross-checks the two channels (the manifest is only read by `secrets-sync.py`), so a block with no
+rows is fine, as is the reverse — memini has rows and no block.
 
 ---
 
@@ -121,6 +135,10 @@ block backed by more manifest rows and more Bitwarden fields. Same pattern, more
 
 Worked example: **memini** (an agent-memory service). Do all four, then commit the three
 tracked files together.
+
+> **No-secret shortcut.** If neither the token nor the hostname is a secret (the `claude-design`
+> shape above), skip steps 1–2 entirely: add the literal-URL block (step 3), `chezmoi apply`
+> (step 4), commit `mcp.json` alone. One artifact, not three.
 
 **1 — Bitwarden item.** Create one login item named `<Thing> MCP` (e.g. `Memini MCP`) with two
 **custom fields**, matching the sibling convention exactly:

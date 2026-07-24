@@ -35,6 +35,10 @@
     "konflate": {
       "type": "http",
       "url": "${KONFLATE_MCP_URL}"
+    },
+    "claude-design": {
+      "type": "http",
+      "url": "https://api.anthropic.com/v1/design/mcp"
     }
   }
 }
