@@ -19,7 +19,10 @@
     "ralph-loop@claude-plugins-official": true,
     "datadog@claude-plugins-official": true,
     "custom-claude-skills@custom-claude-skills": true,
-    "memini@memini": true
+    "memini@memini": true,
+    "atvik-biz@atvik": true,
+    "homelab@atvik": true,
+    "impeccable@impeccable": true
   },
   "extraKnownMarketplaces": {
     "custom-claude-skills": {
@@ -32,6 +35,12 @@
       "source": {
         "source": "github",
         "repo": "eleboucher/memini"
+      }
+    },
+    "impeccable": {
+      "source": {
+        "source": "github",
+        "repo": "pbakaus/impeccable"
       }
     },
     "atvik": {
