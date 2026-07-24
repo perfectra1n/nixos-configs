@@ -126,6 +126,7 @@
         ./modules/hyprland.nix
         ./modules/gaming.nix
         ./modules/pentest.nix
+        ./modules/sigma-crowdstrike-fix.nix # stale nixpkgs pname breaks sigma-cli's build (pentest.nix); drop when nixpkgs renames it
         ./modules/desktop-apps.nix
         ./modules/snapx.nix # SnapX (ShareX fork) — on trial next to flameshot; FHS-sandboxed .NET app
         ./modules/virtual-camera.nix # v4l2loopback /dev/video10 — the node the virtual camera(s) produce into
