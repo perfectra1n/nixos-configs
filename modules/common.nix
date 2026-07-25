@@ -135,6 +135,33 @@ in
   # fixed and re-evaluate.
   virtualisation.docker.daemon.settings.features.containerd-snapshotter = false;
 
+  # ── Stop Docker veth churn from killing Chrome's connections ──
+  # Every container start/stop creates+destroys a veth pair on docker0, and the kernel
+  # auto-assigns an fe80:: link-local to each one — so each container emits an
+  # RTM_NEWADDR *and* RTM_DELADDR on rtnetlink. Chrome's NetworkChangeNotifierLinux
+  # watches rtnetlink and treats an address change on ANY interface as "the network
+  # changed" (it passes an EMPTY ignored-interfaces set on desktop Linux and does no
+  # link-local/veth filtering), so it tears down live HTTP/2 sessions with
+  # ERR_NETWORK_CHANGED (-21). A testcontainers suite doing a container-per-test
+  # (~100/min) makes Chrome unusable — measured ~3 address events/sec, and Chrome's own
+  # NetLog logged a transient CONNECTION_NONE while Ethernet never dropped carrier.
+  # addr_gen_mode=1 ("none") stops the kernel generating those link-locals on NEW
+  # devices, which removes the address events. Upstream: crbug 974711 and
+  # docker/for-linux#914 (both open; the only workaround known there is disabling IPv6
+  # wholesale — this is the surgical version).
+  #
+  # Safe because NetworkManager sets addr_gen_mode PER-DEVICE from its connection
+  # profile, overriding this default: enp5s0f1 already runs mode 1 with an NM-generated
+  # stable-privacy fe80::, and its IPv6 works. So this only reaches devices NM doesn't
+  # manage — docker0, the veths, vmnet* — i.e. exactly the churn sources. NM-managed
+  # WireGuard is unaffected for the same reason, and raw `wg-quick` tunnels don't use a
+  # kernel link-local (point-to-point, no ND; addresses come from the .conf).
+  # ⚠ Two knock-ons: new netns inherit this, so containers get no auto link-local (fine
+  # — docker0 is IPv4-only here, EnableIPv6=false), and this does NOT suppress the
+  # RTM_NEWLINK/DELLINK link churn, so the CONNECTION_NONE blip may persist. Revisit if
+  # you ever want IPv6 inside containers or run a bridged/TAP VPN doing IPv6 ND.
+  boot.kernel.sysctl."net.ipv6.conf.default.addr_gen_mode" = 1;
+
   # ── nix-ld: run foreign dynamic binaries (mise runtimes, downloaded ELFs) ──
   programs.nix-ld.enable = true;
 
