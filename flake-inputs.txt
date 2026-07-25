@@ -12,7 +12,7 @@ chaotic = "9274dc36b535421d2258c306dc96647bbd6392ff"
 dms = "74896fb87cb9e4bb866dbabcfd754e3e649ad0c7"
 
 # renovate: datasource=git-refs depName=dms-plugin-registry packageName=https://github.com/AvengeMedia/dms-plugin-registry branch=master
-dms-plugin-registry = "1463198cb6d23211ee45cc6fe21acc75aa4e77b8"
+dms-plugin-registry = "78d478f34ad6790faea447c37d16bab63e1d3570"
 
 # renovate: datasource=git-refs depName=home-manager packageName=https://github.com/nix-community/home-manager branch=master
 home-manager = "32de400b6ac9f43042bca706f4a64f6ad08117e8"
