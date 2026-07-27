@@ -2743,7 +2743,7 @@ initrd-bin-env
 initrd-fstab
 initrd-group
 initrd-hostname
-initrd-linux-7.1.4
+initrd-linux-7.1.5
 initrd-passwd
 initrd-release
 initrd-shadow
@@ -3431,9 +3431,9 @@ lifted-async-0.10.2.7
 lifted-base-0.2.3.12
 lilv-0.28.0
 link
-linux-7.1.4
-linux-7.1.4-modules
-linux-7.1.4-modules-shrunk
+linux-7.1.5
+linux-7.1.5-modules
+linux-7.1.5-modules-shrunk
 linux-cachyos-config
 linux-firmware-20260622
 linux-firmware-20260622-zstd
