@@ -9,7 +9,7 @@ blender-bin = "32a73188c4026cea3f8ed97078ace45bf9f7f578"
 chaotic = "9274dc36b535421d2258c306dc96647bbd6392ff"
 
 # renovate: datasource=git-refs depName=dms packageName=https://github.com/AvengeMedia/DankMaterialShell branch=stable
-dms = "74896fb87cb9e4bb866dbabcfd754e3e649ad0c7"
+dms = "069ddab041c738236a8910e4c39b65d9628d3018"
 
 # renovate: datasource=git-refs depName=dms-plugin-registry packageName=https://github.com/AvengeMedia/dms-plugin-registry branch=master
 dms-plugin-registry = "78d478f34ad6790faea447c37d16bab63e1d3570"
