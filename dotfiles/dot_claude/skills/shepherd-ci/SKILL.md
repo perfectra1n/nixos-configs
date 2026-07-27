@@ -160,12 +160,25 @@ can't wedge the loop:
 
 ```bash
 # run_in_background: true — you'll be notified on completion
-<skill-dir>/scripts/wait-ci.sh --interval 60 --timeout 1800
+<skill-dir>/scripts/wait-ci.sh --timeout 1800
 ```
 
-On GitHub you *may* instead use the native `gh run watch <id>` / `gh pr checks
---watch` for instant notification — but `wait-ci.sh` works on every forge and is
-the default. Do **not** sleep-poll by hand. When the waiter returns, go to **Step 1**.
+The waiter is **fail-fast**: `ci-status.sh` ranks `FAILING` above `PENDING`, so it
+returns the moment one job fails rather than waiting out the longest job in the
+pipeline. Its poll interval is **adaptive** — 10s for the first 3 minutes, 20s to
+10 minutes, 45s after — because fmt/lint/fast-unit failures surface early, so
+that's where the tight polling belongs. Pass `--interval S` only if you need to
+force a fixed cadence.
+
+Before returning `GREEN` (or `NO_CI`) it requires the **same verdict twice**
+(`--settle N`, default 2). Jobs register progressively after a push, so a single
+green can be the empty window before CI starts rather than a real terminal state.
+
+Do **not** substitute `gh pr checks --watch`: on GitHub PATs that can't read
+`statusCheckRollup` it exits 0 announcing "no checks reported" while checks are
+actually pending — a false green, not a slow one. `gh run watch <id>` is fine if
+you already have a run id. Do **not** sleep-poll by hand. When the waiter
+returns, go to **Step 1**.
 
 **Watchdog.** If `wait-ci.sh` exits 124 (timed out still pending) or you simply
 haven't been notified after ~30 min, run `ci-status.sh` directly as an independent
@@ -214,6 +227,15 @@ what's blocking and what you'd try next.
 - Calling a real failure a "flake" without log evidence, or re-running a genuine
   code failure hoping it passes.
 - Sleep-polling CI by hand instead of backgrounding `wait-ci.sh`.
+- Substituting `gh pr checks --watch` — it false-greens on PATs that can't read
+  `statusCheckRollup`, exiting 0 while checks are still pending.
+- Waiting for the whole pipeline when one job has already failed — `FAILING`
+  outranks `PENDING` for a reason; start fixing.
+- Trusting a single `GREEN`/`NO_CI` right after a push — jobs register
+  progressively, so `--settle` requires the verdict twice. Don't set `--settle 1`
+  to "speed things up".
+- Polling a stuck queue for the full 30 minutes — an unchanging `PENDING` count
+  means the runner fleet, not slow CI. No commit can fix that.
 - Merging / deploying / tagging — out of scope; stop and report.
 
 ## Bundled scripts
@@ -222,9 +244,14 @@ what's blocking and what you'd try next.
   any credential in the remote URL), and print a normalized `VERDICT:` line
   (`GREEN` / `FAILING` / `PENDING` / `NO_CI` / `UNKNOWN`) plus the per-forge log
   command. The single source of truth for "what is CI doing?".
-- `scripts/wait-ci.sh [REF] [--interval S] [--timeout S]` — poll `ci-status.sh`
-  until the verdict leaves `PENDING`, capped so a stuck pipeline can't hang the
-  loop. Run it backgrounded.
+- `scripts/wait-ci.sh [REF] [--interval S] [--timeout S] [--settle N]` — poll
+  `ci-status.sh` until the verdict leaves `PENDING`, capped so a stuck pipeline
+  can't hang the loop. Run it backgrounded. Fail-fast on `FAILING`; adaptive poll
+  ladder (10s → 20s → 45s) instead of a fixed interval; requires `--settle N`
+  (default 2) consecutive identical verdicts before returning `GREEN`/`NO_CI`, so
+  the post-push registration window can't read as green. Warns when a `PENDING`
+  count sits unchanged for 10 minutes — the signature of an unavailable runner
+  fleet rather than slow CI.
 
 ## Related
 

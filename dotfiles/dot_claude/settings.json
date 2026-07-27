@@ -4,7 +4,7 @@
     "pr": "",
     "sessionUrl": false
   },
-  "model": "claude-fable-5[1m]",
+  "model": "opus[1m]",
   "enabledPlugins": {
     "explanatory-output-style@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
@@ -22,7 +22,8 @@
     "memini@memini": true,
     "atvik-biz@atvik": true,
     "homelab@atvik": true,
-    "impeccable@impeccable": true
+    "impeccable@impeccable": true,
+    "pr-review-toolkit@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "custom-claude-skills": {
@@ -35,19 +36,22 @@
       "source": {
         "source": "github",
         "repo": "eleboucher/memini"
-      }
+      },
+      "autoUpdate": true
     },
     "impeccable": {
       "source": {
         "source": "github",
         "repo": "pbakaus/impeccable"
-      }
+      },
+      "autoUpdate": true
     },
     "atvik": {
       "source": {
         "source": "github",
         "repo": "AtvikSecurity/claude-extensions"
-      }
+      },
+      "autoUpdate": true
     }
   },
   "effortLevel": "xhigh",

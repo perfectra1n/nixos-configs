@@ -45,6 +45,6 @@
   },
   "dockerManager": {
     "enabled": true,
-    "groupByCompose": true
+    "groupByCompose": false
   }
 }
