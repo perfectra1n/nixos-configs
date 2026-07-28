@@ -65,7 +65,8 @@
 
   # ── Shared graphical apps (all graphical hosts) ──
   environment.systemPackages = with pkgs; [
-    trilium-desktop # TriliumNext notes
+    trilium-desktop # TriliumNext notes. NOT nixpkgs' — modules/chromium-cm-fix.nix rebinds
+                    # this attr to upstream's flake (built from source) + the HDR flag.
     posy-cursors    # Windows cursor (Posy's Improved Cursors). Theme name "Posy_Cursor"
                     # set in home/gui.nix dconf + chezmoi (hyprland.conf XCURSOR_THEME).
                     # cc-by-nc license → unfree (allowUnfree covers it).

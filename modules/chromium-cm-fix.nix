@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, inputs, ... }:
 
 # HDR brightness fix for Chromium/Electron apps on Wayland.
 #
@@ -18,7 +18,11 @@
 #
 # Imported by modules/hyprland.nix → applies to the Wayland hosts only. Harmless on
 # non-HDR / AMD outputs (it just turns off one Chromium feature). To cover another
-# Chromium app, add one line to the attrset below. Remove this whole file once #14999 ships.
+# Chromium app, add one line to the attrset below.
+#
+# This module ALSO decides where Trilium comes from (upstream's flake, see the trilium input
+# in flake.nix) — see the comment on that line for why the two can't be separate overlays.
+# So when #14999 ships, don't just delete this file: re-home the trilium-desktop definition first.
 {
   nixpkgs.overlays = [
     (final: prev:
@@ -54,7 +58,12 @@
         google-chrome   = addCmFlag prev.google-chrome   [ "google-chrome-stable" ];
         brave           = addCmFlag prev.brave           [ "brave" ];
         vscode          = addCmFlag prev.vscode          [ "code" ];
-        trilium-desktop = addCmFlag prev.trilium-desktop [ "trilium" ];
+        # The one entry NOT sourced from `prev`: Trilium comes from upstream's own flake, not
+        # nixpkgs. Fusing the source swap into this wrap is deliberate — as two overlays it
+        # would depend on which ran first (wrap-then-replace silently drops the flag), and an
+        # invisible ordering constraint between two modules is worse than one honest line here.
+        trilium-desktop = addCmFlag
+          inputs.trilium.packages.${prev.stdenv.hostPlatform.system}.desktop [ "trilium" ];
         slack           = addCmFlag prev.slack           [ "slack" ];
       })
   ];

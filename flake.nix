@@ -68,6 +68,24 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Trilium Notes — upstream's OWN flake instead of nixpkgs' `trilium-desktop`, which merely
+    # repacks the prebuilt release zip and trails main (0.104.0 vs 0.104.1). Price of the swap:
+    # this builds the whole pnpm monorepo + Electron locally — one FOD per npm tarball, cached
+    # nowhere upstream — and pnpm2nix reads the lockfile through IFD, so `nix flake check` and
+    # CI's --dry-run now hit the network at EVAL time. Follows nixpkgs because nothing caches
+    # this build either way: a second nixpkgs would buy only a duplicate eval, and our pin
+    # already has the nodejs_24 / pnpm_11 / electron_43 it wants. Consumed by
+    # modules/chromium-cm-fix.nix (the overlay that also adds the HDR flag) — NOT by
+    # systemPackages directly, so that `pkgs.trilium-desktop` stays the one name to refer to.
+    # ⚠️ Tracks main, so a bump is not routine: launching a newer build migrates
+    # ~/.local/share/trilium-data one-way (dbVersion 238 → 239 as of this commit) and a NixOS
+    # generation rollback does NOT un-migrate it. Sync version must also stay in step with the
+    # Trilium server. Back up document.db before switching onto a bump.
+    trilium = {
+      url = "github:TriliumNext/Trilium";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # NOTE: hardware detection uses nixpkgs' built-in `hardware.facter` module
     # (the standalone nixos-facter-modules flake was upstreamed into nixpkgs and
     # is deprecated). A per-host facter.json replaces the fragile

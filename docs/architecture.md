@@ -130,6 +130,7 @@ time is fine — e.g. the CachyOS kernel and DMS's quickshell only build on a re
 | `hyprswitch` | GUI Alt+Tab switcher (`hyprshell`); not in nixpkgs. | `modules/hyprland.nix` |
 | `dms` + `dms-plugin-registry` | DankMaterialShell (Quickshell Wayland shell) + declarative plugins. | `modules/hyprland.nix` |
 | `chaotic` | CachyOS kernel + its binary cache. **Does not follow nixpkgs** — following it would force a local kernel compile and miss the chaotic cache. | `desktop` host only |
+| `trilium` | Trilium Notes from upstream's own flake; nixpkgs only repacks the release zip and trails main. Builds from source (pnpm2nix), so it is **uncached and uses IFD** — eval now touches the network. | `modules/chromium-cm-fix.nix` |
 
 > `scx` (the sched_ext gaming scheduler in `modules/gaming.nix`) is a **stock nixpkgs**
 > option and needs only a kernel with sched_ext (≥6.12) — it does *not* require chaotic.

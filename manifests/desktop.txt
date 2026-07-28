@@ -1968,6 +1968,7 @@ either-5.0.3-r2.cabal
 electron-41.9.1
 electron-42.5.1
 electron-43.1.0
+electron-43.2.0
 electron-unwrapped-41.9.1
 electron-unwrapped-42.5.1
 electron-unwrapped-43.1.0
@@ -6905,7 +6906,8 @@ tremor-unstable-2018-03-16
 trezord.md
 trifecta-2.1.4
 trifecta-2.1.4-r2.cabal
-trilium-desktop-0.104.0
+trilium-desktop-0.104.1-72f0749
+trilium-desktop-0.104.1-72f0749-dependency-list
 trilium-desktop-cmfix
 trilium-desktop-cmfix_fish-completions
 trivy-0.72.0

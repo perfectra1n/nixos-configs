@@ -75,7 +75,9 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 - Networking: `networking.networkmanager`. Dark mode: `programs.dconf`. Power: `services.upower`
   (DMS battery readout).
 - Firefox enterprise-roots CA policy (inert without custom CAs).
-- Packages: `trilium-desktop`, `posy-cursors`.
+- Packages: `trilium-desktop`, `posy-cursors`. `trilium-desktop` is **not** nixpkgs' — the
+  `modules/chromium-cm-fix.nix` overlay rebinds that attr to the `trilium` flake input's
+  `packages.<system>.desktop` (built from source) with the HDR flag wrapped on.
 - Adds `networkmanager`, `video`, `audio` groups to `${username}`.
 
 ## Wayland + Hyprland — `modules/hyprland.nix` (graphical: D L)
