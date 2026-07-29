@@ -113,6 +113,16 @@ in
     pkg-config           # lets `-sys` crates (openssl-sys, …) locate native libs via .pc files
     openssl              # OpenSSL libs/headers for Rust openssl-sys (PKG_CONFIG_PATH set in modules/common.nix)
     (python3.withPackages (ps: with ps; [ pip requests evtx ]))  # evtx = pyevtx-rs bindings for inline .evtx scripting
+
+    # ── OCI registries ── talk to registries directly, no daemon and no local pull
+    skopeo               # cross-TRANSPORT copy/inspect: docker://, oci-archive:, containers-storage:,
+                         # dir: — the one that moves an image OUT of (or INTO) a non-registry format
+    crane                # NOT the Rust-build nix lib of the same name: this is the single-binary attr
+                         # of go-containerregistry (that attr also ships gcrane). Best for digests,
+                         # `crane ls/cp/append`, and poking at manifest lists
+    regctl               # single-binary slice of pkgs.regclient — switch to that attr if you also
+                         # want regsync (mirroring) / regbot. Only one of the three that edits tags
+                         # and manifests in place (`regctl index add`, `regctl tag rm`)
     # kubectl / talosctl are pinned via nvfetcher and installed system-wide
     # (modules/common.nix) so both the shell and root see the same version.
     k9s                  # k8s TUI
