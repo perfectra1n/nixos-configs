@@ -131,6 +131,8 @@ in
     krew                 # kubectl plugin manager
     cilium-cli           # install/manage the Cilium eBPF CNI + Hubble on k8s clusters
     talhelper            # Talos config templating
+    prometheus.cli       # `promtool` only (the .cli output skips the server) — PromQL queries against vmetrics
+    grafana-loki         # `logcli` — LogQL queries against the homelab Loki (also ships loki/lokitool, unavoidable: no standalone logcli pkg)
     sops                 # secrets management
     bitwarden-cli        # `bw` — Bitwarden vault CLI
     ansible
