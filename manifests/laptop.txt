@@ -2430,6 +2430,7 @@ go-1.24.13-linux-386-bootstrap
 go-1.24.13-linux-amd64-bootstrap
 go-1.25.12
 go-1.26.5
+go-containerregistry-0.21.6
 go-md2man-2.0.7
 go-md2man-2.0.7-go-modules
 gobject-introspection-1.86.0
@@ -6310,6 +6311,8 @@ reducers-3.12.5
 reducers-3.12.5-r1.cabal
 reflection-2.1.9
 reflection-2.1.9-r1.cabal
+regclient-0.11.5
+regclient-0.11.5-go-modules
 regex-1.10.6
 regex-1.12.2
 regex-1.12.3
