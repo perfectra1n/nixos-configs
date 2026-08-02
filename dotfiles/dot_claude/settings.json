@@ -12,7 +12,6 @@
     "code-review@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
-    "github@claude-plugins-official": true,
     "playwright@claude-plugins-official": true,
     "claude-md-management@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
@@ -20,10 +19,9 @@
     "datadog@claude-plugins-official": true,
     "custom-claude-skills@custom-claude-skills": true,
     "memini@memini": true,
-    "atvik-biz@atvik": true,
-    "homelab@atvik": true,
     "impeccable@impeccable": true,
-    "pr-review-toolkit@claude-plugins-official": true
+    "pr-review-toolkit@claude-plugins-official": true,
+    "atvik@atvik": true
   },
   "extraKnownMarketplaces": {
     "custom-claude-skills": {
@@ -54,7 +52,7 @@
       "autoUpdate": true
     }
   },
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "theme": "dark",
