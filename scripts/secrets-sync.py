@@ -110,6 +110,14 @@ FISHENV_MANIFEST = [
     ("AWS_BEARER_TOKEN_BEDROCK",     "AWS Bedrock Bearer Token", "field", "token"),
     ("CF_TURNSTILE_SECRET_KEY",      "Cloudflare Turnstile",     "field", "secret_key"),
     ("CIRCLE_TOKEN",                 "CircleCI",                 "field", "token"),
+    # CLIProxyAPI (CPA) gateways behind `claude --cpa <name>`. BOTH halves are secret: the base
+    # URLs carry private hostnames, which never land in this public repo. The <PROFILE>_CPA_*
+    # naming is load-bearing — the fish wrapper upper-cases whatever profile you typed to derive
+    # the var names, so adding a gateway is one vault item + two rows HERE and no fish edit.
+    ("ATVIK_CPA_BASE_URL",           "Atvik CPA",                "field", "base_url"),
+    ("ATVIK_CPA_TOKEN",              "Atvik CPA",                "field", "token"),
+    ("HOME_CPA_BASE_URL",            "Home CPA",                 "field", "base_url"),
+    ("HOME_CPA_TOKEN",               "Home CPA",                 "field", "token"),
 ]
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
