@@ -22,7 +22,8 @@
 #
 # This module ALSO decides where Trilium comes from (upstream's flake, see the trilium input
 # in flake.nix) — see the comment on that line for why the two can't be separate overlays.
-# So when #14999 ships, don't just delete this file: re-home the trilium-desktop definition first.
+# So when #14999 ships, don't just delete this file: re-home the trilium-desktop definition
+# AND the setWmClass call below first. Neither has anything to do with HDR.
 {
   nixpkgs.overlays = [
     (final: prev:
@@ -53,6 +54,38 @@
             done
           '';
         };
+
+        # Point a package's desktop entries at the app_id its windows ACTUALLY report.
+        #
+        # Wayland shells resolve a window's icon by matching its app_id against
+        # StartupWMClass=, and only then read Icon=. Electron 43 derives app_id from the
+        # binary it was launched as — and upstream's Trilium flake runs nixpkgs' *shared*
+        # `electron` with main.cjs as an argument, so every window comes up as "electron".
+        # Nothing claims that class and no icon theme ships an `electron` icon, so shells
+        # draw a first-letter placeholder ("E") instead of the perfectly-installed
+        # Icon=trilium. Tested against Electron 43: --class=, CHROME_DESKTOP= and an
+        # argv[0] rename all leave app_id at "electron", so the entry has to move instead.
+        #
+        # Only safe while Trilium is the sole shared-electron app on these hosts — a second
+        # one would report the same app_id and inherit Trilium's icon. Check with
+        # `hyprctl clients -j | jq -r '.[].class'` before adding another Electron package.
+        setWmClass = class: pkg: final.symlinkJoin {
+          name = "${pkg.pname or pkg.name}-wmclass";
+          paths = [ pkg ];
+          postBuild = ''
+            shopt -s nullglob
+            for d in "$out"/share/applications/*.desktop; do
+              real=$(readlink -f "$d"); rm -f "$d"; cp "$real" "$d"; chmod +w "$d"
+              # Append rather than assume the key exists, so an upstream bump that drops
+              # StartupWMClass= breaks loudly at the icon instead of silently no-op'ing.
+              if grep -q '^StartupWMClass=' "$d"; then
+                sed -E -i "s|^StartupWMClass=.*|StartupWMClass=${class}|" "$d"
+              else
+                printf 'StartupWMClass=%s\n' ${lib.escapeShellArg class} >> "$d"
+              fi
+            done
+          '';
+        };
       in
       {
         google-chrome   = addCmFlag prev.google-chrome   [ "google-chrome-stable" ];
@@ -62,8 +95,8 @@
         # nixpkgs. Fusing the source swap into this wrap is deliberate — as two overlays it
         # would depend on which ran first (wrap-then-replace silently drops the flag), and an
         # invisible ordering constraint between two modules is worse than one honest line here.
-        trilium-desktop = addCmFlag
-          inputs.trilium.packages.${prev.stdenv.hostPlatform.system}.desktop [ "trilium" ];
+        trilium-desktop = setWmClass "electron" (addCmFlag
+          inputs.trilium.packages.${prev.stdenv.hostPlatform.system}.desktop [ "trilium" ]);
         slack           = addCmFlag prev.slack           [ "slack" ];
       })
   ];
