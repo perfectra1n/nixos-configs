@@ -109,12 +109,18 @@ Run these before committing (or just `mise run verify`, which also refreshes `ma
 
 ```sh
 git add -A                       # flakes only see tracked files
-nix flake check --no-build       # evaluates EVERY host's toplevel + runs the lib/ unit tests
+nix flake check                  # evaluates EVERY host's toplevel + runs the lib/ unit tests
 ```
 
 `nix flake check` forces `config.system.build.toplevel.drvPath` for every `nixosConfigurations`
 entry, so it already covers all hosts — there is no need to loop and `nix build --dry-run` each
-one. Keep `--no-build`: a **bare** `nix flake check` *realizes* the `checks` outputs.
+one. It realizes the `checks` + `packages` outputs, which are kept trivial for that reason.
+
+**Never add `--no-build`.** It sets Nix's read-only mode, which computes `.drv` paths without
+writing them, making **Import From Derivation impossible** — and both graphical closures need IFD
+(trilium's pnpm2nix reads `pnpm-lock.yaml` that way). The failure is
+`error: path '<hash>-toJSON.drv' is not valid`, which looks like store corruption but isn't, and
+it hides until a GC evicts the cached `.drv`.
 
 Apply on a real host: `sudo nixos-rebuild switch --flake .#<HOST>` (hostname auto-selects,
 so `#<HOST>` is optional on the box itself).

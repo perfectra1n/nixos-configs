@@ -138,7 +138,20 @@ git add -A                               # flakes only see tracked files
 # this one command covers all hosts — the old `for h in $(ls hosts); do nix build --dry-run` loop
 # was pure duplicate work (verified: it exits 1 on a bad option with no `checks` output at all).
 # It also runs checks/ — the lib/secrets.nix unit tests.
-nix flake check --no-build
+#
+# NO --no-build, deliberately. It sets Nix's readOnlyMode (`settings.readOnlyMode = !build`), which
+# computes .drv paths WITHOUT writing them to the store — and that makes Import From Derivation
+# impossible. Both graphical closures need IFD: trilium's pnpm2nix reads pnpm-lock.yaml through it
+# (see the trilium input in flake.nix). So --no-build died with
+#   error: path '<hash>-toJSON.drv' is not valid
+# which reads like store corruption but is a config property. It only ever appeared to work while
+# some earlier non-read-only eval had left that .drv in the store; `mise run gc` — or any fresh
+# clone — brought it straight back. CI never hit this: check.yaml uses `nix build --dry-run`, which
+# instantiates normally and so CAN do IFD.
+# Price of dropping it: ~17s, and it realizes the two `touch $out` check markers (kept trivial for
+# exactly this reason — see flake.nix) plus packages/*, whose shellcheck gate --no-build never
+# actually ran.
+nix flake check
 # secrets-sync.py's selftest was wired into NOTHING and had silently rotted (it still asserted
 # `set -Ux` long after merge_fishenv switched to `set -gx`). Run it here, in the choke-point every
 # change flows through, so it can't rot again. It also asserts that yaml_paths agrees with

@@ -172,11 +172,11 @@
       nixosConfigurations = nixpkgs.lib.genAttrs hostNames
         (name: mkHost name (import (./hosts + "/${name}/spec.nix") { inherit inputs graphical; }));
 
-      # Unit tests for lib/. These `throw` at EVAL time rather than failing in a builder, because
-      # `nix flake check --no-build` — what mise's verify and CI actually run — only EVALUATES
-      # checks. A runCommand full of assertions would be silently skipped by the very command meant
-      # to run it. Keep this derivation trivial: a BARE `nix flake check` (no --no-build) realizes
-      # checks, and CLAUDE.md tells people to run exactly that.
+      # Unit tests for lib/. These `throw` at EVAL time rather than failing in a builder, so they
+      # fire during evaluation itself — a runCommand full of assertions would be silently skipped
+      # by any caller that only evaluates. Keep this derivation trivial: `mise run verify` runs a
+      # BARE `nix flake check`, which REALIZES checks. (It can't pass --no-build: that flag's
+      # read-only mode blocks the IFD the graphical closures need — see the trilium input above.)
       checks.x86_64-linux.lib-secrets =
         let
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
@@ -193,9 +193,8 @@
       # two ever disagreed, manifests/ would advertise one gitleaks while a different one gated
       # every commit, and Renovate WILL try: its built-in mise manager bumps mise.toml on its own
       # schedule, while nixpkgs moves via flake-inputs.txt. This turns that silent divergence into
-      # a red CI run. Same eval-time `throw` as lib-secrets above, and for the same reason:
-      # `nix flake check --no-build` only EVALUATES checks, so a runCommand of assertions would be
-      # skipped by the very command meant to run it.
+      # a red CI run. Same eval-time `throw` as lib-secrets above, and for the same reason: it has
+      # to fire during evaluation, not in a builder, or a caller that only evaluates would skip it.
       checks.x86_64-linux.mise-nixpkgs-versions =
         let
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
