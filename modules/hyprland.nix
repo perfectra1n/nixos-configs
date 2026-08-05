@@ -66,9 +66,11 @@ in
 
   # ── DankMaterialShell (DMS) — Quickshell-based Wayland shell (bar + dock + notifications +
   # launcher). Available alongside Waybar on both Hyprland hosts.
-  #   systemd.enable = false ON PURPOSE: DMS is autostarted via `exec-once = dms run` in
-  #   modules/desktop-apps.nix, because graphical-session.target is inactive in this session
-  #   so the systemd user unit wouldn't fire (same reason Waybar uses exec-once). Don't set true.
+  #   systemd.enable = false: DMS is autostarted via `exec-once = dms run` in
+  #   modules/desktop-apps.nix (same reason Waybar uses exec-once). This was once a hard
+  #   requirement — graphical-session.target never activated, so the unit could not fire — but that
+  #   is fixed as of the nixos-fake-graphical-session.target exec-once in modules/desktop-apps.nix.
+  #   Flipping this to true is now merely UNTESTED here, not impossible; don't flip it blind.
   # The module bundles its own pinned quickshell, compiled from source → expect a long FIRST build.
   programs.dank-material-shell = {
     enable = true;

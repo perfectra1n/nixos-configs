@@ -359,12 +359,32 @@ in
     # Session autostart — exec-once daemons, written by the flake and sourced by the chezmoi
     # hyprland.conf. This `hypr/autostart.conf` fragment is an allowed exception to the chezmoi
     # boundary (alongside hypr/gpu.conf — see CLAUDE.md): the flake owns it because it
-    # autostarts daemons the flake itself installs. exec-once is the reliable autostart on
-    # Hyprland (graphical-session.target is inactive, so graphical-session-BOUND systemd user
-    # services would never fire; default.target-bound ones do — see the watchdog unit below)
-    # and runs only at session start, NOT on `hyprctl reload` — re-login after changes.
+    # autostarts daemons the flake itself installs. exec-once runs only at session start, NOT on
+    # `hyprctl reload` — re-login after changes.
+    # Historically exec-once was also the ONLY thing that worked here, because nothing activated
+    # graphical-session.target so graphical-session-BOUND user services never fired (default.target
+    # -bound ones did — see the watchdog unit below). The first exec-once below now activates that
+    # target, so this file's entries are a convention rather than a constraint.
     # REQUIRES the chezmoi ~/.config/hypr/hyprland.conf to `source ~/.config/hypr/autostart.conf`.
     xdg.configFile."hypr/autostart.conf".text = ''
+      # FIRST, before any daemon: tell systemd a graphical session exists. greetd launches
+      # `start-hyprland` directly, which is a "non-systemd-aware session" — it exports the env to
+      # systemd/dbus but never activates graphical-session.target, so that target sat inactive for
+      # the whole session. nixos-fake-graphical-session.target is NixOS's own shim for exactly this
+      # (`BindsTo=graphical-session.target`); starting it pulls the real target in. It has to be
+      # started INDIRECTLY like this because graphical-session.target sets RefuseManualStart=yes.
+      #
+      # Latent until 2026-08-05, when xdg-desktop-portal 1.20.4 → 1.22.1 swapped its unit's
+      # `Requires=dbus.service` for `Requisite=graphical-session.target`. Requisite fails outright
+      # if the target is not ALREADY active, so the portal broke on the first switch that shipped
+      # 1.22.1 — "Failed to start user unit xdg-desktop-portal.service" and no file pickers or
+      # screenshare, in a session where the portal had happily run for hours before.
+      #
+      # Everything below deliberately STAYS exec-once (and dms-idle-watchdog stays bound to
+      # default.target) — that is unchanged behavior, not an oversight. Migrating them onto
+      # graphical-session.target is now POSSIBLE but is a separate change with its own testing.
+      exec-once = systemctl --user start nixos-fake-graphical-session.target
+
       # NO hypridle here — DMS owns idle/lock/DPMS. DMS ships a full idle pipeline
       # (Services/IdleService.qml: monitor-off + lock + suspend timers, AC/battery-aware)
       # and explicitly replaces swayidle/hypridle. Running both = two ext-idle-notify
@@ -376,9 +396,11 @@ in
       # integration), so the old before/after_sleep hooks are redundant.
 
       # Status bar / shell — DankMaterialShell (Quickshell): bar + dock + notifications +
-      # launcher. Uses exec-once (NOT DMS's systemd unit) because graphical-session.target is
-      # inactive here, per the note above — so keep programs.dank-material-shell.systemd.enable
-      # = false (modules/hyprland.nix). To use Waybar instead, swap for ~/.config/waybar/launch.sh.
+      # launcher. Uses exec-once (NOT DMS's systemd unit); keep
+      # programs.dank-material-shell.systemd.enable = false (modules/hyprland.nix). The original
+      # reason — an inactive graphical-session.target — is gone as of the first exec-once above,
+      # so switching to DMS's unit is now a real option; it just hasn't been tested here yet.
+      # To use Waybar instead, swap for ~/.config/waybar/launch.sh.
       exec-once = dms run
 
       # NO idle-inhibit watchdog exec-once here anymore — it runs as the dms-idle-watchdog
