@@ -14,7 +14,7 @@ fetch.url = "https://dl.k8s.io/release/v$ver/bin/linux/amd64/kubectl"
 
 [talosctl]
 # renovate: datasource=github-releases depName=siderolabs/talos extractVersion=^v(?<version>.+)$
-src.manual = "1.13.5"
+src.manual = "1.13.8"
 fetch.url = "https://github.com/siderolabs/talos/releases/download/v$ver/talosctl-linux-amd64"
 
 # ksops — viaduct-ai/kustomize-sops KRM plugin. A release tarball (NOT a bare binary), so the

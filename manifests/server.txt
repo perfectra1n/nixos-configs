@@ -3234,8 +3234,8 @@ taglib-2.2.1
 tagsoup-0.14.8
 talhelper-3.1.15
 talhelper-3.1.15-go-modules
-talosctl-1.13.5
-talosctl-1.13.5_fish-completions
+talosctl-1.13.8
+talosctl-1.13.8_fish-completions
 talosctl-linux-amd64
 tandoor-recipes.md
 tasty-1.5.4
