@@ -6,7 +6,7 @@
 blender-bin = "32a73188c4026cea3f8ed97078ace45bf9f7f578"
 
 # renovate: datasource=git-refs depName=chaotic packageName=https://github.com/chaotic-cx/nyx branch=nyxpkgs-unstable
-chaotic = "913a42f0b735911f667e6350163e49a4ecf27c8f"
+chaotic = "d36aaa93226d7d311aa80a973aef27525ba21dce"
 
 # renovate: datasource=git-refs depName=dms packageName=https://github.com/AvengeMedia/DankMaterialShell branch=stable
 dms = "069ddab041c738236a8910e4c39b65d9628d3018"
