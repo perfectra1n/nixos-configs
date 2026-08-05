@@ -154,6 +154,7 @@
       graphical = [
         ./modules/desktop-base.nix
         ./modules/hyprland.nix
+        ./modules/hyprland-glaze-fix.nix # glaze 8.x breaks hyprland 0.56.1's CMake version range; drop once the channel has nixpkgs 266bfbb
         ./modules/gaming.nix
         ./modules/pentest.nix
         ./modules/sigma-crowdstrike-fix.nix # stale nixpkgs pname breaks sigma-cli's build (pentest.nix); drop when nixpkgs renames it
