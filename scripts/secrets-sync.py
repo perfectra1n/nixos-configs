@@ -90,6 +90,12 @@ FISHENV_MANIFEST = [
     ("KUBESEARCH_MCP_BEARER",        "Kubesearch MCP",       "field", "mcp_bearer"),
     ("PROTONDB_MCP_URL",             "ProtonDB MCP",         "field", "mcp_url"),
     ("PROTONDB_MCP_BEARER",          "ProtonDB MCP",         "field", "mcp_bearer"),
+    # linkedin-mcp is the odd one out: upstream ships NO authentication of its own, so the
+    # credential is checked at the proxy by an Envoy Gateway SecurityPolicy (apiKeyAuth) on the
+    # X-API-Key header — not a bearer. Hence mcp_api_key rather than the usual mcp_bearer field.
+    # It is also internal-only (envoy-internal), so the URL is vault-backed for the hostname.
+    ("LINKEDIN_MCP_URL",             "LinkedIn MCP",         "field", "mcp_url"),
+    ("LINKEDIN_MCP_API_KEY",         "LinkedIn MCP",         "field", "mcp_api_key"),
     # konflate's MCP is unauthenticated by design — it's reachable only via envoy-internal
     # (the public route 404s /mcp), so there is no bearer row. The URL is vault-backed
     # anyway because it carries the internal hostname, which stays out of this public repo.

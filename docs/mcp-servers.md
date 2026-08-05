@@ -100,7 +100,7 @@ Two load-bearing details:
   as literal text in `mcp.json`. Keep the repo copy of `mcp.json` `${VAR}`-only — a pasted token
   there would be committed in plaintext.
 
-### Three block shapes
+### Four block shapes
 
 Most servers need only a bearer (one `mcp_url` + one `mcp_bearer`). A few need extra headers —
 the Trilium servers add `X-Trilium-Url` / `X-Trilium-Token`, which is just more `${VAR}`s in the
@@ -112,6 +112,16 @@ block backed by more manifest rows and more Bitwarden fields. Same pattern, more
   "type": "http",
   "url": "${MEMINI_MCP_URL}",
   "headers": { "Authorization": "Bearer ${MEMINI_MCP_BEARER}" }
+}
+
+// credential in a NON-bearer header (linkedin). The upstream server ships no auth of its
+// own, so the check lives at the proxy — an Envoy Gateway SecurityPolicy with apiKeyAuth
+// reading X-API-Key. The Bitwarden field is named mcp_api_key, not mcp_bearer, because it
+// is not one. Nothing enforces the field naming; it is a convention, so keep it honest.
+"linkedin": {
+  "type": "http",
+  "url": "${LINKEDIN_MCP_URL}",
+  "headers": { "X-API-Key": "${LINKEDIN_MCP_API_KEY}" }
 }
 
 // no header, but the URL itself is private — still a ${VAR} (konflate)

@@ -32,6 +32,13 @@
         "Authorization": "Bearer ${PROTONDB_MCP_BEARER}"
       }
     },
+    "linkedin": {
+      "type": "http",
+      "url": "${LINKEDIN_MCP_URL}",
+      "headers": {
+        "X-API-Key": "${LINKEDIN_MCP_API_KEY}"
+      }
+    },
     "konflate": {
       "type": "http",
       "url": "${KONFLATE_MCP_URL}"
