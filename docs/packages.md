@@ -132,20 +132,24 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 - Captures via the **XDG Screenshot portal** (never raw X11), so on Hyprland it inherits the
   grim wrapper from `modules/hyprland.nix`.
 
-## Virtual camera — `modules/virtual-camera.nix` (graphical: D L)
+## Camera + microphone effects — `modules/cleanroom.nix` (graphical: D L)
 
-- `v4l2loopback` kernel module: one capture node at `/dev/video10`
-  (`card_label="Virtual Camera"`, `exclusive_caps=1`, `max_buffers=4`) — produced into by
-  NV Broadcast (desktop) or OBS's "Start Virtual Camera", consumed by Meet/Teams/Zoom.
-
-## NV Broadcast — `modules/nvbroadcast.nix` (desktop only)
-
-- `nvbroadcast` + `nvbroadcast-vcam` (+ launcher entry): unofficial NVIDIA Broadcast
-  (AI blurred/virtual-background webcam, noise removal, meeting transcription). A
-  `buildFHSEnv` that pip-installs the nvfetcher-pinned source (`[cuda,meeting]` extras)
-  into a first-run venv at `~/.local/share/nvbroadcast-nix` — see the module header for
-  why it can't be a normal Nix package. Replaced the OBS blurcam + obs-backgroundremoval
-  stack (see desktop-scripts.md).
+- **Cleanroom** (`cleanroomd`, `cleanroom-ctl`, GUI + tray) — our own webcam/mic effects
+  daemon, added as the `cleanroom` flake input. Background blur/replace/green-key on
+  wgpu/Vulkan and DeepFilterNet mic denoise, published as `cleanroom_cam` (PipeWire
+  `Video/Source`) and `cleanroom_mic`, plus a v4l2loopback node for apps that only speak V4L2.
+- `v4l2loopback` kernel module, **2 devices, no `video_nr` pin**: cleanroom selects a free
+  node at runtime so it and OBS's "Start Virtual Camera" can produce concurrently.
+  `exclusive_caps=1` stays load-bearing (Chromium/Teams/Zoom ignore a node advertising both
+  output and capture caps).
+- ⚠️ Model weights are **not** declarative and not bundled — DeepFilterNet's weights licence
+  is unresolved upstream and this repo is public. Run `cleanroom-ctl fetch-models` once per
+  host; until then the mic is a *reported* passthrough.
+- Replaced three modules at once: `nvbroadcast.nix` (CUDA-only, desktop-only, pip venv),
+  `virtual-camera.nix` (pinned `/dev/video10`) and `noise-suppression.nix` (a mandatory
+  PipeWire daemon filter-chain that could take all audio down on a LADSPA load failure).
+  The laptop gains a blurred webcam it never had — that is the point of the vendor-neutral
+  matting backend.
 
 ## Security / pentest — `modules/pentest.nix` (graphical: D L)
 

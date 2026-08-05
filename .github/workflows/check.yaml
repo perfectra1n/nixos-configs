@@ -97,9 +97,48 @@ jobs:
         # --dry-run does full module evaluation + closure resolution (catches eval
         # errors, removed attrs, broken/insecure pkgs) but doesn't realize the build.
         # Swap to a plain `nix build` if you add a binary cache + a beefy runner.
+        # Keep the plan text: to print `will be built:` nix has to ask the substituters
+        # about every path, so that section is a free cache-coverage report — consumed
+        # by the next step. The runner's store starts empty, which is what makes the
+        # list complete; on a machine with a warm store it silently omits what's local.
         run: |
+          set -o pipefail
           nix build --dry-run \
-            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel" \
+            2>&1 | tee /tmp/head-plan.txt
+
+      # ADVISORY (never fails the job): which packages will COMPILE locally that the base
+      # commit fetched from the cache. The step above proves the host EVALUATES; it never
+      # enters a builder, so a package that evaluates but fails to compile walks straight
+      # through — nixpkgs shipped glaze 8.0.0 on 2026-08-04 while Hyprland 0.56.1 pins
+      # `find_package(glaze 7...<8)`, hyprland stopped building, and this workflow was green.
+      # Anything Hydra failed is unsubstitutable and therefore lands in `will be built:`,
+      # so diffing against base surfaces it. The diff is what makes it readable: the raw
+      # head-side list is ~900 entries, nearly all this repo's own permanently-uncached
+      # derivations (FHS envs, wrappers, unfree), and they cancel out against base.
+      # Advisory on purpose — a new entry equally means Hydra hasn't caught up yet, and
+      # nothing here can tell that apart from a real breakage. A human reads every PR.
+      - name: Cache coverage vs base (${{ matrix.host }})
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HOST: ${{ matrix.host }}
+        run: |
+          set -o pipefail
+          git fetch --depth=1 origin "$BASE_SHA"
+          git worktree add --detach /tmp/base "$BASE_SHA"
+          # path:, not the git fetcher — a detached worktree's .git is a *file*, and path:
+          # evaluates what's on disk, so the base resolves against its OWN flake.lock.
+          nix build --dry-run \
+            "path:/tmp/base#nixosConfigurations.$HOST.config.system.build.toplevel" \
+            2>&1 | tee /tmp/base-plan.txt || true
+          python3 scripts/uncached-delta.py \
+            --base /tmp/base-plan.txt --head /tmp/head-plan.txt \
+            --host "$HOST" --names-out /tmp/delta.txt | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ -s /tmp/delta.txt ]; then
+            echo "::warning title=New from-source builds ($HOST)::$(cat /tmp/delta.txt)"
+          fi
 
       - name: Manifest freshness (${{ matrix.host }})
         # gen-manifests reuses the eval the dry-run above already did (same installable →

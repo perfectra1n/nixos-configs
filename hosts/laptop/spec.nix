@@ -1,8 +1,9 @@
 # What `laptop` composes: the shared `graphical` stack (flake.nix) + AMD/portable extras.
 # A plain spec consumed by mkHost — NOT a NixOS module, so no module imports another module.
 #
-# No NV Broadcast here — it's CUDA-only, and no blur is wanted on the laptop anyway. So
-# `graphical`'s virtual-camera.nix (/dev/video10) serves only OBS's virtual camera on this host.
+# Webcam effects DO reach this host now: `graphical`'s cleanroom.nix mattes on wgpu/Vulkan, so a
+# blurred webcam no longer needs NVIDIA. That is precisely why it replaced NV Broadcast, which was
+# CUDA-only and therefore desktop-only — this host previously had no blur available at all.
 { inputs, graphical }:
 {
   extraModules = graphical ++ [

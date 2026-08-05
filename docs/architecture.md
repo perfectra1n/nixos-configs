@@ -131,6 +131,7 @@ time is fine — e.g. the CachyOS kernel and DMS's quickshell only build on a re
 | `dms` + `dms-plugin-registry` | DankMaterialShell (Quickshell Wayland shell) + declarative plugins. | `modules/hyprland.nix` |
 | `chaotic` | CachyOS kernel + its binary cache. **Does not follow nixpkgs** — following it would force a local kernel compile and miss the chaotic cache. | `desktop` host only |
 | `trilium` | Trilium Notes from upstream's own flake; nixpkgs only repacks the release zip and trails main. Builds from source (pnpm2nix), so it is **uncached and uses IFD** — eval now touches the network. | `modules/chromium-cm-fix.nix` |
+| `cleanroom` | Our webcam/mic effects daemon (blur + DeepFilterNet denoise) — replaced NV Broadcast, the pinned v4l2loopback node, and the DeepFilter filter-chain. A Rust workspace over an `ort` FOD: **uncached upstream**, so CI compiles it once per nixpkgs bump; our attic cache covers the LAN. | `modules/cleanroom.nix` |
 
 > `scx` (the sched_ext gaming scheduler in `modules/gaming.nix`) is a **stock nixpkgs**
 > option and needs only a kernel with sched_ext (≥6.12) — it does *not* require chaotic.

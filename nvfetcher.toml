@@ -24,16 +24,9 @@ fetch.url = "https://github.com/siderolabs/talos/releases/download/v$ver/talosct
 src.manual = "4.5.1"
 fetch.url = "https://github.com/viaduct-ai/kustomize-sops/releases/download/v$ver/ksops_$ver_Linux_x86_64.tar.gz"
 
-# NV Broadcast — unofficial NVIDIA Broadcast (GTK4/Python). Not packageable from nixpkgs
-# (mediapipe/pyrnnoise missing there, onnxruntime-gpu hard-pinned upstream); instead
-# modules/nvbroadcast.nix pip-installs this pinned source into an FHS venv at first launch.
-# Pinned to our fork's gpu-offload branch (not upstream Hkshoonya releases) — src.manual is
-# the branch-HEAD commit SHA, same fork-branch pattern as libratbag below. Repoint to
-# "Hkshoonya/nvidia-broadcast-linux" releases once the branch lands upstream.
-[nvbroadcast]
-# renovate: datasource=git-refs depName=https://github.com/perfectra1n/nvidia-broadcast-linux branch=gpu-offload
-src.manual = "17df0afc4c035f4d54a5b6f965635c79d0d13448"
-fetch.github = "perfectra1n/nvidia-broadcast-linux"
+# (NV Broadcast was pinned here until cleanroom replaced it — see modules/cleanroom.nix. It is a
+# flake INPUT now, not an nvfetcher pin, because cleanroom is a real derivation with its own flake
+# rather than a pip venv bootstrapped from a source tarball.)
 
 # SnapX — ShareX fork (C#/Avalonia, GPL-3), not in nixpkgs. Built by modules/snapx.nix from
 # upstream's FEDORA RPMs, which are the only artifact that links against system libs — the

@@ -8,8 +8,8 @@ let
   # to x264 (CPU only). Prepend the driver lib dir; the test child inherits this env and
   # then finds the NVIDIA encode lib. addDriverRunpath.driverLink = /run/opengl-driver.
   # (The obs-backgroundremoval plugin + CUDA onnxruntime override that used to be wrapped in
-  # here are retired — the blurred webcam is NV Broadcast now: modules/nvbroadcast.nix,
-  # desktop host. OBS stays for screen recording/streaming and its own virtual camera.)
+  # here are retired — the blurred webcam is cleanroom now: modules/cleanroom.nix, BOTH graphical
+  # hosts. OBS stays for screen recording/streaming and its own virtual camera.)
   obs-studio-nvenc = pkgs.symlinkJoin {
     name = "obs-studio-nvenc";
     paths = [ pkgs.obs-studio ];
@@ -264,48 +264,27 @@ in
   # would leave the daemon (and thus discovery) dormant until something first talked to it.
   programs.kdeconnect.enable = true;
 
-  # The v4l2loopback device OBS's "Start Virtual Camera" writes to lives in
-  # modules/virtual-camera.nix (shared with NV Broadcast, which produces into the same node).
-
-  # Disable WirePlumber's libcamera monitor. A UVC webcam (the C922) gets enumerated TWICE —
-  # once via the v4l2 SPA monitor (exposes the camera's MJPEG modes → 1920x1080@30) and once
-  # via libcamera, which for UVC only surfaces RAW/YUYV modes (1080p caps at ~5fps over USB).
-  # Whichever node OBS / the xdg camera portal happens to bind is a coin-flip, so captures
-  # randomly land on the low-fps libcamera node. libcamera also tends to hold the device fd
-  # open continuously (the "pipewire already owns /dev/video0" contention). Killing the
-  # libcamera monitor leaves only the MJPEG-capable v4l2 nodes → 1080p30 is deterministic.
-  # Safe for plain USB webcams; revisit only for a sensor that is libcamera-ONLY (some MIPI/CSI
-  # or Intel IPU6 laptop cams — neither bare-metal host has one).
-  services.pipewire.wireplumber.extraConfig."10-disable-libcamera" = {
-    "wireplumber.profiles".main."monitor.libcamera" = "disabled";
-  };
-
-  # Hand the C922 to OBS alone. Disabling libcamera (above) leaves the v4l2 SPA node, but that
-  # node only ever advertises raw YUY2 — PipeWire's v4l2 source does NOT pass the cam's MJPG
-  # modes through to consumers (confirmed: the node's EnumFormat is YUY2-only). Raw 1080p
-  # saturates USB2, so anything reading the cam *via PipeWire* is structurally pinned to ~5fps;
-  # there is no "prefer MJPEG" knob that fixes it. The MJPG path (1080p30) is OBS's own
-  # Video Capture Device (V4L2) source, which opens /dev/video0 directly and decodes MJPG. But
-  # while PipeWire streams its YUY2 node it holds /dev/video0, so the two fight for the device
-  # ("pipewire already owns the cam") — which is why both capture paths then break.
-  #   Teams/Zoom/Chromium consume the blurred OBS *virtual* cam (/dev/video10), never the raw
-  # C922, so nothing actually needs PipeWire to own video0. Disable the v4l2 source node so
-  # PipeWire never streams it and OBS is the sole owner. The OBS Virtual Camera node has a
-  # different node.nick and is left intact. In OBS use the V4L2 source with Input Format = MJPEG.
-  #   Match on node.nick (= the V4L2 card name, port-independent) NOT media.class: WirePlumber's
-  # v4l2 create-node hook (scripts/monitors/v4l2/create-node.lua) evaluates these rules against the
-  # props that exist at creation — node.name/nick/description/api.v4l2.path — and media.class is
-  # NOT set yet there, so an `&& media.class` match silently never fires (that was the first cut's
-  # bug). Verified live: this drops the PipeWire source node, and a direct v4l2 MJPG capture then
-  # runs a clean 1080p30 (PipeWire keeps only a harmless probe fd that doesn't block STREAMON).
-  services.pipewire.wireplumber.extraConfig."11-c922-obs-only" = {
-    "monitor.v4l2.rules" = [
-      {
-        matches = [ { "node.nick" = "C922 Pro Stream Webcam"; } ];
-        actions.update-props."node.disabled" = true;
-      }
-    ];
-  };
+  # NO camera WirePlumber rules here any more — modules/cleanroom.nix owns them now, and the two
+  # that used to live here ("10-disable-libcamera" and "11-c922-obs-only") would be exact duplicates
+  # of what its module emits ("50-cleanroom-disable-libcamera", "51-cleanroom-camera"). Keeping both
+  # is not a build conflict — the keys differ, so they merge into separate WirePlumber files — but
+  # it would leave two copies of the same decision drifting apart, and the ORIGINAL RATIONALE HERE
+  # IS NOW FALSE: it read "hand the C922 to OBS alone … Teams/Zoom consume the blurred OBS virtual
+  # cam at /dev/video10". Cleanroom is the camera owner now and there is no pinned /dev/video10.
+  #
+  # The underlying findings still hold and are preserved in cleanroom's own module, because they are
+  # WHY it opens the device directly rather than reading through PipeWire:
+  #   • libcamera double-enumerates a UVC cam and exposes only RAW/YUYV (1080p ≈ 5 fps over USB2),
+  #     so which node a consumer binds was a coin-flip; it also holds the device fd open.
+  #   • PipeWire's v4l2 source node advertises YUY2 ONLY and never passes the cam's MJPG modes
+  #     through, so capture *via* PipeWire is structurally pinned to ~5 fps at 1080p. No knob fixes it.
+  #   • Match on node.nick, NOT media.class: WirePlumber's v4l2 create-node hook evaluates rules
+  #     against props that exist at creation time, and media.class is not among them — a media.class
+  #     match silently never fires. (That was the first cut's bug here, and cleanroom repeats the
+  #     warning in its own option docs so it cannot be relearned a third time.)
+  #
+  # OBS keeps its own "Start Virtual Camera": cleanroom provisions 2 loopback nodes and selects a
+  # free one at runtime, so the two producers no longer take turns on a single pinned node.
 
   # Chrome-channel tools (the @playwright/mcp Claude Code plugin defaults to the `chrome`
   # channel) hardcode Chrome's FHS path /opt/google/chrome/chrome, which doesn't exist on
@@ -437,9 +416,11 @@ in
       # launch it (or kdeconnect-app) on demand; the daemon alone handles sync/notifications.
       exec-once = kdeconnectd
 
-      # NOTE: no OBS / NV Broadcast autostart — the blurred webcam (NV Broadcast,
-      # modules/nvbroadcast.nix) is launched on demand before a call; a producerless
-      # v4l2loopback advertises no format, so an always-on daemon buys nothing.
+      # NOTE: no OBS autostart, and no cleanroom exec-once either — cleanroom (modules/cleanroom.nix)
+      # ships its own systemd user unit bound to graphical-session.target, plus D-Bus activation, so
+      # an exec-once here would race its own single-instance guard. Unlike the old NV Broadcast setup
+      # there IS a reason to have it running before a call: cleanroom is the producer, and a
+      # producerless v4l2loopback advertises no format at all.
 
       # NOTE: no linux-wallpaperengine exec-once — the DMS `linuxWallpaperEngine` plugin
       # (modules/hyprland.nix) owns wallpaper launch + saved state (output, scene id) now.

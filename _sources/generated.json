@@ -50,27 +50,6 @@
         },
         "version": "03bf0a3e4da90f53aa1a0b582f41e3caed2b31bc"
     },
-    "nvbroadcast": {
-        "cargoLock": null,
-        "date": null,
-        "extract": null,
-        "name": "nvbroadcast",
-        "passthru": null,
-        "pinned": false,
-        "src": {
-            "deepClone": false,
-            "fetchSubmodules": false,
-            "leaveDotGit": false,
-            "name": null,
-            "owner": "perfectra1n",
-            "repo": "nvidia-broadcast-linux",
-            "rev": "17df0afc4c035f4d54a5b6f965635c79d0d13448",
-            "sha256": "sha256-eowVEUJZ77XYNRIaYU3tckv5C+4xUn9aKxbt+Al0Hjk=",
-            "sparseCheckout": [],
-            "type": "github"
-        },
-        "version": "17df0afc4c035f4d54a5b6f965635c79d0d13448"
-    },
     "snapx-core": {
         "cargoLock": null,
         "date": null,

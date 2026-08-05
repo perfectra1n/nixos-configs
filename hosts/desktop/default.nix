@@ -23,9 +23,9 @@
   # No nixpkgs.config.cudaCapabilities pin: it existed solely for the blender cudaSupport
   # build (dropped 2026-07, home/gui.nix — the recurring uncached local rebuild wasn't worth
   # it; this host's blender is now the prebuilt blender-bin flake). Nothing on this host
-  # builds CUDA kernels via nixpkgs now; NV Broadcast's CUDA is prebuilt pip wheels
-  # (modules/nvbroadcast.nix). If a cudaSupport package ever returns, bring the pin back:
-  # RTX 5090 = Blackwell, capability "12.0".
+  # builds CUDA kernels via nixpkgs now — and nothing needs CUDA at all since cleanroom
+  # (wgpu/Vulkan) replaced NV Broadcast's prebuilt CUDA wheels. If a cudaSupport package ever
+  # returns, bring the pin back: RTX 5090 = Blackwell, capability "12.0".
 
   # UEFI boot — adjust to match the real machine's firmware (see hosts/server for BIOS).
   boot.loader.systemd-boot.enable = true;
@@ -92,12 +92,11 @@
     ];
   };
 
-  # Pin the DeepFilter denoiser (modules/noise-suppression.nix) to the Scarlett's XLR mic
-  # ("Input 1 Mic"), so it stays the input even when deepfilter_source itself is the default
-  # source (a null target would otherwise loop back on itself). Device-serial-specific →
-  # lives here per-host, not in the shared module. The laptop leaves this null (no Scarlett).
-  services.deepfilterNoiseSuppression.captureTarget =
-    "alsa_input.usb-Focusrite_Scarlett_Solo_USB_Y7H767R15C5B05-00.HiFi__Mic1__source";
+  # No mic pin here any more. The old DeepFilter filter-chain was a node in PipeWire's daemon
+  # config, so it had to be told at BUILD time which mic to capture — the Scarlett's serial leaked
+  # into this file, and a null target would have made the filter follow the default source, i.e.
+  # itself, looping back. Cleanroom (modules/cleanroom.nix) is a PipeWire client that picks its
+  # source at runtime, so the host-specific config went away with the coupling that forced it.
 
   # Autologin straight into Hyprland at boot. greetd's initial_session fires once with no
   # greeter; the tuigreet default_session (modules/hyprland.nix) still handles later logins

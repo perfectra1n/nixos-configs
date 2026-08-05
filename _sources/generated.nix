@@ -33,17 +33,6 @@
       sha256 = "sha256-qdSJFNBCAkC7ulW2Y4cB5OWu+fJEFOLyuk7QZCLGR8A=";
     };
   };
-  nvbroadcast = {
-    pname = "nvbroadcast";
-    version = "17df0afc4c035f4d54a5b6f965635c79d0d13448";
-    src = fetchFromGitHub {
-      owner = "perfectra1n";
-      repo = "nvidia-broadcast-linux";
-      rev = "17df0afc4c035f4d54a5b6f965635c79d0d13448";
-      fetchSubmodules = false;
-      sha256 = "sha256-eowVEUJZ77XYNRIaYU3tckv5C+4xUn9aKxbt+Al0Hjk=";
-    };
-  };
   snapx-core = {
     pname = "snapx-core";
     version = "0.4.0";

@@ -10,32 +10,44 @@ records what and why. The full source + local rationale live as comments next to
 | `hypr-cheatsheet` | [`modules/hyprland.nix`](../modules/hyprland.nix) | Searchable rofi overlay of every live Hyprland keybind |
 | `grim` (shim) | [`modules/hyprland.nix`](../modules/hyprland.nix) | Surgical wrapper that kills screenshot-portal latency |
 
-## blurcam — RETIRED (replaced by NV Broadcast)
+## blurcam, then NV Broadcast — BOTH RETIRED (replaced by cleanroom)
 
-The OBS-based blurred-webcam toggle (`blurcam` + the obs-backgroundremoval filter + a CUDA
-onnxruntime rebuild for the 5090) is gone — replaced on the desktop by **NV Broadcast**
-([`modules/nvbroadcast.nix`](../modules/nvbroadcast.nix)): a purpose-built app (unofficial
-NVIDIA Broadcast port) that produces the same blurred/virtual-background feed into the same
-`/dev/video10` without OBS in the loop. Launch `nvbroadcast` (GUI, also a launcher entry)
-before a call. The laptop keeps no blur stack at all — plain OBS + virtual camera only.
+Two generations of blurred-webcam stack are gone. First `blurcam` (an OBS toggle + the
+obs-backgroundremoval filter + a CUDA onnxruntime rebuild for the 5090), then **NV Broadcast**
+(a pip venv of the unofficial NVIDIA Broadcast port, desktop-only because it needed CUDA).
+Both are replaced by **cleanroom** ([`modules/cleanroom.nix`](../modules/cleanroom.nix)) on
+**both** graphical hosts — it mattes on wgpu/Vulkan, so the AMD laptop finally gets a blurred
+webcam too.
+
+Cleanroom runs as a systemd user daemon (`cleanroomd`, bound to `graphical-session.target`,
+also D-Bus activatable) with a GUI/tray and `cleanroom-ctl` for parity. **Run
+`cleanroom-ctl fetch-models` once per host** — weights are not bundled, deliberately.
 
 **Lore worth keeping** (still true, still the reason things are shaped this way):
 
-- **On-demand, not a daemon.** A producerless v4l2loopback advertises no format at all
-  (`G_FMT` fails), so any "auto-start the producer when an app grabs the cam" design loses the
-  open() race. Start the producer *before* the call.
-- `v4l2loopback` config now lives in [`modules/virtual-camera.nix`](../modules/virtual-camera.nix):
-  `/dev/video10`, `exclusive_caps=1` (Chromium/Teams/Zoom ignore a loopback node advertising both
-  output+capture caps), neutral `card_label="Virtual Camera"` — both NV Broadcast and OBS's
-  "Start Virtual Camera" produce into it, one at a time.
-- WirePlumber's **libcamera monitor disabled** (still in desktop-apps.nix) — a UVC cam enumerated
-  twice (v4l2 MJPEG vs libcamera raw-only ≈5fps) made captures a coin-flip.
-- The C922's **PipeWire v4l2 node disabled** — PipeWire only passes YUY2 through (raw 1080p
-  saturates USB2 → ~5fps ceiling); the producer opens `/dev/video0` directly for MJPG 1080p30 and
-  apps only ever consume `/dev/video10`.
+- **A producerless v4l2loopback advertises no format at all** (`G_FMT` fails), so any
+  "auto-start the producer when an app grabs the cam" design loses the open() race. This is
+  precisely why cleanroom is a *daemon* rather than launched before each call as NV Broadcast
+  was: the producer is already there.
+- `v4l2loopback` config now comes from cleanroom's own module: **2 devices, no `video_nr` pin**.
+  Cleanroom picks a free node at runtime, so it and OBS's "Start Virtual Camera" no longer take
+  turns on a single `/dev/video10`. `exclusive_caps=1` is still load-bearing — Chromium/Teams/Zoom
+  ignore a loopback node advertising both output and capture caps.
+- WirePlumber's **libcamera monitor disabled** — a UVC cam enumerated twice (v4l2 MJPEG vs
+  libcamera raw-only ≈5 fps) made captures a coin-flip. Now emitted by cleanroom's module
+  (`50-cleanroom-disable-libcamera`), not desktop-apps.nix.
+- The webcam's **PipeWire v4l2 node disabled** — PipeWire only passes YUY2 through (raw 1080p
+  saturates USB2 → ~5 fps ceiling), so cleanroom opens `/dev/video0` directly for MJPG 1080p30
+  and republishes it as `cleanroom_cam`. Now `51-cleanroom-camera`, matched on `node.nick` via a
+  regex rather than the hardcoded C922 name, so it works on the laptop too.
+  ⚠️ Match on `node.nick`, never `media.class`: WirePlumber's v4l2 create-node hook evaluates
+  rules against props that exist at creation time, and `media.class` is not among them — such a
+  rule silently never fires.
 
 The old chezmoi-snapshotted OBS "Blurred Cam" scene is app-owned config — delete it from OBS's
-UI whenever.
+UI whenever. Likewise DMS's pinned input device
+(`dotfiles/dot_config/DankMaterialShell/settings.json`) still names `deepfilter_source`; pick
+`cleanroom_mic` in DMS, then `chezmoi add` to re-capture that snapshot.
 
 ## hypr-cheatsheet — live keybind overlay
 

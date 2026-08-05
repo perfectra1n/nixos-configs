@@ -86,6 +86,18 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Cleanroom — OUR webcam/mic effects daemon (background blur + DeepFilterNet denoise), the
+    # vendor-neutral replacement for NV Broadcast + the DeepFilter filter-chain + the pinned
+    # v4l2loopback node. Imported by modules/cleanroom.nix → both Hyprland hosts. Follows nixpkgs
+    # for the blender-bin/trilium reason: nothing upstream caches a Rust workspace built against an
+    # `ort` FOD, so a second nixpkgs would buy only a duplicate eval — and our attic cache
+    # (modules/nix-cache.nix) keys on OUR nixpkgs, which is what lets the desktop's build serve the
+    # laptop. CI has no route to that substituter, so it pays the compile once per nixpkgs bump.
+    cleanroom = {
+      url = "github:perfectra1n/cleanroom";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # NOTE: hardware detection uses nixpkgs' built-in `hardware.facter` module
     # (the standalone nixos-facter-modules flake was upstreamed into nixpkgs and
     # is deprecated). A per-host facter.json replaces the fragile
@@ -147,9 +159,8 @@
         ./modules/sigma-crowdstrike-fix.nix # stale nixpkgs pname breaks sigma-cli's build (pentest.nix); drop when nixpkgs renames it
         ./modules/desktop-apps.nix
         ./modules/snapx.nix # SnapX (ShareX fork) — on trial next to flameshot; FHS-sandboxed .NET app
-        ./modules/virtual-camera.nix # v4l2loopback /dev/video10 — the node the virtual camera(s) produce into
+        ./modules/cleanroom.nix # webcam blur + DeepFilterNet mic denoise (v4l2loopback + PipeWire client); replaced nvbroadcast + virtual-camera + noise-suppression
         ./modules/peripherals.nix # gaming mice (Piper/ratbagd), RGB (OpenRGB), QMK/VIA keyboards (Vial)
-        ./modules/noise-suppression.nix # DeepFilterNet mic denoise (Broadcast-like virtual source)
         ./modules/rclone-mounts.nix # rclone files-on-demand mounts: Nextcloud + Google Drive (activate once chezmoi deploys ~/.config/rclone/rclone.conf)
         ./modules/smb-mounts.nix # CIFS mount of //192.168.2.155/main_smb (on-demand automount; activates once the sops creds land)
         ./modules/dotfiles.nix # chezmoi bootstrap: sops token + chezmoi.toml (orchestration in mise.toml — `mise run apply`)
@@ -209,6 +220,23 @@
           ${lib.concatStringsSep "\n" (lib.mapAttrsToList fmt drift)}
           mise SHADOWS the Nix profile on PATH, so the pinned version is the one the leak gate runs.
           Fix: align mise.toml with nixpkgs (or bump the flake so nixpkgs catches up), then re-run.
+        '';
+
+      # scripts/uncached-delta.py's name normalization decides whether the cache-coverage
+      # step in check.yaml can see anything at all, and it fails SILENTLY when wrong: a
+      # store name must keep its output suffix through normalization, so
+      # `hyprland-0.56.1_fish-completions` becomes `hyprland_fish-completions` and NOT
+      # `hyprland`. That derivation is generated locally and is therefore uncached on every
+      # commit — fold it onto the bare name and `hyprland` sits in the base's uncached set
+      # forever, so the real hyprland losing cache coverage diffs to nothing. Unlike its two
+      # neighbours this can't be an eval-time `throw` (the logic is Python), so it's a
+      # runCommand — fine because `mise run verify` runs a BARE `nix flake check`, which
+      # realizes checks rather than merely evaluating them.
+      checks.x86_64-linux.uncached-delta =
+        let pkgs = nixpkgs.legacyPackages.x86_64-linux; in
+        pkgs.runCommand "uncached-delta-selftest" { nativeBuildInputs = [ pkgs.python3 ]; } ''
+          python3 ${./scripts/uncached-delta.py} --self-test
+          touch $out
         '';
 
       # Ops tooling as flake apps: shellcheck-gated at build time, runtime deps pinned,

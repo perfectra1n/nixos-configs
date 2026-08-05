@@ -14,10 +14,8 @@ Which modules each host opts into (defined in `flake.nix`'s `mkHost` calls). `co
 | `modules/laptop.nix` | — | ✅ | — |
 | `modules/pentest.nix` | ✅ | ✅ | — |
 | `modules/desktop-apps.nix` | ✅ | ✅ | — |
-| `modules/virtual-camera.nix` | ✅ | ✅ | — |
-| `modules/nvbroadcast.nix` | ✅ | — | — |
+| `modules/cleanroom.nix` | ✅ | ✅ | — |
 | `modules/peripherals.nix` | ✅ | ✅ | — |
-| `modules/noise-suppression.nix` | ✅ | ✅ | — |
 | `modules/rclone-mounts.nix` | ✅ | ✅ | — |
 | `inputs.chaotic.nixosModules.default` | ✅ | — | — |
 | `modules/server.nix` | — | — | ✅ |

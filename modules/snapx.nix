@@ -15,7 +15,8 @@
 # those appended bytes, so the app then reads a garbage bundle header and SIGSEGVs before a single
 # line of managed code runs. VERIFIED, not theoretical: a --set-interpreter'd apphost segfaults
 # instantly, the untouched one runs. So the bytes stay untouched and buildFHSEnv supplies the
-# /usr/lib world they were linked against instead (the same steam-run trick as modules/nvbroadcast.nix).
+# /usr/lib world they were linked against instead (a steam-run-style FHS sandbox; modules/nvbroadcast.nix
+# used the same trick until cleanroom replaced it, so this is now the only place it survives).
 #   Hence `dontFixup` on the payload below — that is load-bearing, not tidiness.
 #
 # Why the Fedora RPMs are the source: they are the only Linux artifact upstream ships that links
