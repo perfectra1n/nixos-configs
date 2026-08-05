@@ -6939,7 +6939,8 @@ trifecta-2.1.4-r2.cabal
 trilium-desktop-0.104.1-72f0749
 trilium-desktop-0.104.1-72f0749-dependency-list
 trilium-desktop-cmfix
-trilium-desktop-cmfix_fish-completions
+trilium-desktop-cmfix-wmclass
+trilium-desktop-cmfix-wmclass_fish-completions
 trivy-0.73.0
 trivy-0.73.0-go-modules
 trivy-0.73.0_fish-completions
