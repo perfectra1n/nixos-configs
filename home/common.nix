@@ -113,6 +113,11 @@ in
     pkg-config           # lets `-sys` crates (openssl-sys, …) locate native libs via .pc files
     openssl              # OpenSSL libs/headers for Rust openssl-sys (PKG_CONFIG_PATH set in modules/common.nix)
     (python3.withPackages (ps: with ps; [ pip requests evtx ]))  # evtx = pyevtx-rs bindings for inline .evtx scripting
+    snyk                 # SCA/SAST for YOUR OWN projects — `snyk test` reads the repo's manifests
+                         # (package.json / go.mod / Cargo.toml), so it belongs with dev tooling rather
+                         # than pentest.nix's point-it-at-someone-else scanners (trivy, noseyparker).
+                         # Needs a one-time `snyk auth` (token lands in ~/.config/configstore, written
+                         # by snyk itself — nothing declarative owns it, so no chezmoi collision).
 
     # ── OCI registries ── talk to registries directly, no daemon and no local pull
     skopeo               # cross-TRANSPORT copy/inspect: docker://, oci-archive:, containers-storage:,
