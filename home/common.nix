@@ -27,6 +27,9 @@ in
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
+    # ── Claude Code account switcher (Python; source + tests in scripts/, spec in docs/) ──
+    (import ../pkgs/claude-cred.nix { inherit pkgs; })
+
     # ── Shell ──
     fish
     starship             # prompt

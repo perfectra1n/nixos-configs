@@ -1,5 +1,6 @@
-# Completions for claude-cred. `-f` disables file completion outright: no subcommand takes a path,
-# and the last thing we want is tab-completing a token or a credentials file onto the command line.
+# Completions for claude-cred (the Nix-packaged Python CLI — pkgs/claude-cred.nix).
+# `-f` disables file completion outright: no subcommand takes a path, and the last thing we
+# want is tab-completing a token or a credentials file onto the command line.
 
 function __claude_cred_profile_names
     set --local dir $HOME/.claude/cred-profiles
@@ -14,10 +15,16 @@ complete -c claude-cred -n __fish_use_subcommand -a show -d 'active account + ve
 complete -c claude-cred -n __fish_use_subcommand -a whoami -d 'live account email (network)'
 complete -c claude-cred -n __fish_use_subcommand -a set-refresh -d 'log in from a refresh token (silent prompt)'
 complete -c claude-cred -n __fish_use_subcommand -a save -d 'snapshot the live login as a profile'
-complete -c claude-cred -n __fish_use_subcommand -a use -d 'switch to a saved profile'
-complete -c claude-cred -n __fish_use_subcommand -a list -d 'profiles with emails, and recent backups'
+complete -c claude-cred -n __fish_use_subcommand -a use -d 'verify a profile token, then switch to it'
+complete -c claude-cred -n __fish_use_subcommand -a add-setup-token -d 'store a long-lived setup token as a profile'
+complete -c claude-cred -n __fish_use_subcommand -a run -d 'launch claude with a setup-token profile'
+complete -c claude-cred -n __fish_use_subcommand -a list -d 'profiles with kind/email/health, recent backups'
 complete -c claude-cred -n __fish_use_subcommand -a doctor -d 'audit profiles vs live login (read-only)'
 complete -c claude-cred -n __fish_use_subcommand -a undo -d 'restore the most recent auto-backup'
 
-complete -c claude-cred -n '__fish_seen_subcommand_from use save' -a '(__claude_cred_profile_names)' \
-    -d profile
+complete -c claude-cred -n '__fish_seen_subcommand_from use save run add-setup-token' \
+    -a '(__claude_cred_profile_names)' -d profile
+complete -c claude-cred -n '__fish_seen_subcommand_from add-setup-token' -l generate \
+    -d "run 'claude setup-token' and capture it"
+complete -c claude-cred -n '__fish_seen_subcommand_from add-setup-token' -l token \
+    -d 'inline token (lands in history — prompt is safer)'

@@ -236,6 +236,19 @@
       # neighbours this can't be an eval-time `throw` (the logic is Python), so it's a
       # runCommand — fine because `mise run verify` runs a BARE `nix flake check`, which
       # realizes checks rather than merely evaluating them.
+      # claude-cred's guarantee suite (mcpOAuth preservation, exchange-at-use atomicity,
+      # placeholder semantics — see the 2026-08-06 spec). Same runCommand pattern as
+      # uncached-delta below: stdlib-only unittest, so a bare python3 is the whole harness.
+      # The test file imports the tool as a module, hence the copy into one directory.
+      checks.x86_64-linux.claude-cred-tests =
+        let pkgs = nixpkgs.legacyPackages.x86_64-linux; in
+        pkgs.runCommand "claude-cred-tests" { nativeBuildInputs = [ pkgs.python3 ]; } ''
+          cp ${./scripts/claude_cred.py} claude_cred.py
+          cp ${./scripts/claude_cred_test.py} claude_cred_test.py
+          python3 claude_cred_test.py
+          touch $out
+        '';
+
       checks.x86_64-linux.uncached-delta =
         let pkgs = nixpkgs.legacyPackages.x86_64-linux; in
         pkgs.runCommand "uncached-delta-selftest" { nativeBuildInputs = [ pkgs.python3 ]; } ''
@@ -249,6 +262,11 @@
       packages.x86_64-linux =
         let pkgs = nixpkgs.legacyPackages.x86_64-linux; in
         {
+          # Not ops tooling like its neighbours — it's the user-facing Claude Code account
+          # switcher — but packaged here too so `nix run` works and CI realizes (and
+          # flake8-gates) it. home/common.nix installs the same derivation into PATH.
+          claude-cred = import ./pkgs/claude-cred.nix { inherit pkgs; };
+
           gen-manifests = pkgs.writeShellApplication {
             name = "gen-manifests";
             runtimeInputs = with pkgs; [ nix gnused gnugrep coreutils findutils ];
