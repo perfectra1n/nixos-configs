@@ -40,7 +40,7 @@ M2-0.M1-1.9.1
 M2-0.c-1.9.1
 M2-0.hex2-1.9.1
 M2-1.9.1
-NVIDIA-Linux-x86_64-610.43.03.run
+NVIDIA-Linux-x86_64-610.57.04.run
 OneTuple-0.4.2.1
 Only-0.1
 Only-0.1-r2.cabal
@@ -4242,12 +4242,12 @@ nvidia-cdi-generator
 nvidia-container-toolkit-1.19.1
 nvidia-egl-external-platforms
 nvidia-egl-external-platforms-x32
-nvidia-open-610.43.03-7.1.6
-nvidia-settings-610.43.03
-nvidia-settings-610.43.03_fish-completions
+nvidia-open-610.57.04-7.1.6
+nvidia-settings-610.57.04
+nvidia-settings-610.57.04_fish-completions
 nvidia-vaapi-driver-0.0.17
-nvidia-x11-610.43.03
-nvidia-x11-610.43.03_fish-completions
+nvidia-x11-610.57.04
+nvidia-x11-610.57.04_fish-completions
 nyacc-1.09.1
 nyacc-1.09.1-builder
 obex-data-server-0.4.6
