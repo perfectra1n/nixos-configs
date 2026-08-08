@@ -6840,6 +6840,7 @@ rtl8761b-firmware-rtk1395
 rtl8761b-firmware-rtk1395-zstd
 rtmpdump-2.6
 rtmpdump-6f6bb13
+rtrb-0.3.4
 rubato-0.14.1
 rubberband-4.0.0
 rubik-2.200
