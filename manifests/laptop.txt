@@ -3251,9 +3251,8 @@ kstatusnotifieritem-6.28.0
 kstring-2.0.2
 ktextwidgets-6.28.0
 kubectl
-kubectl-1.36.2
-kubectl-1.36.2_fish-completions
 kubectl-1.36.3
+kubectl-1.36.3_fish-completions
 kubectl-krew
 kubectl-krew_fish-completions
 kubernetes-client-bom-5.12.2.pom

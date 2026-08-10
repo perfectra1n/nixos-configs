@@ -1212,9 +1212,8 @@ krew-0.5.0-go-modules
 ksops-4.5.1
 ksops-4.5.1_fish-completions
 kubectl
-kubectl-1.36.2
-kubectl-1.36.2_fish-completions
 kubectl-1.36.3
+kubectl-1.36.3_fish-completions
 kubectl-krew
 kubectl-krew_fish-completions
 kubernetes-helm-4.2.3
