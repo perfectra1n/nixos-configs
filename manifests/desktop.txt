@@ -7453,6 +7453,8 @@ tremor-unstable-2018-03-16
 trezord.md
 trifecta-2.1.4
 trifecta-2.1.4-r2.cabal
+trilium-atvik
+trilium-atvik_fish-completions
 trilium-desktop-0.104.1-cba5593
 trilium-desktop-0.104.1-cba5593-dependency-list
 trilium-desktop-cmfix

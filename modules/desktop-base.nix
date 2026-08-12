@@ -2,6 +2,49 @@
 
 # Shared by all graphical hosts (desktop, laptop). NOT imported by server.
 # WM-agnostic: networking, audio, fonts, graphical group memberships, shared GUI apps.
+let
+  # Second Trilium desktop instance, synced to the Atvik server (the default instance
+  # syncs to the personal one). Everything hangs off two env vars, both verified against
+  # the pinned upstream source (apps/{server,desktop}/src):
+  #   TRILIUM_DATA_DIR — separate document.db + sync-server config (created on first run);
+  #   TRILIUM_PORT     — REQUIRED, not cosmetic: the Electron build ignores config.ini's
+  #     Network.port (port.ts hardcodes 37840 prod / 37740 dev), and Electron's userData
+  #     dir + single-instance lock are keyed on this port (main.ts getUserData →
+  #     "<appData>/<name>-<port>"), so a distinct port is what lets both instances run
+  #     simultaneously with separate Chromium profiles. 37841 is clear of both defaults.
+  # Set unconditionally (not ''${VAR:-default}) so a leaked ambient TRILIUM_DATA_DIR can
+  # never silently point this client at the personal DB.
+  # ⚠️ flake.nix's trilium bump warning now applies to BOTH data dirs: back up each
+  # document.db before switching onto a bump, and bump the client only after the older
+  # of the two servers has been upgraded (sync protocol must stay in step).
+  trilium-atvik =
+    let
+      wrapper = pkgs.writeShellScriptBin "trilium-atvik" ''
+        export TRILIUM_DATA_DIR="$HOME/.local/share/trilium-data-atvik"
+        export TRILIUM_PORT=37841
+        exec ${pkgs.trilium-desktop}/bin/trilium "$@"
+      '';
+    in
+    pkgs.symlinkJoin {
+      name = "trilium-atvik";
+      paths = [
+        wrapper
+        # Launcher entry. Icon=trilium resolves from the base package's hicolor theme
+        # (also in systemPackages). StartupWMClass=electron matches what the windows
+        # actually report — see the shared-Electron app_id note in chromium-cm-fix.nix;
+        # the shell cannot distinguish the two instances by class, only by title.
+        (pkgs.makeDesktopItem {
+          name = "trilium-atvik";
+          desktopName = "Atvik Trilium Notes";
+          exec = "${wrapper}/bin/trilium-atvik";
+          icon = "trilium";
+          comment = "Trilium desktop synced to the Atvik server";
+          categories = [ "Office" ];
+          startupWMClass = "electron";
+        })
+      ];
+    };
+in
 {
   networking.networkmanager.enable = true; # nm-applet / waybar network module
 
@@ -67,6 +110,8 @@
   environment.systemPackages = with pkgs; [
     trilium-desktop # TriliumNext notes. NOT nixpkgs' — modules/chromium-cm-fix.nix rebinds
                     # this attr to upstream's flake (built from source) + the HDR flag.
+    trilium-atvik   # second instance (Atvik server) — wrapper defined above; wraps
+                    # pkgs.trilium-desktop, so it inherits the rebind + HDR flag for free.
     posy-cursors    # Windows cursor (Posy's Improved Cursors). Theme name "Posy_Cursor"
                     # set in home/gui.nix dconf + chezmoi (hyprland.conf XCURSOR_THEME).
                     # cc-by-nc license → unfree (allowUnfree covers it).
