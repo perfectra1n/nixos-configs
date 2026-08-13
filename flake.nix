@@ -266,6 +266,11 @@
           # flake8-gates) it. home/common.nix installs the same derivation into PATH.
           claude-cred = import ./pkgs/claude-cred.nix { inherit pkgs; };
 
+          # Also here (not just modules/airplay.nix) so `nix flake check` realizes the Go build
+          # on every CI run — a silent vendorHash/upstream drift then fails loudly rather than
+          # waiting to break the next laptop rebuild.
+          doubletake = import ./pkgs/doubletake.nix { inherit pkgs; };
+
           gen-manifests = pkgs.writeShellApplication {
             name = "gen-manifests";
             runtimeInputs = with pkgs; [ nix gnused gnugrep coreutils findutils ];

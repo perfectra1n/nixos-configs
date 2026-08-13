@@ -10,6 +10,7 @@
     ../../modules/amd.nix
     ../../modules/laptop.nix
     ../../modules/miracast.nix # cast the screen to Miracast TVs — needs Wi-Fi for the P2P leg, so laptop-only
+    ../../modules/airplay.nix # cast the screen to AirPlay 2 sinks (Apple TV, Samsung) — the protocol Miracast/Cast can't reach
   ];
   homeModules = [ ../../home/gui.nix ../../home/docker.nix ];
 }
