@@ -467,6 +467,7 @@ blueprint-compiler-0.20.4
 bluez-5.86
 bluez-5.86_fish-completions
 bluez-headers-5.86
+bluez-headers-5.87
 bmake-20260313
 boehm-gc-8.2.12
 bogofilter-db-1.2.5
@@ -2530,6 +2531,7 @@ glibc-2.42
 glibc-2.42-67
 glibc-2.42-67-source-unsecvars
 glibc-2.42-67_fish-completions
+glibc-headers-2.42
 glibc-iconv-2.42
 glibc-locales-2.42-67
 glibc-locales-2.42-67_fish-completions
@@ -2993,7 +2995,7 @@ initrd-bin-env
 initrd-fstab
 initrd-group
 initrd-hostname
-initrd-linux-7.1.6
+initrd-linux-7.1.8
 initrd-passwd
 initrd-release
 initrd-shadow
@@ -3713,9 +3715,9 @@ linebender_resource_handle-0.1.1
 link
 linked-hash-map-0.5.6
 linked_hash_set-0.1.6
-linux-7.1.6
-linux-7.1.6-modules
-linux-7.1.6-modules-shrunk
+linux-7.1.8
+linux-7.1.8-modules
+linux-7.1.8-modules-shrunk
 linux-cachyos-config
 linux-firmware-20260622
 linux-firmware-20260622-zstd
@@ -4030,6 +4032,7 @@ moxcms-0.8.1
 mp11-src
 mpack-1.0.13-0.rockspec
 mpack-luarocks-config.lua
+mpc-1.3.1
 mpdecimal-4.0.1
 mpfr-4.2.2
 mpg123-1.33.6
@@ -5347,6 +5350,7 @@ pub-webkit_inspection_protocol-1.2.1
 pub-xml-7.0.1
 pub-yaml-3.1.3
 publicsuffix-list-0-unstable-2026-06-24
+publicsuffix-list-0-unstable-2026-07-25
 pugixml-1.16
 pulldown-cmark-0.13.4
 pulldown-cmark-escape-0.11.0
@@ -5398,7 +5402,10 @@ python3-3.13.14
 python3-3.13.14-env
 python3-3.14.6
 python3-3.14.6-env
+python3-3.14.7
+python3-3.14.7-env
 python3-minimal-3.14.6
+python3-minimal-3.14.7
 python3.12-accessible-pygments-0.0.5
 python3.12-aiodns-4.0.4
 python3.12-aiohappyeyeballs-2.7.1
