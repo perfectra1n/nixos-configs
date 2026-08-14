@@ -272,6 +272,7 @@ async-signal-0.2.14
 async-task-4.7.1
 async-trait-0.1.91
 at-spi2-core-2.60.4
+at-spi2-core-2.60.6
 atalkd.md
 athens.md
 atkmm-2.28.5
@@ -294,6 +295,7 @@ attr-2.6.0
 attr-2.6.0_fish-completions
 audiofile-0.3.6
 audit-4.2
+audit-4.2.1
 auditable-cargo-1.97.1
 auditable-cargo-bootstrap-1.97.1
 auto-add-driver-runpath-hook
@@ -466,6 +468,7 @@ blueprint-compiler-0.20.4
 bluez-5.86
 bluez-5.86_fish-completions
 bluez-headers-5.86
+bluez-headers-5.87
 bmake-20260313
 boehm-gc-8.2.12
 bogofilter-db-1.2.5
@@ -2325,6 +2328,7 @@ float-cmp-0.9.0
 fluidsynth-2.5.6
 flux-2013-09-20
 fmt-12.1.0
+fmt-12.2.0
 fnv-1.0.7
 foldhash-0.1.5
 foldhash-0.2.0
@@ -2431,6 +2435,7 @@ gd-2.3.3
 gdb-17.2
 gdbm-1.26
 gdk-pixbuf-2.44.6
+gdk-pixbuf-2.44.7
 gdk-pixbuf-loader-loaders-wrapped
 gemfile-and-lockfile
 gen-bin-stubs
@@ -2508,12 +2513,14 @@ glfw-minecraft-3.4
 glib-2.88.1
 glib-2.88.1-binlore
 glib-2.88.1_fish-completions
+glib-2.88.3
 glib-networking-2.80.1
 glib-testing-0.2.0
 glibc-2.42
 glibc-2.42-67
 glibc-2.42-67-source-unsecvars
 glibc-2.42-67_fish-completions
+glibc-headers-2.42
 glibc-iconv-2.42
 glibc-locales-2.42-67
 glibc-locales-2.42-67_fish-completions
@@ -2861,6 +2868,7 @@ hugo-0.164.0
 hugo-0.164.0-go-modules
 hunspell-1.7.3
 hwdata-0.409
+hwdata-0.410
 hwdb.bin
 hwloc-2.14.0
 hydra-0-unstable-2026-03-16
@@ -2972,7 +2980,7 @@ initrd-bin-env
 initrd-fstab
 initrd-group
 initrd-hostname
-initrd-linux-7.1.6
+initrd-linux-7.1.8
 initrd-passwd
 initrd-release
 initrd-shadow
@@ -3274,6 +3282,7 @@ lemmy.md
 lens-5.3.6
 leptonica-1.87.0
 lerc-4.1.1
+lerc-4.2.0
 less-704
 less-704_fish-completions
 lessconfig
@@ -3645,6 +3654,7 @@ libxdmcp-1.1.5
 libxext-1.3.7
 libxfixes-6.0.2
 libxfont_2-2.0.8
+libxfont_2-2.0.9
 libxft-2.3.9
 libxi-1.8.3
 libxinerama-1.1.6
@@ -3688,9 +3698,9 @@ linebender_resource_handle-0.1.1
 link
 linked-hash-map-0.5.6
 linked_hash_set-0.1.6
-linux-7.1.6
-linux-7.1.6-modules
-linux-7.1.6-modules-shrunk
+linux-7.1.8
+linux-7.1.8-modules
+linux-7.1.8-modules-shrunk
 linux-cachyos-config
 linux-firmware-20260622
 linux-firmware-20260622-zstd
@@ -4001,6 +4011,7 @@ moxcms-0.8.1
 mp11-src
 mpack-1.0.13-0.rockspec
 mpack-luarocks-config.lua
+mpc-1.3.1
 mpdecimal-4.0.1
 mpfr-4.2.2
 mpg123-1.33.6
@@ -4242,7 +4253,7 @@ nvidia-cdi-generator
 nvidia-container-toolkit-1.19.1
 nvidia-egl-external-platforms
 nvidia-egl-external-platforms-x32
-nvidia-open-610.57.04-7.1.6
+nvidia-open-610.57.04-7.1.8
 nvidia-settings-610.57.04
 nvidia-settings-610.57.04_fish-completions
 nvidia-vaapi-driver-0.0.17
@@ -5316,6 +5327,7 @@ pub-webkit_inspection_protocol-1.2.1
 pub-xml-7.0.1
 pub-yaml-3.1.3
 publicsuffix-list-0-unstable-2026-06-24
+publicsuffix-list-0-unstable-2026-07-25
 pugixml-1.16
 pulldown-cmark-0.13.4
 pulldown-cmark-escape-0.11.0
@@ -5364,7 +5376,10 @@ python3-3.12.13-env
 python3-3.13.14
 python3-3.14.6
 python3-3.14.6-env
+python3-3.14.7
+python3-3.14.7-env
 python3-minimal-3.14.6
+python3-minimal-3.14.7
 python3.12-accessible-pygments-0.0.5
 python3.12-aiodns-4.0.4
 python3.12-aiohappyeyeballs-2.7.1
@@ -7685,7 +7700,7 @@ vlc-3.0.23-2
 vmware-bootstrap
 vmware-config
 vmware-modconfig
-vmware-modules-workstation-25h2-20251015-7.1.6
+vmware-modules-workstation-25h2-20251015-7.1.8
 vmware-unpack-env-25H2u1
 vmware-unpack-env-25H2u1-bwrap
 vmware-unpack-env-25H2u1-fhsenv-profile
@@ -7704,6 +7719,7 @@ vscode-cmfix
 vtable-0.4.0
 vtable-macro-0.4.0
 vulkan-headers-1.4.350.0
+vulkan-headers-1.4.357.0
 vulkan-helper-0-unstable-2023-12-22
 vulkan-helper-0-unstable-2023-12-22-vendor
 vulkan-helper-0-unstable-2023-12-22-vendor-staging
