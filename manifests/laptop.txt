@@ -324,6 +324,7 @@ autoreconf-hook
 av-scenechange-0.14.1
 av1-grain-0.2.5
 avahi-0.8
+avahi-0.8_fish-completions
 avif-serialize-0.8.9
 avisynthplus-3.7.5
 aws-c-auth-0.9.1
@@ -2049,6 +2050,9 @@ dosfstools-4.2
 dosfstools-4.2_fish-completions
 dotconf-1.4.1
 double-conversion-3.4.0
+doubletake-0.4.0-unstable-2026-08-09
+doubletake-0.4.0-unstable-2026-08-09-go-modules
+doubletake-0.4.0-unstable-2026-08-09_fish-completions
 downcast-rs-1.2.1
 doxygen-1.17.0
 dpi-0.1.2
@@ -4239,6 +4243,7 @@ nspr-4.39
 nss-3.112.5
 nss-3.126
 nss-cacert-3.126
+nss-mdns-0.15.1
 ntfs3g-2026.7.7
 ntfs3g-2026.7.7_fish-completions
 nu-ansi-term-0.50.3
@@ -7681,6 +7686,7 @@ uniplate-1.6.13
 uniplate-1.6.13-r1.cabal
 unit--.slice
 unit-autovt-tty1.service-disabled
+unit-avahi-daemon.socket
 unit-console-getty.service-disabled
 unit-dbus.socket
 unit-docker.socket
