@@ -48,6 +48,15 @@ in
 {
   networking.networkmanager.enable = true; # nm-applet / waybar network module
 
+  # NM ships at WARN, which logs nothing for a normal DHCP renewal, carrier event or
+  # device state change. Two separate "the network keeps dropping" investigations here
+  # stalled on exactly that hole: with the NIC counters clean and NM silent, there was no
+  # way to tell an actual lease/carrier loss apart from an application-side stall, and both
+  # had to be re-derived from live packet capture. INFO makes the next one answerable from
+  # `journalctl -u NetworkManager` alone. Costs a couple hundred lines a day; veths and
+  # vmnet are unmanaged by NM, so container churn does not land here.
+  networking.networkmanager.logLevel = "INFO";
+
   # ── UPower (power-source daemon) ──
   # NixOS doesn't enable it on a WM-only setup, but DankMaterialShell reads battery/power
   # data from it (BatteryService → Quickshell.Services.UPower) — without it the DMS battery
