@@ -2139,6 +2139,7 @@ envfs-1.2.0
 envfs-1.2.0-vendor
 envfs-1.2.0-vendor-staging
 envfs-1.2.0_fish-completions
+envsubst-1.4.3
 equator-0.4.2
 equator-macro-0.4.2
 equivalent-1.0.1
@@ -2180,6 +2181,7 @@ etc-ssh-ssh_config
 etc-ssh-ssh_known_hosts
 etc-systemd-system-preset-00-nixos.preset
 etc-systemd-user-preset-00-nixos.preset
+etc-vmware-networking
 ethtool-7.1
 euclid-0.22.14
 event-listener-2.5.3
@@ -7583,6 +7585,7 @@ unit-polkit-agent-helper.socket
 unit-remote-fs.target
 unit-run-initramfs.mount
 unit-run-wrappers.mount
+unit-script-NetworkManager-ensure-profiles-start
 unit-script-initrd-find-nixos-closure-start
 unit-script-initrd-nixos-activation-start
 unit-script-linger-users-start
@@ -7630,6 +7633,8 @@ unty-0.0.4
 unzip-6.0
 unzip-6.0_fish-completions
 update-autotools-gnu-config-scripts-hook
+uplink-10g
+uplink-onboard
 upower-1.91.2
 upower-1.91.2_fish-completions
 ureq-3.3.0
