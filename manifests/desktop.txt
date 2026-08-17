@@ -114,6 +114,7 @@ ada-3.4.4
 add-bin-to-path-hook
 add-dll-accept-device-paths
 add-driver-runpath-hook
+additional-cups-backends
 adjunctions-4.4.4
 adler2-2.0.1
 adns-1.6.1
@@ -325,6 +326,7 @@ autoreconf-hook
 av-scenechange-0.14.1
 av1-grain-0.2.5
 avahi-0.8
+avahi-0.8_fish-completions
 avif-serialize-0.8.9
 avisynthplus-3.7.5
 aws-c-auth-0.9.1
@@ -516,8 +518,11 @@ brave-1.93.129
 brave-browser_1.93.129_amd64.deb
 brave-cmfix
 breeze-icons-6.29.0
+brgenml1lpr-3.1.0-1
+brgenml1lpr-3.1.0-1.i386.deb
 brightnessctl-0.5.1
 brightnessctl-0.5.1_fish-completions
+brlaser-6.2.8
 brotli-1.2.0
 bsb-http-chunked-0.0.0.4
 bsh-2.1.1
@@ -1744,6 +1749,7 @@ cmark-0.31.2
 cmark-gfm-0.29.0.gfm.13
 cmdargs-0.10.22
 cmocka-2.0.2
+cnijfilter2-6.90-1
 code
 code-42b3557
 code-page-0.2.1
@@ -1893,6 +1899,14 @@ ctor-0.2.9
 cubeb-0-unstable-2026-07-25
 culmus-0.133
 cups-2.4.19
+cups-2.4.19_fish-completions
+cups-filters-2.0.1
+cups-gutenprint-binary-5.0.1
+cups-pdf-to-pdf-0-unstable-2021-12-22
+cups-pdf-to-pdf-0-unstable-2021-12-22-wrapped
+cups-pk-helper-0.2.6
+cups-pk-helper-0.2.6_fish-completions
+cups-progs
 curl-0.4.49
 curl-8.21.0
 curl-8.21.0_fish-completions
@@ -1944,6 +1958,7 @@ dec-0.0.6-r1.cabal
 dee
 dee-1.2.7-unstable-2017-06-16
 deep_filter-0.5.6
+default-testpage.pdf
 default-vimrc
 default.md
 dejagnu-1.6.3
@@ -2052,6 +2067,7 @@ documentation-highlighter
 doh-server.md
 dolt-2.2.4
 dolt-2.2.4-go-modules
+dos2unix-7.5.5
 dosfstools-4.2
 dosfstools-4.2_fish-completions
 dotconf-1.4.1
@@ -2146,6 +2162,8 @@ envfs-1.2.0
 envfs-1.2.0-vendor
 envfs-1.2.0-vendor-staging
 envfs-1.2.0_fish-completions
+epson-escpr-1.8.6-1
+epson-inkjet-printer-escpr2-1.2.37
 equator-0.4.2
 equator-macro-0.4.2
 equivalent-1.0.1
@@ -2352,6 +2370,9 @@ fontconfig-etc
 fontdb-0.23.0
 fontforge-20251009
 fontique-0.10.0
+foomatic-db-0-unstable-2026-02-09
+foomatic-db-combined
+foomatic-db-ppds-0-unstable-2026-02-09
 foreign-types-0.5.0
 foreign-types-macros-0.2.4
 foreign-types-shared-0.3.1
@@ -2366,6 +2387,7 @@ free-5.2
 free-5.2-r8.cabal
 freefont-ttf-20120503
 freeglut-3.8.0
+freeglut-mupdf-3.0.0-rd5e2256d571b3ef66fb60716c99e35e9d3e570a2
 freepats-20060219
 freetype-2.14.3
 frei0r-plugins-3.2.1
@@ -2706,6 +2728,8 @@ gumbo-0.13.2
 gupnp-1.6.10
 gupnp-igd-1.6.0
 gusb-0.4.9
+gutenprint-5.3.5
+gutenprint_5.0.1-1lsb3.1_amd64.deb
 gvfs-1.60.2
 gvfs-1.60.2_fish-completions
 gweather-locations-2026.2
@@ -2822,6 +2846,8 @@ hotdoc-0.17.4
 hourglass-0.2.12
 hourglass-0.2.12-r1.cabal
 howard-hinnant-date-3.0.3
+hplip-3.26.4
+hplip-3.26.4_fish-completions
 hscolour-1.25
 hslua-2.3.1
 hslua-aeson-2.3.2
@@ -3017,6 +3043,7 @@ io-lifetimes-1.0.11
 ipa-priv-key.pem
 ipcalc-1.0.3
 iperf-3.21
+ipp-usb-0.9.34
 iproute-1.7.15
 iproute2-7.1.0
 iproute2-7.1.0_fish-completions
@@ -3356,6 +3383,7 @@ libcpuid-0.8.1
 libcst-1.8.6-vendor
 libcst-1.8.6-vendor-staging
 libcue-2.3.0
+libcupsfilters-2.1.1
 libcxx-21.1.8
 libcxx-src-21.1.8
 libcxx-static-wasm32-unknown-wasip1-21.1.8
@@ -3520,6 +3548,7 @@ libpng-1.2.59
 libpng-1.6.58
 libpng-apng-1.6.58
 libportal-gtk4-0.9.1
+libppd-2.1.1
 libpq-18.4
 libpq.sgml
 libpqxx-7.10.7
@@ -4070,6 +4099,7 @@ nerd-fonts-jetbrains-mono-3.5.0+2.304
 nerd-fonts-symbols-only-3.5.0
 net-snmp-5.9.5.2
 net-tools-2.10
+net.conf_fish-completions
 netbird.md
 netcat-gnu-0.7.1
 nethogs-0.9.0
@@ -4229,6 +4259,7 @@ nspr-4.39
 nss-3.112.5
 nss-3.127
 nss-cacert-3.126
+nss-mdns-0.15.1
 ntfs3g-2026.7.7
 ntfs3g-2026.7.7_fish-completions
 nu-ansi-term-0.50.3
@@ -4352,6 +4383,7 @@ openldap-2.6.13
 openmp-21.1.8
 openmp-src-21.1.8
 openobex-1.7.2
+openprinting-ppds-postscript-lexmark-20160218-1lsb3.2.noarch.rpm
 openresolv-3.17.4
 openresolv-3.17.4_fish-completions
 openrgb-1.0rc3
@@ -4417,6 +4449,7 @@ owncloud-client-6.0.3
 owned_ttf_parser-0.25.1
 p11-kit-0.26.2
 p7zip-17.06
+packagekit-1.3.5
 pahole-1.31
 paisa.md
 pam.d
@@ -4456,6 +4489,8 @@ patch-2.8
 patch-2.8_fish-completions
 patch-Makefile.in
 patch-configure
+patch-ppd-files
+patch-ppd-lines.awk
 patchelf-0.15.2
 patchelf-0.18.0-unstable-2025-08-13
 patchelf-static-0.18.0
@@ -5035,6 +5070,7 @@ perl5.42.0-asa-1.04
 perl5.42.0-boolean-0.46
 perl5.42.0-common-sense-3.75
 perl5.42.0-curry-2.000001
+perl5.42.0-foomatic-db-engine-0-unstable-2026-04-13
 perl5.42.0-gettext-1.07
 perl5.42.0-goto-file-0.005
 perl5.42.0-libnet-3.15
@@ -5162,6 +5198,7 @@ portmaster.md
 postgresql-18.6
 postgresql-test-hook
 postgresql.md
+postscript-lexmark-20160218
 posy-cursors-1.6
 posy-cursors-1.6_fish-completions
 potential_utf-0.1.4
@@ -5232,6 +5269,7 @@ psmisc-23.7
 psmisc-23.7_fish-completions
 psqlodbc-18.00.0002
 psqueues-0.2.8.3
+psutils-17
 pth-2.0.7
 pub-_fe_analyzer_shared-103.0.0
 pub-_fe_analyzer_shared-92.0.0
@@ -6164,6 +6202,7 @@ python3.14-pycrypto-3.23.0
 python3.14-pycryptodome-3.23.0
 python3.14-pycryptodome-test-vectors-1.0.14
 python3.14-pycryptodomex-3.23.0
+python3.14-pycups-2.0.4
 python3.14-pycurl-7.46.0
 python3.14-pydantic-2.13.4
 python3.14-pydantic-core-2.46.4
@@ -6200,6 +6239,9 @@ python3.14-pypng-0.20250521.0
 python3.14-pyproject-api-1.10.0
 python3.14-pyproject-hooks-1.2.0
 python3.14-pyproject-metadata-0.12.1
+python3.14-pyqt-builder-1.19.1
+python3.14-pyqt5-5.15.10
+python3.14-pyqt5-sip-12.17.0
 python3.14-pyquery-2.0.1
 python3.14-pyscard-2.3.1
 python3.14-pyserial-3.5
@@ -6213,6 +6255,7 @@ python3.14-pysigma-backend-qradar-0.3.3
 python3.14-pysigma-backend-splunk-2.1.0
 python3.14-pysigma-pipeline-sysmon-2.0.0
 python3.14-pysigma-pipeline-windows-2.0.0
+python3.14-pysmbc-1.0.25.1
 python3.14-pysocks-1.7.1
 python3.14-pystemmer-3.0.0
 python3.14-pytest-7.4.4
@@ -6327,6 +6370,7 @@ python3.14-shapely-2.1.2
 python3.14-shellingham-1.5.4
 python3.14-shtab-1.9.2
 python3.14-simplejson-4.1.1
+python3.14-sip-6.15.1
 python3.14-six-1.17.0
 python3.14-skia-pathops-0.9.2
 python3.14-smartypants-2.0.2
@@ -6540,7 +6584,9 @@ qttranslations-6.11.1
 qtwayland-5.15.19
 qtwayland-6.11.1
 qtwayland-605b8bc
+qtwebchannel-5.15.19
 qtwebchannel-6.11.1
+qtwebchannel-6a20afa
 qtwebengine-6.11.1
 qtwebsockets-6.11.1
 qtwebview-6.11.1
@@ -6710,6 +6756,7 @@ rpm-4.20.1
 rpm-sequoia-1.10.0
 rpm-sequoia-1.10.0-vendor
 rpm-sequoia-1.10.0-vendor-staging
+rpmextract
 rspolib-0.1.2
 rsync-3.4.4
 rsync-3.4.4_fish-completions
@@ -6825,9 +6872,14 @@ samba.md
 same-file-1.0.6
 saml2aws-2.36.19
 saml2aws-2.36.19-go-modules
+samsung-unified-linux-driver-4.01.17
 samurai-1.2
 sandbox-dbus-launch
+sane-airscan-0.99.38
+sane-airscan-0.99.38_fish-completions
 sane-backends-1.4.0
+sane-backends-1.4.0_fish-completions
+sane-config
 sassc-3.6.2
 satty-0.22.0
 satty-0.22.0-vendor
@@ -6868,6 +6920,7 @@ seatd-0.9.3
 security-wrapper-.vmware-vmx-wrapped-x86_64-unknown-linux-musl
 security-wrapper-Hyprland-x86_64-unknown-linux-musl
 security-wrapper-chsh-x86_64-unknown-linux-musl
+security-wrapper-cups-pdf-x86_64-unknown-linux-musl
 security-wrapper-dumpcap-x86_64-unknown-linux-musl
 security-wrapper-fusermount-x86_64-unknown-linux-musl
 security-wrapper-fusermount3-x86_64-unknown-linux-musl
@@ -6949,6 +7002,7 @@ sharded-slab-0.1.7
 shared-mime-info-2.4
 shared-mime-info-2.4_fish-completions
 shellInit
+shellcheck-0.11.0
 shiboken6-6.11.1
 shiboken6-generator-6.11.1
 shim_headers.gni
@@ -6975,6 +7029,8 @@ simdutf-6.5.0
 simdutf-9.0.0
 simdutf8-0.1.5
 simple-reflect-0.3.3
+simple-scan-50.0
+simple-scan-50.0_fish-completions
 simple-sendfile-0.2.32
 simplecss-0.2.2
 singleton-bool-0.1.8
@@ -7093,6 +7149,9 @@ spirv-headers-1.4.357.0
 spirv-tools-1.4.357.0
 split-0.2.5
 splitmix-0.1.3.2
+splix-color-profiles-0-unstable-2007-06-25
+splix-r315
+splix-svn-315
 spotify-1.2.92.147.g5b8f9367
 spotify-1.2.92.147.g5b8f9367-97.snap
 spotless-lib-2.45.0.jar
@@ -7208,6 +7267,8 @@ synstructure-0.13.2
 sys-locale-0.3.2
 sysctl-procps-4.0.6
 syslog-7.0.0
+system-config-printer-1.5.18
+system-config-printer-1.5.18_fish-completions
 system-deps-7.0.8
 system-generators
 system-path
@@ -7561,7 +7622,9 @@ uniplate-1.6.13
 uniplate-1.6.13-r1.cabal
 unit--.slice
 unit-autovt-tty1.service-disabled
+unit-avahi-daemon.socket
 unit-console-getty.service-disabled
+unit-cups.socket
 unit-dbus.socket
 unit-docker.socket
 unit-fs.target
@@ -7587,6 +7650,8 @@ unit-polkit-agent-helper.socket
 unit-remote-fs.target
 unit-run-initramfs.mount
 unit-run-wrappers.mount
+unit-script-cups-pre-start
+unit-script-ensure-printers-start
 unit-script-initrd-find-nixos-closure-start
 unit-script-initrd-nixos-activation-start
 unit-script-linger-users-start
