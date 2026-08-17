@@ -15,7 +15,7 @@ cleanroom = "73919d42f17f3fd0308df77d71f46294da921287"
 dms = "069ddab041c738236a8910e4c39b65d9628d3018"
 
 # renovate: datasource=git-refs depName=dms-plugin-registry packageName=https://github.com/AvengeMedia/dms-plugin-registry branch=master
-dms-plugin-registry = "1c652c5f5d0b0ff174674e27cc34fe551254b84c"
+dms-plugin-registry = "72f5f946e50d427772fee87d3fbcd0e2dfb98db7"
 
 # renovate: datasource=git-refs depName=home-manager packageName=https://github.com/nix-community/home-manager branch=master
 home-manager = "c554d3441f725537854e877519f01cbd60680174"
