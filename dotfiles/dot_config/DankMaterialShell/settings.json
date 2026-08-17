@@ -380,16 +380,6 @@
   "fadeToDpmsEnabled": true,
   "fadeToDpmsGracePeriod": 5,
   "launchPrefix": "",
-  "brightnessDevicePins": {},
-  "wifiNetworkPins": {},
-  "bluetoothDevicePins": {},
-  "audioInputDevicePins": {
-    "preferredInput": [
-      "alsa_input.usb-Focusrite_Scarlett_Solo_USB_Y7H767R15C5B05-00.HiFi__Mic1__source",
-      "deepfilter_source"
-    ]
-  },
-  "audioOutputDevicePins": {},
   "gtkThemingEnabled": false,
   "qtThemingEnabled": false,
   "syncModeWithPortal": true,
@@ -760,7 +750,7 @@
       "currentFilePath": "notepad-files/untitled-1781973370635.txt",
       "currentFileExtension": "txt",
       "sourceContent": "asdf",
-      "updatedAt": 1785166022517
+      "updatedAt": 1786980250351
     }
   },
   "clipboardClickToPaste": false,
@@ -793,5 +783,5 @@
   "barInsetPaddingShared": -1,
   "barInsetPaddingSyncAll": false,
   "frameBarInsetPadding": -1,
-  "configVersion": 12
+  "configVersion": 13
 }
