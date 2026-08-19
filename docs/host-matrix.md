@@ -16,6 +16,7 @@ Which modules each host opts into (defined in `flake.nix`'s `mkHost` calls). `co
 | `modules/desktop-apps.nix` | ✅ | ✅ | — |
 | `modules/cleanroom.nix` | ✅ | ✅ | — |
 | `modules/peripherals.nix` | ✅ | ✅ | — |
+| `modules/printing.nix` | ✅ | ✅ | — |
 | `modules/rclone-mounts.nix` | ✅ | ✅ | — |
 | `inputs.chaotic.nixosModules.default` | ✅ | — | — |
 | `modules/server.nix` | — | — | ✅ |
@@ -30,6 +31,11 @@ Logitech receiver rules — it replaced Solaar. It also carries a `libratbag` ov
 the package from upstream **git master** instead of nixpkgs' 0.18 release: the **G502 X PLUS**
 (onboard-profile format `0x05`, wireless PID `046d:4099`) is only supported by libratbag commits
 merged after v0.18 (#1693/#1728/#1799). Drop the overlay once nixpkgs ships libratbag > 0.18.
+
+`modules/printing.nix` is the CUPS/SANE stack. Note it also declares `services.avahi` — the same
+block `modules/miracast.nix` sets on laptop. Equal boolean definitions merge, so that's not a
+conflict; it's declared in both because printer discovery and Chromecast discovery each genuinely
+need mDNS, and desktop has no miracast.nix to inherit it from.
 
 ## Per-host notes
 

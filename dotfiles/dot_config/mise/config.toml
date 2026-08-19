@@ -1,6 +1,10 @@
 [settings]
 
+# NixOS: like python below, mise resolves an unset node.compile to true here
+# (no FHS loader for the prebuilt binary), which would source-compile node AND
+# write a `compile` option into every project's mise.lock. Pin it off.
 [settings.node]
+compile = false
 
 # NixOS: never source-compile Python (system zlib/openssl headers aren't on the
 # FHS paths python-build expects). Use precompiled python-build-standalone instead.

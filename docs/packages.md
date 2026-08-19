@@ -157,6 +157,26 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 - Packages: `burpsuite`, `nmap`, `wireshark`, `sqlmap`, `ffuf`, `gobuster`, `feroxbuster`,
   `nikto`, `hashcat`, `john`, `hydra`, `netcat-gnu`.
 
+## Printing + scanning — `modules/printing.nix` (graphical: D L)
+
+- `services.printing` (CUPS) + `cups-pdf` (virtual PDF queue), `services.ipp-usb` (driverless
+  over USB), `services.avahi` (mDNS), `hardware.sane`.
+- `services.printing.browsed` is **off**: it built a duplicate `implicitclass://` queue for an
+  already-added printer, made it the default, and routed over TLS/:443 into the HP M452dw's
+  self-signed cert (expired 2026-01-01) — every job died on `cups-pki-expired` and paused the
+  queue. Add network printers by hand instead. Avahi stays regardless: manual queues keep a
+  `dnssd://` URI, so mDNS is needed on every job, not just at discovery time.
+- CUPS drivers (via `services.printing.drivers`, NOT systemPackages — cupsd only reads
+  `/var/lib/cups/path`): `gutenprint`, `gutenprintBin`, `foomatic-db-ppds`, `brlaser`,
+  `brgenml1lpr`, `hplip`, `cnijfilter2`, `epson-escpr`, `epson-escpr2`, `splix`,
+  `samsung-unified-linux-driver`, `postscript-lexmark`.
+- SANE backends: `sane-airscan`, `hplip`. Packages: `system-config-printer`, `simple-scan`.
+
+> The drivers are insurance for pre-IPP-Everywhere hardware; a driverless (AirPrint) printer uses
+> none of them. Whole stack ≈ 760 MiB download / 2.3 GiB unpacked cold. No single hog: measured
+> alone, `foomatic-db-ppds` 154 MiB, `hplip` 143, `cnijfilter2` 137, `system-config-printer` 134
+> (PyQt5). Trimming means dropping vendors you don't own, not deleting one line.
+
 ## Host-only modules
 
 - `modules/laptop.nix` (L): power-profiles-daemon, lid suspend, acpilight, fwupd.

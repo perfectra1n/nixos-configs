@@ -124,6 +124,14 @@ FISHENV_MANIFEST = [
     ("ATVIK_CPA_TOKEN",              "Atvik CPA",                "field", "token"),
     ("HOME_CPA_BASE_URL",            "Home CPA",                 "field", "base_url"),
     ("HOME_CPA_TOKEN",               "Home CPA",                 "field", "token"),
+    # lupina gateway. The lupina@lupina plugin reads ALL THREE of these straight from the shell
+    # env (base_url resolves userConfig -> LUPINA_BASE_URL -> ANTHROPIC_BASE_URL), so there is
+    # deliberately NO `pluginConfigs` block in dot_claude/settings.json — a literal base_url there
+    # would put the private gateway hostname in this public repo, which the gitleaks domain pass
+    # correctly rejects. Keep the URL here and settings.json stays hostname-free.
+    ("LUPINA_BASE_URL",              "Jon Lupina",               "field", "base_url"),
+    ("LUPINA_API_KEY",               "Jon Lupina",               "field", "jon-api-key"),
+    ("LUPINA_ADMIN_KEY",             "Jon Lupina",               "field", "jon-api-key"),
 ]
 
 REPO_ROOT = Path(__file__).resolve().parent.parent

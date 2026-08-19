@@ -15,10 +15,10 @@ cleanroom = "73919d42f17f3fd0308df77d71f46294da921287"
 dms = "069ddab041c738236a8910e4c39b65d9628d3018"
 
 # renovate: datasource=git-refs depName=dms-plugin-registry packageName=https://github.com/AvengeMedia/dms-plugin-registry branch=master
-dms-plugin-registry = "1c652c5f5d0b0ff174674e27cc34fe551254b84c"
+dms-plugin-registry = "72f5f946e50d427772fee87d3fbcd0e2dfb98db7"
 
 # renovate: datasource=git-refs depName=home-manager packageName=https://github.com/nix-community/home-manager branch=master
-home-manager = "c554d3441f725537854e877519f01cbd60680174"
+home-manager = "aac4965ddb7ea2ff0f3cadd9502c7042b7aa07ba"
 
 # renovate: datasource=git-refs depName=hyprswitch packageName=https://github.com/h3rmt/hyprswitch branch=hyprshell-release
 hyprswitch = "61ddaa30563c1f091ca5fbe5d7203c19f42b519c"
@@ -27,11 +27,11 @@ hyprswitch = "61ddaa30563c1f091ca5fbe5d7203c19f42b519c"
 network-indicator = "d197967a2cda718ff7a883083b486b20dcc562c4"
 
 # renovate: datasource=git-refs depName=nixpkgs packageName=https://github.com/NixOS/nixpkgs branch=nixos-unstable
-nixpkgs = "b7c2ada94fe99c15b0dbcf4d11fd7850b957a436"
+nixpkgs = "e5bdc4a41d4c072fe1e3787eaa0320a384741d44"
 
 # renovate: datasource=git-refs depName=sops-nix packageName=https://github.com/Mic92/sops-nix branch=master
 sops-nix = "a8627b21b9107c5711c96b84f32a9a4b3d45295f"
 
 # renovate: datasource=git-refs depName=trilium packageName=https://github.com/TriliumNext/Trilium branch=main
-trilium = "cba55936caa59d5589cb22f8e744f4dd219d17de"
+trilium = "02835932b88b1ebcf9f9981b005716aacfd18513"
 

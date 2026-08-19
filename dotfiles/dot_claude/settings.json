@@ -5,6 +5,10 @@
     "sessionUrl": false
   },
   "model": "opus[1m]",
+  "statusLine": {
+    "type": "command",
+    "command": "node \"$HOME/.claude/lupina/statusline.ts\""
+  },
   "enabledPlugins": {
     "explanatory-output-style@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
@@ -21,7 +25,8 @@
     "memini@memini": true,
     "impeccable@impeccable": true,
     "pr-review-toolkit@claude-plugins-official": true,
-    "atvik@atvik": true
+    "atvik@atvik": true,
+    "lupina@lupina": true
   },
   "extraKnownMarketplaces": {
     "custom-claude-skills": {
@@ -50,6 +55,18 @@
         "repo": "AtvikSecurity/claude-extensions"
       },
       "autoUpdate": true
+    },
+    "claude-for-legal": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-for-legal"
+      }
+    },
+    "lupina": {
+      "source": {
+        "source": "github",
+        "repo": "AtvikSecurity/lupina"
+      }
     }
   },
   "effortLevel": "high",

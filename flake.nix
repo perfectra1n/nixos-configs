@@ -164,6 +164,7 @@
         ./modules/snapx.nix # SnapX (ShareX fork) — on trial next to flameshot; FHS-sandboxed .NET app
         ./modules/cleanroom.nix # webcam blur + DeepFilterNet mic denoise (v4l2loopback + PipeWire client); replaced nvbroadcast + virtual-camera + noise-suppression
         ./modules/peripherals.nix # gaming mice (Piper/ratbagd), RGB (OpenRGB), QMK/VIA keyboards (Vial)
+        ./modules/printing.nix # CUPS + cups-browsed/Avahi discovery + ipp-usb + vendor drivers, and SANE scanning
         ./modules/rclone-mounts.nix # rclone files-on-demand mounts: Nextcloud + Google Drive (activate once chezmoi deploys ~/.config/rclone/rclone.conf)
         ./modules/smb-mounts.nix # CIFS mount of //192.168.2.155/main_smb (on-demand automount; activates once the sops creds land)
         ./modules/dotfiles.nix # chezmoi bootstrap: sops token + chezmoi.toml (orchestration in mise.toml — `mise run apply`)
