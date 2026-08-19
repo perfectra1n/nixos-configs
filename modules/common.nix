@@ -151,12 +151,8 @@ in
   # wholesale — this is the surgical version).
   #
   # Safe because NetworkManager sets addr_gen_mode PER-DEVICE from its connection
-  # profile, overriding this default: a managed uplink still gets an NM-generated
-  # stable-privacy fe80:: regardless of this sysctl. (On desktop that uplink is now
-  # deliberately link-local ONLY — see the ensureProfiles block in hosts/desktop/default.nix
-  # for why RA-assigned addresses were costing a connection reset every ~30 min. That is a
-  # separate decision from this sysctl, which would be safe either way.) So this only
-  # reaches devices NM doesn't
+  # profile, overriding this default: enp5s0f1 already runs mode 1 with an NM-generated
+  # stable-privacy fe80::, and its IPv6 works. So this only reaches devices NM doesn't
   # manage — docker0, the veths, vmnet* — i.e. exactly the churn sources. NM-managed
   # WireGuard is unaffected for the same reason, and raw `wg-quick` tunnels don't use a
   # kernel link-local (point-to-point, no ND; addresses come from the .conf).

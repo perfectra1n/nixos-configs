@@ -10,9 +10,6 @@
 {
   extraModules = graphical ++ [
     ../../modules/nvidia.nix
-    # Only this host runs VMware Workstation (virtualisation.vmware.host in default.nix),
-    # so it is the only one whose vmnet subnets can collide with the LAN.
-    ../../modules/vmware-net.nix
   ];
   homeModules = [ ../../home/gui.nix ../../home/docker.nix ];
 }
