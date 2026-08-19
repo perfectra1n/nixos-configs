@@ -8,6 +8,74 @@
 
   networking.hostName = "desktop";
 
+  # ── Wired uplink: Intel X520-2 (82599ES, dual SFP+), port 1 on DAC ──
+  #
+  # Three ethernet NICs live here — the X520's enp5s0f0/enp5s0f1 and the board's onboard
+  # RTL8126 5GbE (enp8s0) — and NetworkManager auto-generates a "Wired connection N"
+  # profile per device with route-metric left at auto. Only one has a cable today, so the
+  # right NIC wins by accident; plug in a second and two DHCP default routes appear at the
+  # same metric and the winner is whichever finished first that boot. Pin it instead.
+  # These are also the FIRST persistent profiles on this box: NM's auto-generated ones are
+  # written to /run and rebuilt from scratch every boot, so nothing about the uplink
+  # survived a reboot before this.
+  #
+  # ipv6.method = "link-local" is the load-bearing line, and it is about stability, not
+  # IPv6 policy. This LAN advertises only ULA prefixes (fd00::/8) with a ~1800s lifetime
+  # and no default route, so IPv6 here carries no traffic at all — `ping -6` returns
+  # "Network is unreachable" and there are zero established IPv6 connections. What it DOES
+  # do is re-emit RTM_NEWADDR on this interface roughly every 30 minutes as the RA refreshes
+  # and the temporary (privacy) address deprecates and regenerates. Chromium's
+  # NetworkChangeNotifierLinux watches rtnetlink with an EMPTY ignored-interface set on
+  # desktop Linux (same mechanism modules/common.nix documents for docker veth churn) and
+  # treats a flag change on the primary interface as "the network changed", tearing down
+  # live sessions with ERR_NETWORK_CHANGED. Unused addresses were buying a periodic
+  # connection reset. link-local keeps fe80:: for anything that needs it and stops the
+  # SLAAC churn; if this network ever gains real (globally routable) IPv6, set it back to
+  # "auto" — nothing else here depends on the choice.
+  #
+  # The DHCPv4 renewal at T1 also re-emits RTM_NEWADDR, but with identical ifaddrmsg flags,
+  # which Chromium compares and ignores — so a static lease is not needed and the address
+  # deliberately stays out of this (public) repo.
+  networking.networkmanager.ensureProfiles.profiles = {
+    uplink-10g = {
+      connection = {
+        id = "uplink-10g";
+        type = "ethernet";
+        interface-name = "enp5s0f1";
+        autoconnect = true;
+        autoconnect-priority = 100;
+      };
+      ipv4 = {
+        method = "auto";
+        route-metric = 100;
+      };
+      ipv6.method = "link-local";
+    };
+    # Onboard 5GbE: same treatment, deliberately worse metric. Not cabled today; this
+    # exists so that if it ever is, it becomes a backup rather than a coin flip.
+    uplink-onboard = {
+      connection = {
+        id = "uplink-onboard";
+        type = "ethernet";
+        interface-name = "enp8s0";
+        autoconnect = true;
+        autoconnect-priority = 10;
+      };
+      ipv4 = {
+        method = "auto";
+        route-metric = 600;
+      };
+      ipv6.method = "link-local";
+    };
+  };
+
+  # The 82599 rejects non-Intel optics in firmware — the link simply never comes up, with
+  # no error that points at the cage. Inert on the DAC cable in use now; this just makes a
+  # future third-party SFP+ a non-event instead of an afternoon.
+  boot.extraModprobeConfig = ''
+    options ixgbe allow_unsupported_sfp=1
+  '';
+
   # CachyOS kernel (chaotic-nyx) — built-in sched_ext + gaming tuning, pairs with the scx
   # scheduler in modules/gaming.nix. The chaotic module (+ its binary cache) comes from
   # inputs.chaotic.nixosModules.default, added to this host's extraModules in flake.nix; do
