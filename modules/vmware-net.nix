@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ config, lib, ... }:
 
 # VMware vmnet subnets — pinned off the installer's random 192.168.x defaults.
 #
@@ -159,4 +159,21 @@ in
       [incomingudp]
     '';
   };
+
+  # environment.etc changes alone are INERT here. vmware-networks.service is Type=forking
+  # and reads /etc/vmware/networking exactly once, at ExecStart; its unit definition names
+  # only ${pkgs.vmware-workstation}/bin/vmware-networks, so switch-to-configuration sees a
+  # byte-identical unit and never restarts it. Rewriting the subnet above therefore lands on
+  # disk while vmnet1/vmnet8 keep running the OLD one until the next reboot — which is how
+  # the original 192.168.x collision survived its own fix and kept black-holing LAN hosts.
+  # Hashing the four files into the unit makes the running adapters follow the config.
+  #
+  # Cost: ExecStop is `vmware-networks --stop`, so this drops every vmnet adapter and kills
+  # networking inside any running VM. Only fires when one of these files actually changes.
+  systemd.services.vmware-networks.restartTriggers = [
+    config.environment.etc."vmware/networking".source
+    config.environment.etc."vmware/vmnet1/dhcpd/dhcpd.conf".source
+    config.environment.etc."vmware/vmnet8/dhcpd/dhcpd.conf".source
+    config.environment.etc."vmware/vmnet8/nat/nat.conf".source
+  ];
 }
