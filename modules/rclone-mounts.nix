@@ -147,10 +147,15 @@ in
     # Both graphical hosts get both, so they live here rather than in per-host spec.nix.
     # Keys MUST match the [section] headers in the chezmoi-managed rclone.conf.
     services.rcloneMounts = {
-      # WebDAV. Long dir-cache because WebDAV CANNOT push change notifications (--poll-interval
-      # is a no-op here), so browsing is fast but remote-side edits only appear once the cache
-      # expires. Lower it if you start editing from many devices at once.
-      FullerNextcloud.extraFlags = [ "--dir-cache-time" "72h" ];
+      # WebDAV. --poll-interval is REJECTED here, not merely ignored: the backend implements no
+      # ChangeNotify, so `rclone test changenotify FullerNextcloud:` errors outright. Cache expiry
+      # is therefore the ONLY way an out-of-band change (a folder made in the web UI or on a phone)
+      # ever becomes visible. This was 72h and cost three days of blindness to save one PROPFIND
+      # per directory — a bad trade, since the VFS dir cache holds LISTINGS only; file contents are
+      # cached separately by --vfs-cache-mode full above, so shortening this buys freshness without
+      # re-downloading anything. 15m ~= rclone's own 5m default, erring toward fewer requests.
+      # Impatient? `systemctl --user kill -s HUP rclone-FullerNextcloud.service` flushes it now.
+      FullerNextcloud.extraFlags = [ "--dir-cache-time" "15m" ];
 
       # Google Shared Drive. team_drive + root_folder_id live in rclone.conf, not here: they
       # define the REMOTE, not the mount's behaviour.
