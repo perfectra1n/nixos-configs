@@ -116,15 +116,16 @@
   home-manager.users.${username}.xdg.configFile = {
     # Two-panel layout. Alienware AW3225QF (4K 240Hz) is the MAIN display, pinned to the
     # origin 0x0 — Hyprland gravitates default focus, new windows, and layer surfaces to the
-    # monitor at 0,0, so origin = "primary" here. Dell S2719DGF (1440p) sits physically to its
-    # LEFT in PORTRAIT: `transform, 1` rotates it 90° clockwise (top edge → right), which makes
-    # its rotated footprint 1440 wide × 2560 tall, so a negative x of -1440 abuts the Alienware's
-    # left edge with no gap/overlap. If the Dell comes out upside-down, swap transform 1 → 3.
-    # The Dell's y=-560 vertically CENTERS the two. NOTE the Alienware's scale 1.5 makes its
-    # EFFECTIVE height 1440 (2160/1.5), not 2160 — so its midpoint is y=720, not 1080. The Dell
-    # portrait is 2560 tall (scale 1), so to put its midpoint at 720: y = 720 - 2560/2 = -560.
+    # monitor at 0,0, so origin = "primary" here. KTC U27T6 (4K 160Hz) sits physically to its
+    # LEFT in PORTRAIT: `transform, 1` rotates it 90° clockwise (top edge → right), standing the
+    # 3840x2160 mode up as 2160 wide × 3840 tall, which scale 1.5 renders as a 1440 × 2560
+    # LOGICAL footprint — so a negative x of -1440 abuts the Alienware's left edge with no
+    # gap/overlap. If the KTC comes out upside-down, swap transform 1 → 3.
+    # Its y=-560 vertically CENTERS the two. NOTE the Alienware's scale 1.5 makes its
+    # EFFECTIVE height 1440 (2160/1.5), not 2160 — so its midpoint is y=720, not 1080. The KTC
+    # portrait is 2560 LOGICAL tall, so to put its midpoint at 720: y = 720 - 2560/2 = -560.
     # It overhangs ~560px above and below the Alienware. Cursor crosses straight across instead
-    # of jumping. Nudge -416 up/down to taste (more negative = Dell moves UP).
+    # of jumping. Nudge -560 up/down to taste (more negative = KTC moves UP).
     #
     # MATCH BY `desc:`, NEVER BY PORT NAME. This box has TWO DRM cards — the RTX 5090 (nvidia)
     # and the Ryzen's Raphael iGPU (amdgpu) — sharing one DP-x name pool, and the split is not
@@ -141,19 +142,28 @@
     # (id 0 -> ws 1-10, id 1 -> ws 11-20), and at COLD BOOT ids follow DRM connector order, so
     # the lowest-numbered CONNECTED port wins id 0. Keep the Alienware on the lower of the two
     # good nvidia DPs so it stays id 0 = hyprsome's primary and new windows/games default to it
-    # instead of the portrait Dell. NOTE: the Dell would NOT link on the 5090's remaining DP
-    # (dead/marginal). Live hotplug can assign ids out of connector order — only a cold boot is
-    # canonical.
+    # instead of the portrait KTC. NOTE: the old Dell would NOT link on the 5090's remaining DP
+    # (DP-6 — dead/marginal); never retested with the KTC. Live hotplug can assign ids out of
+    # connector order — only a cold boot is canonical.
     #
     # Alienware scale 1.5: at scale 1 a 31.5" 4K panel renders the full 3840x2160 logically,
     # so the UI (incl. DMS) is microscopic — DMS honours the Hyprland scale, the scale was
     # just wrong. 1.5 -> logical 2560x1440, which divides the mode into whole px (3840/1.5,
     # 2160/1.5 both integer) so Hyprland won't nudge + warn. Drop back to 1.25 (-> 3072x1728)
-    # if the UI is now too big. The Dell stays scale 1; 1440p portrait at this size is already
-    # comfortable.
+    # if the UI is now too big. The KTC runs the SAME 1.5, for the same whole-px reason
+    # (3840/1.5, 2160/1.5) and because it makes the 2026-08 panel swap a pure drop-in: 4K
+    # portrait at 1.5 is logically 1440x2560 — byte-identical to the 1440p Dell S2719DGF it
+    # replaced at scale 1 — so the position math above needed NO change and apparent text size
+    # is unchanged (both land at ~109 logical PPI). The win is 4× the physical pixels behind
+    # the same layout, not more screen real estate.
     #
     # HDR10 on the AW3225QF (QD-OLED) only — unlocks the panel's high peak luminance that SDR
-    # firmware-caps at ~250 nits. The Dell stays SDR.
+    # firmware-caps at ~250 nits. The KTC stays SDR *deliberately* — don't "fix" it by adding
+    # cm, hdr. Its EDID does advertise HDR10 (SMPTE ST2084 + BT2020RGB/YCC, 10-bit), but at
+    # 400 cd/m² desired peak with NO local dimming — the tell is that its max-luminance figures
+    # WITH and WITHOUT local dimming are identical (417.7 both). On a panel like that HDR buys
+    # raised blacks and tone-mapped SDR, not highlight headroom. Re-check with `edid-decode`
+    # if the panel ever changes.
     #   bitdepth, 10    = 10-bit output (required for HDR)
     #   cm, hdr         = wide gamut + PQ/ST2084 transfer (HDR10; no Dolby Vision on Wayland)
     #   sdrbrightness   = brightness multiplier for SDR content in HDR mode — the dimness knob
@@ -165,7 +175,14 @@
     # and they break it.
     "hypr/monitors.conf".text = ''
       monitor = desc:Dell Inc. AW3225QF 5K46YZ3, 3840x2160@240, 0x0, 1.5, bitdepth, 10, cm, hdr, sdrbrightness, 12.5, sdrsaturation, 1.2
-      monitor = desc:Dell Inc. S2719DGF 8H2YBY2, 2560x1440@144, -1440x-560, 1, transform, 1
+      monitor = desc:Shenzhen KTC Technology Group U27T6 0000000000001, 3840x2160@160, -1440x-560, 1.5, transform, 1
+
+      # Focus the Alienware at login so new windows open there by default. Belt-and-braces on
+      # top of its 0x0 placement. Lives here rather than in the chezmoi hyprland.conf because
+      # it names a specific panel: it was `focusmonitor DP-1` there, and once DP-1 became a
+      # disconnected iGPU connector it silently no-op'd for who knows how long. `desc:` can't
+      # rot that way.
+      exec-once = hyprctl dispatch focusmonitor desc:Dell Inc. AW3225QF 5K46YZ3
     '';
     # Mouse feel (host-specific). sensitivity 0 = no accel change; flat = raw 1:1 movement.
     "hypr/input.conf".text = ''
