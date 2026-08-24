@@ -51,16 +51,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1786051750,
-        "narHash": "sha256-FoTou0W618X7VewwlaucrIRb30o7MVnC9WKQ9Wx6YJM=",
+        "lastModified": 1787601089,
+        "narHash": "sha256-9KJqzZ9p1cfbeZeDxFsl7amodPQof6NlBY/v8e58ZIQ=",
         "owner": "perfectra1n",
         "repo": "cleanroom",
-        "rev": "a3bc98ec07a6fae76d9d5482afbf0bd5398a4c04",
+        "rev": "9d24ce961927a7d8fcdec9f7dcd33885ab54ba80",
         "type": "github"
       },
       "original": {
         "owner": "perfectra1n",
-        "ref": "fix/mic-device-selection",
         "repo": "cleanroom",
         "type": "github"
       }

@@ -94,10 +94,8 @@
     # (modules/nix-cache.nix) keys on OUR nixpkgs, which is what lets the desktop's build serve the
     # laptop. CI has no route to that substituter, so it pays the compile once per nixpkgs bump.
     cleanroom = {
-      # Temporarily on the mic-selection fix branch (cleanroom PR #2: description-vs-node.name
-      # capture pinning, instant audio restarts, RLIMIT_RTTIME kill on reload). Point back at
-      # the default branch once that PR merges.
-      url = "github:perfectra1n/cleanroom/fix/mic-device-selection";
+      # No ref = the repo's default branch (main), so `nix flake update cleanroom` tracks releases.
+      url = "github:perfectra1n/cleanroom";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
