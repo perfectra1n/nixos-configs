@@ -548,7 +548,11 @@
       "all"
     ],
     "lockScreen": [
-      "S2719DGF"
+      "S2719DGF",
+      {
+        "name": "DP-5",
+        "model": "U27T6"
+      }
     ]
   },
   "showOnLastDisplay": {
@@ -750,7 +754,7 @@
       "currentFilePath": "notepad-files/untitled-1781973370635.txt",
       "currentFileExtension": "txt",
       "sourceContent": "asdf",
-      "updatedAt": 1786980250351
+      "updatedAt": 1787599599076
     }
   },
   "clipboardClickToPaste": false,
