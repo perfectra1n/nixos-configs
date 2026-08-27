@@ -9,7 +9,7 @@
 
 [kubectl]
 # renovate: datasource=github-releases depName=kubernetes/kubernetes extractVersion=^v(?<version>.+)$
-src.manual = "1.36.3"
+src.manual = "1.37.0"
 fetch.url = "https://dl.k8s.io/release/v$ver/bin/linux/amd64/kubectl"
 
 [talosctl]

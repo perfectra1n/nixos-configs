@@ -3272,7 +3272,8 @@ kstring-2.0.2
 ktextwidgets-6.29.0
 kubectl
 kubectl-1.36.3
-kubectl-1.36.3_fish-completions
+kubectl-1.37.0
+kubectl-1.37.0_fish-completions
 kubectl-krew
 kubectl-krew_fish-completions
 kubernetes-client-bom-5.12.2.pom
