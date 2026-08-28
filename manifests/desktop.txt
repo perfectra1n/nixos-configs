@@ -7298,8 +7298,8 @@ tagsoup-0.14.8
 talhelper-3.1.16
 talhelper-3.1.16-go-modules
 talloc-2.4.4
-talosctl-1.13.8
-talosctl-1.13.8_fish-completions
+talosctl-1.13.9
+talosctl-1.13.9_fish-completions
 talosctl-linux-amd64
 tandoor-recipes.md
 tap-1.0.1
