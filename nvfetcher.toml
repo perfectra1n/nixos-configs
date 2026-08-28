@@ -17,6 +17,15 @@ fetch.url = "https://dl.k8s.io/release/v$ver/bin/linux/amd64/kubectl"
 src.manual = "1.13.9"
 fetch.url = "https://github.com/siderolabs/talos/releases/download/v$ver/talosctl-linux-amd64"
 
+# ludus — badsectorlabs Ludus cyber-range CLIENT (talks to the Ludus server on media-pc over the
+# API/WireGuard). Not in nixpkgs (the only `ludus` hit is the unrelated `ludusavi` save-backup tool).
+# Static CGO_ENABLED=0 Go binary from GitLab's generic package registry — installed as-is via mkBin
+# in modules/pentest.nix. GitLab tags are bare (no leading "v"), so $ver is used unchanged in the URL.
+[ludus]
+# renovate: datasource=gitlab-releases depName=badsectorlabs/ludus registryUrl=https://gitlab.com
+src.manual = "2.3.1"
+fetch.url = "https://gitlab.com/api/v4/projects/54052321/packages/generic/ludus/$ver/ludus-client_linux-amd64-$ver"
+
 # ksops — viaduct-ai/kustomize-sops KRM plugin. A release tarball (NOT a bare binary), so the
 # derivation in modules/common.nix unpacks it; only the version/src/hash live here.
 [ksops]

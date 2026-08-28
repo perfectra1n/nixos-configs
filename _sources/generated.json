@@ -50,6 +50,21 @@
         },
         "version": "03bf0a3e4da90f53aa1a0b582f41e3caed2b31bc"
     },
+    "ludus": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "ludus",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": null,
+            "sha256": "sha256-X/sFrHKWW1or4fI1bgXaF2F+erFABEwH+W7uDyIUDZU=",
+            "type": "url",
+            "url": "https://gitlab.com/api/v4/projects/54052321/packages/generic/ludus/2.3.1/ludus-client_linux-amd64-2.3.1"
+        },
+        "version": "2.3.1"
+    },
     "snapx-core": {
         "cargoLock": null,
         "date": null,

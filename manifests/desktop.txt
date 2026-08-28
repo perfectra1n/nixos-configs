@@ -3855,6 +3855,9 @@ luassert-1.9.0-1.rockspec
 luassert-luarocks-config.lua
 luasystem-0.7.1-1.rockspec
 luasystem-luarocks-config.lua
+ludus-2.3.1
+ludus-2.3.1_fish-completions
+ludus-client_linux-amd64-2.3.1
 luit-20250912
 luv-luarocks-config.lua
 lv2-1.18.10

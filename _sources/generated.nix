@@ -33,6 +33,14 @@
       sha256 = "sha256-qdSJFNBCAkC7ulW2Y4cB5OWu+fJEFOLyuk7QZCLGR8A=";
     };
   };
+  ludus = {
+    pname = "ludus";
+    version = "2.3.1";
+    src = fetchurl {
+      url = "https://gitlab.com/api/v4/projects/54052321/packages/generic/ludus/2.3.1/ludus-client_linux-amd64-2.3.1";
+      sha256 = "sha256-X/sFrHKWW1or4fI1bgXaF2F+erFABEwH+W7uDyIUDZU=";
+    };
+  };
   snapx-core = {
     pname = "snapx-core";
     version = "0.4.0";

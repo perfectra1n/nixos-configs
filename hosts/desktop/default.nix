@@ -31,6 +31,16 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # The spare SFP+ cage (enp5s0f0, 82599ES) holds an XGS-PON ONU stick, which is not on
+  # Intel's SFP whitelist — without this, ixgbe refuses to bring the port up at all
+  # ("unsupported SFP+ module"), and worse, the failed probe's error path leaks a zombie
+  # mdio_bus sysfs entry that blocks ALL re-probes of the port until reboot. The param is
+  # probe-time-only and module-wide (both ports share the ixgbe module), so it must be set
+  # before boot loads the driver.
+  boot.extraModprobeConfig = ''
+    options ixgbe allow_unsupported_sfp=1
+  '';
+
   # 4TB 990 PRO — bulk data (Steam library at /data/steam + repos). One-time formatted
   # ext4 (uniform with root; xfs/btrfs perf is a wash on NVMe for Steam+git, and ext4
   # keeps shrink/repartition open). nofail: a dead DATA drive must not drop boot to
