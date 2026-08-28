@@ -135,6 +135,30 @@ in
   # fixed and re-evaluate.
   virtualisation.docker.daemon.settings.features.containerd-snapshotter = false;
 
+  # ── overlayfs metacopy off (upstream default; the CachyOS kernel flips it on) ──
+  # linuxPackages_cachyos-gcc builds CONFIG_OVERLAY_FS_METACOPY=y,
+  # which only sets this parameter's default — vanilla and nixpkgs leave it off. With it
+  # on, a metadata-only copy-up writes an empty upper file carrying trusted.overlay.
+  # metacopy plus a trusted.overlay.origin file handle pointing at the lower inode that
+  # still holds the data. Docker's containerd snapshotter mounts a SUBSET of layers to
+  # diff one layer, so that handle often can't be resolved and overlayfs answers EIO —
+  # which surfaces as the useless "failed to open writer: ref ... locked ...: unavailable"
+  # because the differ's EIO cancels the export and only the retry's lock collision is
+  # reported. Deterministic, and immune to serialising the builds.
+  # Nothing here wants metacopy: Docker is the only container runtime (no podman/CRI-O,
+  # which are what enable it deliberately), so take the upstream default.
+  # modprobe.d, NOT systemd.tmpfiles: a tmpfiles `w` rule silently no-ops when its target
+  # is absent, and /sys/module/overlay/ does not exist until the module loads. Measured on
+  # Vesemir: tmpfiles-setup finishes at 4.3s, overlay is first pulled in by dockerd at
+  # 32.7s, and it is not in the initrd — so the tmpfiles rule would never have fired.
+  # A modprobe option applies at load time instead, whenever that happens, and
+  # /etc/modprobe.d is populated a minute before dockerd starts. CONFIG_OVERLAY_FS=m, so
+  # there is a load event to attach to at all.
+  # This only governs NEW copy-ups: metacopy xattrs already written to disk survive it, so
+  # a poisoned build cache still needs `docker builder prune`.
+  boot.extraModprobeConfig = ''
+    options overlay metacopy=N
+  '';
   # ── Stop Docker veth churn from killing Chrome's connections ──
   # Every container start/stop creates+destroys a veth pair on docker0, and the kernel
   # auto-assigns an fe80:: link-local to each one — so each container emits an
