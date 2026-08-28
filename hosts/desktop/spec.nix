@@ -1,4 +1,5 @@
-# What `desktop` composes: the shared `graphical` stack (flake.nix) + NVIDIA-only extras.
+# What `desktop` composes: the shared `graphical` stack (flake.nix) + the extras only this
+# box needs — the NVIDIA card and the VMware Workstation host.
 # A plain spec consumed by mkHost — NOT a NixOS module, so no module imports another module.
 #
 # Note on cleanroom.nix (it comes from `graphical`): NV Broadcast used to be opted into HERE,
@@ -10,6 +11,10 @@
 {
   extraModules = graphical ++ [
     ../../modules/nvidia.nix
+    # Desktop-only because it is the only host with virtualisation.vmware.host.enable.
+    # Not optional: this LAN hands out a /16, so VMware's randomly-chosen 192.168.x.0/24
+    # vmnets land INSIDE the LAN prefix and black-hole real hosts. See the module header.
+    ../../modules/vmware-net.nix
   ];
   homeModules = [ ../../home/gui.nix ../../home/docker.nix ];
 }

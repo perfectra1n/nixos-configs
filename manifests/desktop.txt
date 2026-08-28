@@ -82,6 +82,7 @@ X-Restart-Triggers-systemd-sysctl
 X-Restart-Triggers-systemd-timesyncd
 X-Restart-Triggers-systemd-tmpfiles-resetup
 X-Restart-Triggers-systemd-udevd
+X-Restart-Triggers-vmware-networks
 X-Restart-Triggers-wpa_supplicant
 XADMaster
 __fish_build_paths_suffix.fish
@@ -2205,6 +2206,7 @@ etc-ssh-ssh_config
 etc-ssh-ssh_known_hosts
 etc-systemd-system-preset-00-nixos.preset
 etc-systemd-user-preset-00-nixos.preset
+etc-vmware-networking
 ethtool-7.1
 euclid-0.22.14
 event-listener-2.5.3
