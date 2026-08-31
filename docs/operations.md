@@ -122,6 +122,6 @@ these tasks move it around:
 - **Idempotent + guarded**: bootstrap tasks no-op when already done (`key-bootstrap` skips if a
   key exists, `secrets:init` exits if `secrets.yaml` is real) — safe to re-run, and safe for
   `apply`'s preflights to call unconditionally.
-- **`task_output = "quiet"`**: mise's per-line command echo is suppressed (it printed every
+- **`task.output = "quiet"`**: mise's per-line command echo is suppressed (it printed every
   comment in long scripts); the tasks' own `>> …` progress lines still show. Debug one run with
   `mise run -o prefix <task>`.

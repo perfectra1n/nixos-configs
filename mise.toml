@@ -5,7 +5,7 @@
 # `apply`). `quiet` only drops mise's framing — task stdout/stderr (incl. our `>> …` progress
 # and any errors) still prints. Override for one run with `mise run -o prefix <task>`.
 [settings]
-task_output = "quiet"
+task.output = "quiet"
 
 # ── Leak-gate tooling, ALSO pinned here (see .lefthook.toml) ───────────────────────────────
 # These same three packages come from Nix (home/common.nix). This section is the ONE place in
