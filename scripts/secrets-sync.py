@@ -132,6 +132,7 @@ FISHENV_MANIFEST = [
     ("LUPINA_BASE_URL",              "Jon Lupina",               "field", "base_url"),
     ("LUPINA_API_KEY",               "Jon Lupina",               "field", "jon-api-key"),
     ("LUPINA_ADMIN_KEY",             "Jon Lupina",               "field", "jon-api-key"),
+    ("ANTHROPIC_AUTH_TOKEN",         "Jon Lupina",               "field", "jon-api-key"),
 ]
 
 REPO_ROOT = Path(__file__).resolve().parent.parent

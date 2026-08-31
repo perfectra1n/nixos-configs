@@ -250,9 +250,11 @@ in
   # Logitech wireless, QMK/VIA keyboard, and gaming-mouse/RGB device support moved to
   # modules/peripherals.nix (single home for physical-peripheral management).
 
-  # GVfs is the backend Nautilus (our $fileManager) leans on for the things that look
-  # broken without it: the Trash, "Other Locations", and mounting network/MTP/removable
-  # volumes. Not pulled in automatically since we're not running full GNOME.
+  # GVfs backs the GTK side's Trash, "Other Locations", and network/MTP/removable mounting.
+  # Still needed after the Dolphin swap even though $fileManager is now KDE: Nautilus is kept
+  # as the GTK fallback, and GTK file dialogs in every other app use gvfs too. Dolphin does
+  # NOT use gvfs — its equivalent is kdePackages.kio-extras (home/gui.nix). Not pulled in
+  # automatically since we're not running full GNOME.
   services.gvfs.enable = true;
 
   # KDE Connect — phone↔desktop pairing (notifications, clipboard, file transfer, media
@@ -317,9 +319,10 @@ in
       owncloud-client     # ownCloud desktop sync client
       obs-studio-nvenc    # screen recording / streaming (PipeWire screencast on Wayland).
                           # Wrapped to add /run/opengl-driver/lib so NVENC works (see let-binding).
-      vlc                 # media player
+      vlc                 # media player. No longer the default video/image handler (Haruna owns
+                          # video now, home/gui.nix) but kept installed — still the audio default,
+                          # and stays available under "Open With" for anything mpv chokes on.
       plex-desktop        # Plex desktop player/client (streams from a Plex Media Server; NOT the server)
-      imv                 # Wayland-native image viewer (lightweight, GPU-accelerated)
       linux-wallpaperengine  # binary dep of the DMS `linuxWallpaperEngine` plugin (modules/hyprland.nix);
                              # the plugin launches/manages it — no exec-once here. Renders Steam WE workshop scenes.
       dms-idle-inhibit-watchdog  # releases leaked ScreenSaver inhibits so monitors can DPMS-off; runs as the

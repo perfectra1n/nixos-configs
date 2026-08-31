@@ -36,8 +36,19 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 
 ## GUI apps — `home/gui.nix` (graphical: D L)
 
-- Packages: `kitty`, `google-chrome`, `firefox`, `brave`, `vscode`, `dbeaver-bin`, `nautilus`,
+- Packages: `kitty`, `google-chrome`, `firefox`, `brave`, `vscode`, `dbeaver-bin`,
   `evolution`, `copyq`, `handbrake`, `wineWow64Packages.stable`, `winetricks`, `blender`.
+- **KDE file stack** (the `$fileManager` in `hyprland.conf` since the Nemo→Dolphin swap):
+  `kdePackages.dolphin` + `kio-extras` (Trash/network — Dolphin's Trash is broken without it),
+  `ark` (archive context menu), `kdegraphics-thumbnailers` + `ffmpegthumbs` (thumbnails —
+  Dolphin does *not* use `ffmpegthumbnailer`, that's the GTK/tumbler path), `breeze-icons`,
+  `kdePackages.gwenview` (photos) and top-level `haruna` (video, mpv-based; **not** under
+  `kdePackages`). `nautilus` + `sushi` + `file-roller` stay as the GTK fallback path.
+- Qt is themed Breeze (`qt.platformTheme.name = "kde"`, `style.name = "breeze"`), with
+  `platformTheme.package` pinned to `[ plasma-integration kio ]` to keep home-manager's
+  auto-detect from dragging in `kdePackages.systemsettings`. Dark mode comes from a
+  seed-if-absent `~/.config/kdeglobals` (BreezeDark), left writable so KDE's own settings
+  dialogs still save.
 - `dbeaver-bin` (not `dbeaver` — renamed upstream with the prebuilt-binary switch) is the GUI
   counterpart to the Databases row above; Apache-2.0, so no unfree gate.
 - `blender` is GPU-conditional (gated on `videoDrivers`, since no host has a `facter.json` yet so
@@ -113,8 +124,9 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 
 - `hardware.logitech.wireless` (+ Solaar GUI).
 - `programs.kdeconnect` (opens firewall 1714-1764; `kdeconnectd` runs via exec-once).
-- Home packages: `slack`, `discord`, `signal-desktop`, `spotify`, `kdePackages.dolphin`,
-  `owncloud-client`, `obs-studio`, `vlc`, `plex-desktop`, `imv`,
+- Home packages: `slack`, `discord`, `signal-desktop`, `spotify`,
+  `owncloud-client`, `obs-studio`, `vlc` (audio default; no longer the video default),
+  `plex-desktop`,
   `linux-wallpaperengine` (Steam WE workshop renderer; binary dep of the DMS `linuxWallpaperEngine`
   plugin — launched by the plugin, not an exec-once), `prismlauncher`, `nomachine-client`, `anydesk`,
   `zoom-us`, `playwright`, `playwright-test`, `playwright-mcp`.

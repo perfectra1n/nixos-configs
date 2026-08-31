@@ -20,6 +20,16 @@ let
     if lib.elem "nvidia" osConfig.services.xserver.videoDrivers
     then inputs.blender-bin.packages.${pkgs.system}.default
     else pkgs.blender;
+
+  # Seed content for ~/.config/kdeglobals (see home.activation.seedKdeglobals below).
+  # BreezeDark.colors is already a near-complete kdeglobals — it ships [General] ColorScheme,
+  # [KDE], [WM] and every [Colors:*] group — so this only appends the one group it lacks.
+  # Built as a derivation rather than a heredoc inside the activation script: HM's `run`
+  # wrapper echoes instead of executing under dry-run, which would swallow a heredoc body.
+  kdeglobalsSeed = pkgs.runCommand "kdeglobals-breeze-dark" { } ''
+    cat ${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors > "$out"
+    printf '\n[Icons]\nTheme=breeze-dark\n' >> "$out"
+  '';
 in
 {
   home.packages = with pkgs; [
@@ -33,25 +43,44 @@ in
                 # prebuilt binaries took the old name with it, so plain `dbeaver` no longer
                 # evaluates. Apache-2.0 despite the -bin, so no unfree gate. Its state lives in
                 # ~/.local/share/DBeaverData, nowhere near chezmoi. CLIs are in home/common.nix.
-    nautilus            # file manager ($fileManager in hyprland.conf). GTK4/libadwaita, so
-                        # it follows the portal color-scheme + DMS's matugen gtk-4.0 colors.
-    papirus-icon-theme  # actual icons. `nautilus` does NOT propagate an icon theme into the
-                        # HM profile, so without this XDG_DATA_DIRS has only `hicolor` (the
-                        # empty fallback) and every folder/place/toolbar icon renders as a
-                        # broken generic. Papirus has the widest coverage; theme name (below).
+    # ── KDE file stack ── Dolphin is $fileManager in hyprland.conf. Dolphin is a KIO client,
+    # not a self-contained binary, so the companions below are load-bearing, not nice-to-haves.
+    kdePackages.dolphin
+    kdePackages.kio-extras        # Trash, network (smb/sftp/mtp), "Remote" places. WITHOUT this
+                                  # Dolphin has no working Trash at all — deletes fail and the
+                                  # Trash entry dead-ends, which reads as a broken file manager
+                                  # rather than a missing package. services.gvfs (desktop-apps.nix)
+                                  # is the GTK-side equivalent and is still needed for Nautilus.
+    kdePackages.ark               # right-click Extract/Compress. Dolphin's counterpart to the
+                                  # nemo-fileroller shim we just dropped; file-roller stays for
+                                  # Nautilus (the two archive managers don't conflict).
+    kdePackages.kdegraphics-thumbnailers  # PDF/SVG/RAW thumbnails in the grid
+    kdePackages.ffmpegthumbs      # video thumbnails. Dolphin does NOT use ffmpegthumbnailer —
+                                  # that's the GNOME/tumbler path (kept below for Nautilus).
+                                  # Same job, different plugin ABI; both are needed here.
+    kdePackages.breeze-icons      # icon theme KDE apps assume exists. Papirus (below) covers the
+                                  # GTK side but has no Breeze-named symbolic aliases, so Dolphin's
+                                  # toolbar renders half-empty without this.
+    kdePackages.gwenview          # photo viewer. Claims all 10 image MIME types listed in
+                                  # xdg.mimeApps below — a clean 1:1 replacement for imv.
+    haruna                        # video player (mpv-based, KDE). NOTE: top-level attr, NOT
+                                  # kdePackages.haruna — it isn't in the KDE Gear set.
+
+    nautilus            # GTK fallback file manager — deliberately kept after the Dolphin swap.
+                        # Still the host for sushi (Space-preview) and gnome-disk-utility's
+                        # "Open in Disks", and the sane target when a GTK app hands off a folder.
+    papirus-icon-theme  # actual icons for the GTK apps. `nautilus` does NOT propagate an icon
+                        # theme into the HM profile, so without this XDG_DATA_DIRS has only
+                        # `hicolor` (the empty fallback) and every folder/place/toolbar icon
+                        # renders as a broken generic. Papirus has the widest coverage.
     adwaita-icon-theme  # base layer Papirus inherits from — covers any symbolic icons Papirus
                         # lacks, and what GNOME apps expect as the ultimate fallback.
     nautilus-python     # extension runtime (enables third-party Nautilus extensions)
     sushi               # GNOME quick-preview: select a file, hit Space to preview (no app launch)
     file-roller         # archive manager — Nautilus's "Extract"/"Compress" right-click actions
-    nemo                # default file manager ($fileManager in hyprland.conf), Cinnamon/GTK3.
-                        # Preferred over Nautilus for the things GNOME stripped out — dual-pane,
-                        # type-ahead find, "Open as root", configurable columns — and it follows
-                        # the gtk-3.0 settings.ini + dank-colors.css import. Nautilus stays
-                        # installed (below) as a GTK4 fallback + host for sushi/Open-in-Disks.
-    nemo-fileroller     # wires file-roller into Nemo's right-click Extract/Compress menu
     gnome-disk-utility  # GNOME Disks — provides Nautilus's "Open in Disks" (org.gnome.DiskUtility D-Bus service)
-    ffmpegthumbnailer   # video thumbnails in the file grid (images work out of the box)
+    ffmpegthumbnailer   # video thumbnails for the GTK/tumbler side (Nautilus). Dolphin uses
+                        # kdePackages.ffmpegthumbs above instead.
     bitwarden-desktop # Bitwarden vault GUI (the `bw` CLI lives in home/common.nix)
     evolution   # ~/.config/evolution
     slack       # official Slack desktop client (unfree)
@@ -89,14 +118,46 @@ in
   # it). The GTK3 dark-theme hint (gtk-application-prefer-dark-theme=1) lives in chezmoi's
   # settings.ini instead; GTK4/libadwaita follow color-scheme via the dconf block above.
 
-  # Qt apps (handbrake, copyq, …) don't follow the portal color-scheme at all. Point the Qt
-  # platform theme at Adwaita and force the dark variant so they match the GTK look. This
-  # exports QT_QPA_PLATFORMTHEME + QT_STYLE_OVERRIDE and pulls in adwaita-qt for Qt5/Qt6.
+  # Qt apps don't follow the portal color-scheme at all, so Qt gets themed explicitly here.
+  # Breeze rather than the previous adwaita-dark: Dolphin/Gwenview/Haruna are KDE apps and
+  # only look right under their native style. This also covers the pre-existing Qt apps
+  # (handbrake, copyq, telegram, kdeconnect) — they were being forced into a GTK-lookalike
+  # theme before, so moving them to Breeze is a lateral change, not a regression.
+  #
+  # platformTheme.package is pinned rather than left to auto-detect. home-manager's map for
+  # name = "kde" is [ kio plasma-integration systemsettings ], and systemsettings is the whole
+  # Plasma System Settings app — meaningless without plasmashell and a large closure for a
+  # Hyprland session. The module takes platformTheme.package INSTEAD of the auto list (a
+  # findFirst, not a merge), so naming the two we actually want drops the third.
+  #
+  # No widgetStyle key is set in kdeglobals: style.name exports QT_STYLE_OVERRIDE=breeze, and
+  # the env var outranks kdeglobals, so writing it there too would be dead config.
   qt = {
     enable = true;
-    platformTheme.name = "adwaita";
-    style.name = "adwaita-dark";
+    platformTheme = {
+      name = "kde";
+      package = with pkgs.kdePackages; [ plasma-integration kio ];
+    };
+    style.name = "breeze";  # auto-resolves to kdePackages.breeze + .qt5
   };
+
+  # Breeze reads its palette from the [Colors:*] groups in ~/.config/kdeglobals, and OUTSIDE a
+  # Plasma session nothing ever populates them — so style.name alone gives Breeze-shaped but
+  # BLINDING WHITE KDE apps. Seed the file from the BreezeDark scheme that ships in
+  # kdePackages.breeze (it already carries [General] ColorScheme, [KDE] and [WM]; only [Icons]
+  # is missing, and there's no existing [Icons] group to collide with).
+  #
+  # Seed-if-absent into a REAL writable file, deliberately not xdg.configFile: kdeglobals is
+  # app-owned — Dolphin's and Gwenview's own settings dialogs write to it — and a read-only
+  # store symlink would make those dialogs silently fail to save. Same reasoning as the DMS
+  # settings.json snapshot rule. Delete the file and re-switch to reset to defaults.
+  home.activation.seedKdeglobals = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    kg="${config.xdg.configHome}/kdeglobals"
+    if [ ! -e "$kg" ]; then
+      run mkdir -p "$(dirname "$kg")"
+      run install -m644 ${kdeglobalsSeed} "$kg"
+    fi
+  '';
 
   # Default application handlers — the flake now OWNS ~/.config/mimeapps.list. Safe to own
   # here because chezmoi does NOT manage that file (no boundary collision). Captured from the
@@ -107,14 +168,22 @@ in
   xdg.mimeApps = {
     enable = true;
     defaultApplications =
-      # Video → VLC (the point of this change). Enumerated per-type rather than a `video/*`
-      # glob — explicit MIME types are the portable form of [Default Applications].
+      # Video → Haruna (KDE, mpv-based). Enumerated per-type rather than a `video/*` glob —
+      # explicit MIME types are the portable form of [Default Applications]. VLC stays
+      # installed and still shows up under "Open With"; it just isn't the default any more.
+      #   Four of these (x-flv, 3gpp, x-m4v, application/x-matroska) are NOT claimed by
+      # org.kde.haruna.desktop's own MimeType= line. That's fine and intentional: the XDG
+      # spec honors a [Default Applications] entry regardless of what the target .desktop
+      # claims, and mpv plays all of them. Both .avi spellings are listed because Haruna
+      # claims video/vnd.avi while the old VLC list used video/x-msvideo — which one your
+      # shared-mime-info resolves to varies, so cover both rather than guess.
       (lib.genAttrs [
         "video/mp4"
         "video/x-matroska"    # .mkv
         "video/webm"
         "video/quicktime"     # .mov
-        "video/x-msvideo"     # .avi
+        "video/x-msvideo"     # .avi (freedesktop spelling)
+        "video/vnd.avi"       # .avi (IANA spelling — the one Haruna's .desktop claims)
         "video/mpeg"          # .mpg / .mpeg
         "video/x-flv"         # .flv
         "video/x-ms-wmv"      # .wmv
@@ -123,12 +192,13 @@ in
         "video/x-m4v"         # .m4v
         "video/mp2t"          # .ts (MPEG transport stream)
         "application/x-matroska"
-      ] (_: "vlc.desktop"))
-      # Images → imv (Wayland image viewer, desktop-apps.nix)
+      ] (_: "org.kde.haruna.desktop"))
+      # Images → Gwenview (KDE). Verified: org.kde.gwenview.desktop's MimeType= claims all
+      # ten of these, so this is a straight 1:1 swap for the imv entry it replaces.
       // (lib.genAttrs [
         "image/png" "image/jpeg" "image/gif" "image/webp" "image/bmp"
         "image/tiff" "image/svg+xml" "image/avif" "image/heif" "image/jxl"
-      ] (_: "imv.desktop"))
+      ] (_: "org.kde.gwenview.desktop"))
       # Audio → VLC. Enumerated for the same reason as video: an `audio/*` glob is NOT honored
       # as a default, so HandBrake (which also claims audio types) wins otherwise.
       // (lib.genAttrs [
@@ -149,6 +219,10 @@ in
         "audio/x-aiff"
       ] (_: "vlc.desktop"))
       // {
+        # Folders → Dolphin. NEW entry: there was no inode/directory default before, so any
+        # app asking the system to "open containing folder" had no registered handler.
+        "inode/directory" = "org.kde.dolphin.desktop";
+
         # Web / mail / generic schemes + PDF → Chrome
         "text/html" = "google-chrome.desktop";
         "x-scheme-handler/http" = "google-chrome.desktop";
