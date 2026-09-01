@@ -585,11 +585,6 @@
           "enabled": true
         },
         {
-          "id": "clock",
-          "enabled": true,
-          "clockCompactMode": false
-        },
-        {
           "id": "music",
           "enabled": true,
           "mediaSize": 1
@@ -628,8 +623,19 @@
           "enabled": true
         },
         {
-          "id": "battery",
+          "id": "clock",
+          "enabled": true,
+          "clockCompactMode": false
+        },
+        {
+          "id": "dankUpsMonitor",
           "enabled": true
+        },
+        {
+          "id": "battery",
+          "enabled": true,
+          "showBatteryPercent": true,
+          "showBatteryPercentOnlyOnBattery": true
         }
       ],
       "spacing": 4,
@@ -754,7 +760,7 @@
       "currentFilePath": "notepad-files/untitled-1781973370635.txt",
       "currentFileExtension": "txt",
       "sourceContent": "asdf",
-      "updatedAt": 1787599599076
+      "updatedAt": 1788288702445
     }
   },
   "clipboardClickToPaste": false,

@@ -18,6 +18,7 @@ Which modules each host opts into (defined in `flake.nix`'s `mkHost` calls). `co
 | `modules/peripherals.nix` | ✅ | ✅ | — |
 | `modules/printing.nix` | ✅ | ✅ | — |
 | `modules/rclone-mounts.nix` | ✅ | ✅ | — |
+| `modules/ios-backup.nix` | ✅ | — | — |
 | `inputs.chaotic.nixosModules.default` | ✅ | — | — |
 | `modules/server.nix` | — | — | ✅ |
 | `home/gui.nix` (homeModules) | ✅ | ✅ | — |
@@ -47,6 +48,9 @@ need mDNS, and desktop has no miracast.nix to inherit it from.
 - greetd `initial_session` autologin straight into Hyprland (tuigreet still handles relogin).
 - NVIDIA driver pinned to `nvidiaPackages.latest` (see `modules/nvidia.nix`).
 - Swap `modules/nvidia.nix` → `modules/amd.nix` if the box is AMD.
+- Nightly Wi-Fi iOS device backups (`modules/ios-backup.nix`) — desktop-only because it is
+  the machine the phones USB-pair with; the timer only exists once the `ios/backup_devices`
+  sops secret is present (see the module header for the per-device runbook).
 
 ### laptop — bare-metal, AMD
 - Same desktop stack as `desktop`, with `modules/amd.nix` + `modules/laptop.nix` (power

@@ -82,6 +82,8 @@ X-Restart-Triggers-systemd-sysctl
 X-Restart-Triggers-systemd-timesyncd
 X-Restart-Triggers-systemd-tmpfiles-resetup
 X-Restart-Triggers-systemd-udevd
+X-Restart-Triggers-upsd
+X-Restart-Triggers-upsdrv
 X-Restart-Triggers-vmware-networks
 X-Restart-Triggers-wpa_supplicant
 XADMaster
@@ -2244,6 +2246,8 @@ expand-response-params
 expat-2.8.2
 expat-2.8.3
 expect-5.45.4
+expected_long_output
+expected_short_output
 exporters.md
 exr-1.74.2
 external.md
@@ -2413,6 +2417,7 @@ free-5.2-r8.cabal
 freefont-ttf-20120503
 freeglut-3.8.0
 freeglut-mupdf-3.0.0-rd5e2256d571b3ef66fb60716c99e35e9d3e570a2
+freeipmi-1.6.19
 freepats-20060219
 freetype-2.14.3
 frei0r-plugins-3.2.3
@@ -2980,6 +2985,7 @@ i-slint-core-macros-1.17.1
 i-slint-renderer-femtovg-1.17.1
 i-slint-renderer-skia-1.17.1
 i-slint-renderer-software-1.17.1
+i2c-tools-4.4
 i686-w64-mingw32-binutils-2.46
 i686-w64-mingw32-binutils-wrapper-2.46
 i686-w64-mingw32-gcc-15.3.0
@@ -3056,6 +3062,7 @@ initrd-unit-env
 initrd-units
 input-0.10.0
 input-sys-1.19.0
+input_file
 inputrc
 inspect-3.1.3-0.rockspec
 inspect-luarocks-config.lua
@@ -3533,6 +3540,7 @@ libglycin-2.1.5-vendor-staging
 libglycin-gtk4-2.1.5
 libgpg-error-1.61
 libgphoto2-2.5.34
+libgpiod-1.6.4
 libgsf-1.14.58
 libgudev-238
 libgweather-4.6.0
@@ -3588,6 +3596,7 @@ libmicrohttpd-1.0.6
 libmikmod-3.3.13
 libmng-2.0.3
 libmnl-1.0.5
+libmodbus-3.2.0
 libmodplug-0.8.9.0
 libmpack-1.0.5
 libmpc-1.4.1
@@ -3748,6 +3757,7 @@ libwpe-1.16.3
 libwpg-0.3.4
 libwps-0.4.14
 libx11-1.8.13
+libx86-1.1
 libxau-1.0.12
 libxaw-1.0.16
 libxcb-1.17.0
@@ -4356,6 +4366,8 @@ num_enum_derive-0.7.6
 num_threads-0.1.7
 numactl-2.0.18
 nuspell-5.1.7
+nut-2.8.4
+nut-2.8.4_fish-completions
 nv-codec-headers
 nv-codec-headers-11.1.5.2
 nv-codec-headers-12.1.14.0
@@ -4563,6 +4575,7 @@ parser-combinators-1.3.1
 parsers-0.12.12
 parsers-0.12.12-r1.cabal
 parted-3.7
+passwd
 paste-1.0.15
 pastey-0.1.1
 pastey-0.2.3
@@ -6443,6 +6456,7 @@ rdfind-1.8.0
 rdma-core-64.0
 re2-2025-11-05
 re2c-4.5.1
+read-edid-3.0.2
 read-fonts-0.39.2
 read-fonts-0.41.0
 readline-7.0p5
@@ -6494,6 +6508,7 @@ remove-references-to
 removeReferencesToRustToolchainHook
 removeReferencesToVendoredSourcesHook
 renderdoc-sys-1.1.0
+replace-secret
 replace-workspace-values
 replaceCargoLockHook
 rerebase-1.21.2
@@ -6546,6 +6561,7 @@ rpm-sequoia-1.10.0
 rpm-sequoia-1.10.0-vendor
 rpm-sequoia-1.10.0-vendor-staging
 rpmextract-4.20.1
+rsa
 rspolib-0.1.2
 rsync-3.4.4
 rsync-3.5.0
@@ -7461,6 +7477,7 @@ unit-script-mandb-start
 unit-script-network-local-commands-start
 unit-script-nix-gc-start
 unit-script-nixos-activation-start
+unit-script-nut-upsmon-password-start
 unit-script-post-boot-pre-stop
 unit-script-post-boot-start
 unit-script-prepare-kexec-start
@@ -7476,6 +7493,7 @@ unit-speech-dispatcher.socket
 unit-sshd-vsock.socket
 unit-sysinit-reactivation.target
 unit-sysroot-run.mount
+unit-system-ups.slice
 unit-system.slice
 unit-systemd-journald-audit.socket
 unit-systemd-tmpfiles-clean.timer
@@ -7503,6 +7521,7 @@ unzip-6.0_fish-completions
 update-autotools-gnu-config-scripts-hook
 upower-1.91.3
 upower-1.91.3_fish-completions
+upsd.users
 ureq-3.3.0
 ureq-proto-0.6.0
 url-2.5.7

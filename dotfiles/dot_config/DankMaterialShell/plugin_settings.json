@@ -11,7 +11,8 @@
       "DP-1": "897016354",
       "DP-2": "897016354",
       "DP-4": "897016354",
-      "DP-5": "897016354"
+      "DP-5": "897016354",
+      "DP-6": "897016354"
     },
     "sceneSettings": {
       "897016354": {
@@ -46,5 +47,9 @@
   "dockerManager": {
     "enabled": true,
     "groupByCompose": false
+  },
+  "dankUpsMonitor": {
+    "enabled": true,
+    "mainsBarStatistic": "load"
   }
 }

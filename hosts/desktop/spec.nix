@@ -15,6 +15,11 @@
     # Not optional: this LAN hands out a /16, so VMware's randomly-chosen 192.168.x.0/24
     # vmnets land INSIDE the LAN prefix and black-hole real hosts. See the module header.
     ../../modules/vmware-net.nix
+    # The CyberPower CP1500PFCLCDa is plugged into this box's USB.
+    ../../modules/ups.nix
+    # iOS device backups run here because this is the box the phones USB-pair with, and
+    # Apple only allows Wi-Fi backups from a trusted machine on the same LAN.
+    ../../modules/ios-backup.nix
   ];
   homeModules = [ ../../home/gui.nix ../../home/docker.nix ];
 }
