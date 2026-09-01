@@ -18,6 +18,8 @@
 # fallback is stock usbmuxd + a transient netmuxd on a TCP socket inside the service — but
 # usbmuxd2 keeps this module free of out-of-tree pins.
 #
+# Full runbook (setup, verification, restore, troubleshooting): docs/ios-backup.md.
+#
 # ── One-time runbook, per device (over USB, phone unlocked) ──
 #   1. idevicepair pair                # accept the Trust dialog on the phone
 #   2. idevicebackup2 encryption on    # set a backup password — STORE IT IN BITWARDEN.

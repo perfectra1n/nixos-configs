@@ -194,6 +194,9 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 - `modules/laptop.nix` (L): power-profiles-daemon, lid suspend, acpilight, fwupd.
 - `modules/server.nix` (S): SSH hardening, sleep targets off, journald cap, `htop tmux rsync
   dnsutils`.
+- `modules/ios-backup.nix` (D): `libimobiledevice` + `usbmuxd2` (Wi-Fi muxer) — nightly
+  full-device iOS backups; timer gated on the `ios/backup_devices` sops key. See
+  [ios-backup.md](ios-backup.md).
 
 ## Out-of-tree pins — `nvfetcher.toml` → `_sources/generated.nix`
 

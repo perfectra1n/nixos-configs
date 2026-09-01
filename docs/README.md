@@ -18,6 +18,7 @@ installed where.
 | [mcp-servers.md](mcp-servers.md) | Claude Code in these dotfiles — HTTP MCP servers (the three-artifact pattern: `mcp.json` block + `secrets-sync.py` manifest row + Bitwarden item, the `--mcp-config` launch wiring, add/update/remove loops) **and** plugins (the declarative-vs-cache split, the `czadd` snapshot loop, the mixed-`settings.json` gotcha). |
 | [desktop-scripts.md](desktop-scripts.md) | The custom `let`-binding tools — hypr-cheatsheet (live keybind overlay), the grim latency shim + HDR screenshot context, and the retired blurcam's still-relevant v4l2loopback lore. |
 | [idle-watchdog.md](idle-watchdog.md) | The `dms-idle-inhibit-watchdog` idle-policy daemon — how it releases leaked ScreenSaver inhibits so monitors DPMS-off, the positive-signal design, and how to debug a stuck screen. |
+| [ios-backup.md](ios-backup.md) | Nightly Wi-Fi full-device iOS backups on the desktop — why it's not in the cluster, the per-device USB pairing runbook, the sops device list, verification, restore, and troubleshooting. |
 
 ## Keeping these current
 
