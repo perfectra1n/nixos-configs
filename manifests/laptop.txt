@@ -1999,9 +1999,6 @@ derive_utils-0.16.0
 desktop-file-utils-0.28
 desktops
 dev.hdos.HDOS.png
-dgop-0.2.3
-dgop-0.2.3-go-modules
-dgop-0.2.3_fish-completions
 dhcpcd-10.3.2
 die-hook
 diff-0.1.13
@@ -2049,9 +2046,9 @@ dms-idle-inhibit-watchdog
 dms-plugin-hyprlandSubmapIndicator-1.0.0
 dms-plugin-linuxWallpaperEngine-1.1.2
 dms-plugins-851e06c
-dms-shell-1.5.3+date=2026-07-27_069ddab
-dms-shell-1.5.3+date=2026-07-27_069ddab-go-modules
-dms-shell-1.5.3+date=2026-07-27_069ddab_fish-completions
+dms-shell-1.6.0+date=2026-09-03_0bbe833
+dms-shell-1.6.0+date=2026-09-03_0bbe833-go-modules
+dms-shell-1.6.0+date=2026-09-03_0bbe833_fish-completions
 dms-wallpaperengine-3c63881
 dns-root-data-2025-04-14
 dnsmasq-2.93
