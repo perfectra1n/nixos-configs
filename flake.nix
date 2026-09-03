@@ -166,7 +166,7 @@
         ./modules/rclone-mounts.nix # rclone files-on-demand mounts: Nextcloud + Google Drive (activate once chezmoi deploys ~/.config/rclone/rclone.conf)
         ./modules/smb-mounts.nix # CIFS mount of //192.168.2.155/main_smb (on-demand automount; activates once the sops creds land)
         ./modules/dotfiles.nix # chezmoi bootstrap: sops token + chezmoi.toml (orchestration in mise.toml — `mise run apply`)
-        ./modules/git-credentials.nix # sops-rendered ~/.git-credentials for GitHub + both Gitea (helper line lives in chezmoi gitconfig)
+        ./modules/git-credentials.nix # sops-rendered ~/.git-credentials for GitHub + both Gitea + Forgejo (helper line lives in chezmoi gitconfig)
         ./modules/docker-credentials.nix # sops-rendered ~/.docker/config.json for both Gitea + ghcr.io (symlink lives in home/docker.nix)
         inputs.chaotic.nixosModules.default # CachyOS kernel + chaotic cache (see boot.kernelPackages in hosts/<name>)
       ];

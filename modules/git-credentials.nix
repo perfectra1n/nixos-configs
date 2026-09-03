@@ -1,12 +1,13 @@
 { config, lib, username, secrets, ... }:
 
-# Renders ~/.git-credentials' content from sops so `git push/pull` to GitHub + the two Gitea
-# instances works non-interactively, without a plaintext token ever living in a dotfile.
+# Renders ~/.git-credentials' content from sops so `git push/pull` to GitHub, the two Gitea
+# instances and the Forgejo instance works non-interactively, without a plaintext token ever
+# living in a dotfile.
 #
 # WHY sops.templates (not a plain sops.secret): a template interpolates secret PLACEHOLDERS
 # into eval-time plaintext. The tokens AND the Gitea hostnames both come from Bitwarden (see
 # `mise run secrets:pull`), so even the hosts are placeholders — this .nix file hardcodes
-# nothing but the two usernames and github.com. The rendered file lands on tmpfs (/run), never
+# nothing but the usernames and github.com. The rendered file lands on tmpfs (/run), never
 # on persistent disk and never in the nix store.
 #
 # THE GIT SIDE LIVES IN CHEZMOI, not here. Per the chezmoi boundary, ~/.config/git/config is
@@ -37,6 +38,8 @@ lib.mkIf declareSecret {
     "git/main_gitea_host" = { owner = username; };
     "git/duck_gitea_token" = { };
     "git/duck_gitea_host" = { };
+    "git/forgejo_token" = { };
+    "git/forgejo_host" = { };
   };
 
   sops.templates."git-credentials" = {
@@ -47,6 +50,7 @@ lib.mkIf declareSecret {
       https://perfectra1n:${ph "git/github_token"}@github.com
       https://perf3ct:${ph "git/main_gitea_token"}@${ph "git/main_gitea_host"}
       https://perf3ct:${ph "git/duck_gitea_token"}@${ph "git/duck_gitea_host"}
+      https://perfectra1n:${ph "git/forgejo_token"}@${ph "git/forgejo_host"}
     '';
   };
 }
