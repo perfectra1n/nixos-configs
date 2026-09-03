@@ -40,6 +40,7 @@ lib.mkIf declareSecret {
     "git/duck_gitea_host" = { };
     "git/forgejo_token" = { };
     "git/forgejo_host" = { };
+    "git/forgejo_alt_host" = { }; # second hostname for the SAME Forgejo; git keys creds by host
   };
 
   sops.templates."git-credentials" = {
@@ -51,6 +52,7 @@ lib.mkIf declareSecret {
       https://perf3ct:${ph "git/main_gitea_token"}@${ph "git/main_gitea_host"}
       https://perf3ct:${ph "git/duck_gitea_token"}@${ph "git/duck_gitea_host"}
       https://perfectra1n:${ph "git/forgejo_token"}@${ph "git/forgejo_host"}
+      https://perfectra1n:${ph "git/forgejo_token"}@${ph "git/forgejo_alt_host"}
     '';
   };
 }
