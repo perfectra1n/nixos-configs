@@ -147,6 +147,7 @@ in
     terraform            # BSL-licensed upstream (unfree); coexists with opentofu — different binaries
     opentofu             # FOSS Terraform fork (`tofu`)
     tea                  # Gitea CLI
+    forgejo-cli          # `fj` — Forgejo CLI (the binary is not `forgejo`); auth via `fj auth login`
     gh                   # GitHub CLI
     awscli2
     saml2aws             # fetch temporary AWS STS creds via a SAML IdP (Okta/ADFS/etc.) for `aws`

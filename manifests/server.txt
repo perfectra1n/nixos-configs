@@ -754,6 +754,9 @@ fontconfig-2.18.2_fish-completions
 fontconfig-conf
 fontconfig-etc
 fontforge-20251009
+forgejo-cli-0.6.0
+forgejo-cli-0.6.0-vendor
+forgejo-cli-0.6.0-vendor-staging
 forgejo.md
 form_urlencoded-1.2.2
 fortify-headers-3.0.1
