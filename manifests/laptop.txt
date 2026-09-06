@@ -2047,12 +2047,12 @@ dlv-list-0.5.2
 dmenu-5.4
 dms-idle-inhibit-watchdog
 dms-plugin-hyprlandSubmapIndicator-1.0.0
-dms-plugin-linuxWallpaperEngine-1.1.2
+dms-plugin-linuxWallpaperEngine-1.2.0
 dms-plugins-851e06c
 dms-shell-1.5.3+date=2026-07-27_069ddab
 dms-shell-1.5.3+date=2026-07-27_069ddab-go-modules
 dms-shell-1.5.3+date=2026-07-27_069ddab_fish-completions
-dms-wallpaperengine-3c63881
+dms-wallpaperengine-e96718f
 dns-root-data-2025-04-14
 dnsmasq-2.93
 dnsmasq.md
