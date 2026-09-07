@@ -251,8 +251,8 @@ in
   # modules/peripherals.nix (single home for physical-peripheral management).
 
   # GVfs backs the GTK side's Trash, "Other Locations", and network/MTP/removable mounting.
-  # Still needed after the Dolphin swap even though $fileManager is now KDE: Nautilus is kept
-  # as the GTK fallback, and GTK file dialogs in every other app use gvfs too. Dolphin does
+  # Still needed with Dolphin as the only file manager: the GTK file dialogs in every GTK /
+  # Electron app (Chrome, VSCode, Slack…) enumerate mounts and Trash through gvfs. Dolphin does
   # NOT use gvfs — its equivalent is kdePackages.kio-extras (home/gui.nix). Not pulled in
   # automatically since we're not running full GNOME.
   services.gvfs.enable = true;

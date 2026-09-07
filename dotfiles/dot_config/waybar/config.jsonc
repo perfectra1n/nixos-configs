@@ -28,8 +28,6 @@
             "class<discord>": " Discord",
             "class<slack>": " Slack",
             "class<spotify>": " Spotify",
-            "class<thunar>": " Files",
-            "class<nautilus>": " Files",
             "class<org.kde.dolphin>": " Files",
             "class<dolphin>": " Files",
             "class<org.kde.gwenview>": " Photos",

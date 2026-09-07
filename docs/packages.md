@@ -43,7 +43,9 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
   `ark` (archive context menu), `kdegraphics-thumbnailers` + `ffmpegthumbs` (thumbnails —
   Dolphin does *not* use `ffmpegthumbnailer`, that's the GTK/tumbler path), `breeze-icons`,
   `kdePackages.gwenview` (photos) and top-level `haruna` (video, mpv-based; **not** under
-  `kdePackages`). `nautilus` + `sushi` + `file-roller` stay as the GTK fallback path.
+  `kdePackages`). The GTK fallback path (`nautilus`, `nautilus-python`, `sushi`, `file-roller`,
+  `ffmpegthumbnailer`) was removed 2026-09-07 — Dolphin is the only file manager now.
+  `gnome-disk-utility` stays as a standalone disk tool.
 - Qt is themed Breeze (`qt.platformTheme.name = "kde"`, `style.name = "breeze"`), with
   `platformTheme.package` pinned to `[ plasma-integration kio ]` to keep home-manager's
   auto-detect from dragging in `kdePackages.systemsettings`. Dark mode comes from a

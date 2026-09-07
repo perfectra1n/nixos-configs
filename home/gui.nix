@@ -50,14 +50,12 @@ in
                                   # Dolphin has no working Trash at all — deletes fail and the
                                   # Trash entry dead-ends, which reads as a broken file manager
                                   # rather than a missing package. services.gvfs (desktop-apps.nix)
-                                  # is the GTK-side equivalent and is still needed for Nautilus.
-    kdePackages.ark               # right-click Extract/Compress. Dolphin's counterpart to the
-                                  # nemo-fileroller shim we just dropped; file-roller stays for
-                                  # Nautilus (the two archive managers don't conflict).
+                                  # is the GTK-side equivalent, kept for GTK file dialogs.
+    kdePackages.ark               # right-click Extract/Compress — the only archive manager now
+                                  # that file-roller went with the Nautilus fallback.
     kdePackages.kdegraphics-thumbnailers  # PDF/SVG/RAW thumbnails in the grid
     kdePackages.ffmpegthumbs      # video thumbnails. Dolphin does NOT use ffmpegthumbnailer —
-                                  # that's the GNOME/tumbler path (kept below for Nautilus).
-                                  # Same job, different plugin ABI; both are needed here.
+                                  # that's the GNOME/tumbler plugin ABI, dropped with Nautilus.
     kdePackages.breeze-icons      # icon theme KDE apps assume exists. Papirus (below) covers the
                                   # GTK side but has no Breeze-named symbolic aliases, so Dolphin's
                                   # toolbar renders half-empty without this.
@@ -66,21 +64,20 @@ in
     haruna                        # video player (mpv-based, KDE). NOTE: top-level attr, NOT
                                   # kdePackages.haruna — it isn't in the KDE Gear set.
 
-    nautilus            # GTK fallback file manager — deliberately kept after the Dolphin swap.
-                        # Still the host for sushi (Space-preview) and gnome-disk-utility's
-                        # "Open in Disks", and the sane target when a GTK app hands off a folder.
-    papirus-icon-theme  # actual icons for the GTK apps. `nautilus` does NOT propagate an icon
-                        # theme into the HM profile, so without this XDG_DATA_DIRS has only
-                        # `hicolor` (the empty fallback) and every folder/place/toolbar icon
-                        # renders as a broken generic. Papirus has the widest coverage.
+    # Dolphin everywhere (2026-09-07): the Nautilus fallback stack (nautilus, nautilus-python,
+    # sushi, file-roller, ffmpegthumbnailer) is gone. Folders already resolved to Dolphin via
+    # xdg.mimeApps below, so the GTK path was dead weight — two Trash implementations, two
+    # thumbnailer ABIs, two archive managers. Space-preview has no KDE equivalent outside Plasma;
+    # Gwenview/Haruna open fast enough that it isn't missed.
+    papirus-icon-theme  # actual icons for the GTK apps (Evolution, LibreOffice, the GTK file
+                        # dialogs). No GTK app propagates an icon theme into the HM profile, so
+                        # without this XDG_DATA_DIRS has only `hicolor` (the empty fallback) and
+                        # every folder/toolbar icon renders as a broken generic.
     adwaita-icon-theme  # base layer Papirus inherits from — covers any symbolic icons Papirus
                         # lacks, and what GNOME apps expect as the ultimate fallback.
-    nautilus-python     # extension runtime (enables third-party Nautilus extensions)
-    sushi               # GNOME quick-preview: select a file, hit Space to preview (no app launch)
-    file-roller         # archive manager — Nautilus's "Extract"/"Compress" right-click actions
-    gnome-disk-utility  # GNOME Disks — provides Nautilus's "Open in Disks" (org.gnome.DiskUtility D-Bus service)
-    ffmpegthumbnailer   # video thumbnails for the GTK/tumbler side (Nautilus). Dolphin uses
-                        # kdePackages.ffmpegthumbs above instead.
+    gnome-disk-utility  # GNOME Disks — kept as a standalone partition/SMART/image tool. It was
+                        # listed for Nautilus's "Open in Disks"; that hook is gone, the tool is
+                        # still the easiest way to burn an image or read SMART on this box.
     bitwarden-desktop # Bitwarden vault GUI (the `bw` CLI lives in home/common.nix)
     evolution   # ~/.config/evolution
     slack       # official Slack desktop client (unfree)
@@ -107,8 +104,8 @@ in
     cursor-size = 24;
     # GTK4/libadwaita reads the icon theme from GSettings (no gnome-settings-daemon needed,
     # same path as cursor-theme above) and it overrides chezmoi's settings.ini. Names the
-    # papirus-icon-theme added to home.packages — without this Nautilus falls back to
-    # `hicolor` and shows broken icons everywhere.
+    # papirus-icon-theme added to home.packages — without this GTK4 apps fall back to
+    # `hicolor` and show broken icons everywhere.
     icon-theme = "Papirus-Dark";
   };
 
@@ -132,6 +129,18 @@ in
   #
   # No widgetStyle key is set in kdeglobals: style.name exports QT_STYLE_OVERRIDE=breeze, and
   # the env var outranks kdeglobals, so writing it there too would be dead config.
+  #
+  # The same precedence bites the other way: hyprland.conf `env =` lines are exported to the
+  # systemd/D-Bus activation environment AFTER hm-session-vars and win. A leftover
+  # `env = QT_QPA_PLATFORMTHEME,qt5ct` there (from the pre-Dolphin era) made this whole block
+  # dead config for months — qt5ct ships no Qt6 plugin, Qt fell back to its generic theme and a
+  # light default palette, and nothing ever fed kdeglobals into Qt. Dolphin creates its first
+  # view BEFORE KColorSchemeManager applies the saved scheme (setupActions runs after the tab
+  # widget), and that view snapshots the palette into an explicit QGraphicsView palette, so it
+  # kept the light Text/AlternateBase (black text, white stripes) while the rest of the window
+  # went dark. Re-picking any scheme from the menu re-set the palette and "fixed" it. With the
+  # kde platform theme the pre-manager palette is already BreezeDark from kdeglobals, so the
+  # snapshot is harmless. Never set QT_QPA_PLATFORMTHEME / QT_STYLE_OVERRIDE in chezmoi.
   qt = {
     enable = true;
     platformTheme = {

@@ -2,7 +2,7 @@
 
 # Printing + scanning for the graphical hosts. There was no printing stack in this flake at all
 # before now, and the symptom of that is silent rather than loud: with no cupsd running, every
-# GTK/Qt/Electron print dialog (Firefox, Chromium, Nemo, the lot) opens listing ZERO destinations,
+# GTK/Qt/Electron print dialog (Firefox, Chromium, Dolphin, the lot) opens listing ZERO destinations,
 # because they all enumerate printers by speaking IPP to localhost:631. Nothing errors, nothing
 # logs — the dialog is just empty. So `services.printing.enable` is what makes printing *exist*,
 # not merely what makes a specific printer work.
@@ -110,7 +110,6 @@
   environment.systemPackages = with pkgs; [
     system-config-printer # GTK app to add/manage queues. Earns its place because Hyprland has no
     # settings shell to host a printer panel; the alternative is localhost:631.
-    simple-scan # GTK scanning frontend, matching the GTK stack (Nemo, etc.).
-    # Not skanlite — that one is KDE-only in nixpkgs.
+    simple-scan # GTK scanning frontend. Not skanlite — that one is KDE-only in nixpkgs.
   ];
 }
