@@ -133,7 +133,8 @@ in
                          # and manifests in place (`regctl index add`, `regctl tag rm`)
     # kubectl / talosctl are pinned via nvfetcher and installed system-wide
     # (modules/common.nix) so both the shell and root see the same version.
-    k9s                  # k8s TUI
+    k9s                  # k8s TUI — sofka (its Rust sibling with Flux/Argo actions built in) is
+                         # an nvfetcher pin in modules/common.nix alongside kubectl
     kubernetes-helm
     kustomize
     krew                 # kubectl plugin manager

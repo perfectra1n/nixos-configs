@@ -34,6 +34,37 @@ let
     dontBuild = true;
     installPhase = "install -Dm755 ksops $out/bin/ksops";
   };
+
+  # sofka — nklmilojevic/sofka: k9s-style Kubernetes TUI (Rust, kube-rs + ratatui) with Flux/Argo
+  # suspend/resume/reconcile and a Helm-release inspector built in (native API patches, no
+  # flux/argocd/helm binaries). Not in nixpkgs. Upstream's Linux tarball is one dynamically-linked
+  # binary needing only glibc + libgcc_s, so unpack + autoPatchelf (interpreter + libgcc_s →
+  # /nix/store) beats compiling the kube-rs tree on every bump. nix-ld would run it unpatched, but
+  # a store path shouldn't lean on that. Pinned here (not home/common.nix) like kubectl so root's
+  # shell sees the same version.
+  sofka = pkgs.stdenv.mkDerivation {
+    inherit (sources.sofka) pname version src;
+    sourceRoot = ".";           # flat tarball: just `sofka` at the root, no top-level dir
+    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+    buildInputs = [ pkgs.stdenv.cc.cc.lib ];   # libgcc_s.so.1 (Rust unwinder)
+    dontConfigure = true;
+    dontBuild = true;
+    installPhase = "install -Dm755 sofka $out/bin/sofka";
+  };
+
+  # cargo-clean-all — dnlmlr/cargo-clean-all: `cargo clean-all [dir]` walks a tree and deletes
+  # every target/ (interactive, with size/age filters) — the fix for ~/repos quietly eating tens
+  # of GiB of stale build artifacts. Not in nixpkgs and upstream publishes no binaries, so it's the
+  # one nvfetcher pin built from source (small dep tree). nvfetcher's cargo_lock ships the upstream
+  # Cargo.lock in _sources/ with git-dep hashes precomputed, so a Renovate bump never needs a
+  # hand-updated cargoHash.
+  cargo-clean-all = pkgs.rustPlatform.buildRustPackage {
+    inherit (sources.cargo-clean-all) pname src;
+    # fetch.github pins the git TAG, so nvfetcher's version carries the "v" — strip it for the store name.
+    version = lib.removePrefix "v" sources.cargo-clean-all.version;
+    cargoLock = sources.cargo-clean-all.cargoLock."Cargo.lock";
+    meta.mainProgram = "cargo-clean-all";
+  };
 in
 {
   # ── Nix / locale ──
@@ -234,6 +265,8 @@ in
     (mkBin "kubectl") (mkBin "talosctl") # pinned via nvfetcher (see let above)
     kubectl-krew        # krew (kubectl plugin manager): `krew` + `kubectl-krew`; plugins → ~/.krew/bin
     ksops               # kustomize SOPS plugin (defined in `let` above) — decrypts SOPS secrets in kustomize builds
+    sofka               # k9s-style k8s TUI with Flux/Argo actions built in (defined in `let` above)
+    cargo-clean-all     # `cargo clean-all` — recursively purge target/ dirs (defined in `let` above)
   ];
 
   # mkDefault so a host installed on a different release can override it.

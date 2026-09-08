@@ -1,4 +1,30 @@
 {
+    "cargo-clean-all": {
+        "cargoLock": {
+            "Cargo.lock": [
+                "sha256-CJzjw_g0Ap7TKC2m+bVlH+_iCUOQITmE6HGvrNzWQ3o=/Cargo.lock",
+                {}
+            ]
+        },
+        "date": null,
+        "extract": null,
+        "name": "cargo-clean-all",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "deepClone": false,
+            "fetchSubmodules": false,
+            "leaveDotGit": false,
+            "name": null,
+            "owner": "dnlmlr",
+            "repo": "cargo-clean-all",
+            "rev": "v0.6.5",
+            "sha256": "sha256-CJzjw/g0Ap7TKC2m+bVlH+/iCUOQITmE6HGvrNzWQ3o=",
+            "sparseCheckout": [],
+            "type": "github"
+        },
+        "version": "v0.6.5"
+    },
     "ksops": {
         "cargoLock": null,
         "date": null,
@@ -94,6 +120,21 @@
             "url": "https://github.com/SnapXL/SnapX/releases/download/v0.4.0/snapx-ui-0.4-3.0.fc42.x86_64.rpm"
         },
         "version": "0.4.0"
+    },
+    "sofka": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "sofka",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": null,
+            "sha256": "sha256-WCrrwOYMfLMGz8Jlj2VApopCC6wgyNfnIPbjSA96PhE=",
+            "type": "url",
+            "url": "https://github.com/nklmilojevic/sofka/releases/download/v0.24.9/sofka-v0.24.9-x86_64-unknown-linux-gnu.tar.gz"
+        },
+        "version": "0.24.9"
     },
     "talosctl": {
         "cargoLock": null,

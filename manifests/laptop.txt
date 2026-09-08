@@ -128,6 +128,7 @@ ahash-0.7.8
 ahash-0.8.12
 aho-corasick-1.1.3
 aho-corasick-1.1.4
+aho-corasick-1.1.5
 akkoma.md
 alembic-1.8.12
 alex-3.5.4.2
@@ -153,6 +154,7 @@ android-activity-0.6.1
 android-build-0.1.4
 android-properties-0.2.2
 android_system_properties-0.1.5
+android_system_properties-0.1.6
 anes-0.1.6
 anki-sync-server.md
 annotate-snippets-0.11.5
@@ -566,6 +568,7 @@ busted-luarocks-config.lua
 busybox-1.37.0
 by_address-1.2.1
 byacc-20260126
+bytefmt-0.1.7
 bytemuck-1.24.0
 bytemuck-1.25.2
 bytemuck_derive-1.11.0
@@ -619,6 +622,8 @@ cargo-bootstrap-1.97.1
 cargo-c-0.10.22
 cargo-c-0.10.22-vendor
 cargo-c-0.10.22-vendor-staging
+cargo-clean-all-0.6.5
+cargo-clean-all-0.6.5_fish-completions
 cargo-deps-vendor
 cargo-deps-vendor-staging
 cargo-package-adler2-2.0.1
@@ -1666,6 +1671,7 @@ cc-1.2.1
 cc-1.2.46
 cc-1.2.50
 cc-1.4.0
+cc-1.4.4
 cc_arch-0.hex2-1.9.1
 cc_arch-1.9.1
 cc_arch-1.hex2-1.9.1
@@ -1730,10 +1736,12 @@ clap-4.5.13
 clap-4.5.21
 clap-4.5.58
 clap-4.6.4
+clap-4.6.6
 clap_builder-4.5.13
 clap_builder-4.5.21
 clap_builder-4.5.58
 clap_builder-4.6.2
+clap_builder-4.6.6
 clap_derive-4.6.4
 clap_lex-0.7.2
 clap_lex-0.7.3
@@ -1780,6 +1788,7 @@ color_quant-1.1.0
 colorchoice-1.0.4
 colorchoice-1.0.5
 colord-1.4.8
+colored-3.1.1
 colour-2.3.7
 column-util-linux-2.42.2
 com.github.johnrengelman.shadow.gradle.plugin-8.1.1.pom
@@ -1822,6 +1831,7 @@ config.guess-948ae97
 config.sub-948ae97
 configureCargoCommonVarsHook
 configureCargoVendoredDepsHook
+console-0.16.4
 console-env
 const-field-offset-0.2.0
 const-field-offset-macro-0.2.0
@@ -1913,6 +1923,7 @@ cryptsetup-2.8.7
 ctestCheckHook
 ctor-0.10.1
 ctor-0.2.9
+ctrlc-3.5.2
 cubeb-0-unstable-2026-08-19
 culmus-0.133
 cups-2.4.19
@@ -1930,6 +1941,7 @@ curl-8.21.0_fish-completions
 curl-impersonate-2.1.1
 curl-sys-0.4.84+curl-8.17.0
 cursor-icon-1.2.0
+cvt-0.1.2
 cyrus-sasl-2.1.28
 d3-flame-graph-templates-4.1.3
 darcs-2.18.5
@@ -2001,6 +2013,7 @@ dgop-0.2.3
 dgop-0.2.3-go-modules
 dgop-0.2.3_fish-completions
 dhcpcd-10.3.2
+dialoguer-0.12.0
 die-hook
 diff-0.1.13
 diffstat-1.69
@@ -2146,6 +2159,7 @@ eigen-3.4.1
 either-1.13.0
 either-1.15.0
 either-1.17.0
+either-1.18.0
 either-5.0.3
 either-5.0.3-r2.cabal
 electron-42.9.3
@@ -2164,6 +2178,7 @@ emojis-0.1.4.1
 empty-directory
 empty-inhibitors
 enchant-2.6.9
+encode_unicode-1.0.0
 endi-1.1.1
 ensure-all-wrappers-paths-exist
 ensure-full-key-match
@@ -2321,6 +2336,7 @@ filesystem-1.5.14
 filetime-0.2.29
 filtrable-0.1.6.0
 filtrable-0.1.6.0-r2.cabal
+find-msvc-tools-0.1.11
 find-msvc-tools-0.1.5
 find-msvc-tools-0.1.9
 find-xml-catalogs-hook
@@ -2423,6 +2439,7 @@ freetype-2.14.3
 frei0r-plugins-3.2.3
 fribidi-1.0.16
 frozen-containers-1.2.0-unstable-2026-04-20
+fs_at-0.2.1
 fs_extra-1.3.0
 fstrm-0.6.1
 full-border.yazi-0-unstable-2026-08-18
@@ -2439,6 +2456,7 @@ futures-0.3.33
 futures-channel-0.3.33
 futures-core-0.3.31
 futures-core-0.3.33
+futures-core-0.3.34
 futures-executor-0.3.33
 futures-io-0.3.31
 futures-io-0.3.33
@@ -2447,7 +2465,9 @@ futures-lite-2.6.1
 futures-macro-0.3.33
 futures-sink-0.3.33
 futures-task-0.3.33
+futures-task-0.3.34
 futures-util-0.3.33
+futures-util-0.3.34
 fwupd-2.1.6
 fwupd-2.1.6_fish-completions
 fwupd-efi-1.8
@@ -3044,6 +3064,7 @@ indexed-traversable-0.1.4-r2.cabal
 indexed-traversable-instances-0.1.2.1
 indexmap-2.14.0
 indexmap-2.3.0
+indicatif-0.18.6
 indoc-2.0.6
 inheritCargoArtifactsHook
 inih-62
@@ -3099,6 +3120,7 @@ ipynb-0.2
 ipynb-0.2-r1.cabal
 is-terminal-0.4.12
 is_executable-1.0.5
+is_executable-1.0.6
 is_terminal_polyfill-1.70.2
 isa-l-2.32.1
 isahc-1.7.2
@@ -3181,6 +3203,7 @@ js-dgtable-0.5.2
 js-flot-0.8.3
 js-jquery-3.7.1
 js-sys-0.3.103
+js-sys-0.3.104
 js-sys-0.3.69
 js-sys-0.3.85
 json-c-0.18
@@ -3869,6 +3892,7 @@ log-0.4.22
 log-0.4.27
 log-0.4.29
 log-0.4.33
+log-0.4.34
 log4j-2.20.0.pom
 log4j-api-2.20.0.jar
 log4j-api-2.20.0.pom
@@ -4316,6 +4340,7 @@ nom-8.0.0
 nomachine-client-9.5.7
 noop_proc_macro-0.3.0
 nordvpn.md
+normpath-1.5.1
 noseyparker-0.24.0
 noseyparker-0.24.0-vendor
 noseyparker-0.24.0-vendor-staging
@@ -4354,6 +4379,7 @@ num-derive-0.4.2
 num-integer-0.1.46
 num-rational-0.4.2
 num-traits-0.2.19
+num_cpus-1.17.0
 num_enum-0.7.6
 num_enum_derive-0.7.6
 num_threads-0.1.7
@@ -5282,6 +5308,7 @@ popt-1.19
 portable-atomic-1.12.0
 portable-atomic-1.13.1
 portable-atomic-1.14.0
+portable-atomic-1.15.0
 portable-atomic-util-0.2.4
 portable-atomic-util-0.2.7
 portaudio-190700_20210406
@@ -6547,6 +6574,7 @@ regex-applicative-0.3.4
 regex-automata-0.4.13
 regex-automata-0.4.14
 regex-automata-0.4.16
+regex-automata-0.4.18
 regex-automata-0.4.7
 regex-base-0.94.0.3
 regex-posix-0.96.0.2
@@ -6561,6 +6589,7 @@ release-notes
 remove-references-to
 removeReferencesToRustToolchainHook
 removeReferencesToVendoredSourcesHook
+remove_dir_all-1.0.0
 renderdoc-sys-1.1.0
 replace-workspace-values
 replaceCargoLockHook
@@ -6859,6 +6888,7 @@ shake-0.19.9
 sharded-slab-0.1.7
 shared-mime-info-2.4
 shared-mime-info-2.4_fish-completions
+shell-words-1.1.1
 shellInit
 shellcheck-0.11.0
 shiboken6-6.11.1
@@ -6964,6 +6994,8 @@ socket2-0.6.1
 socks-0.3.4
 sof-firmware-2025.12.2
 sof-firmware-2025.12.2-zstd
+sofka-0.24.9
+sofka-0.24.9_fish-completions
 softbuffer-0.4.8
 softhsm-2.7.0
 software-and-algorithms-1.0.jar
@@ -7123,6 +7155,7 @@ syn-2.0.68
 syn-2.0.72
 syn-2.0.89
 syn-3.0.3
+syn-3.0.4
 synapse.md
 syndication-5.116.0
 syndication-6.29.0
@@ -7517,6 +7550,7 @@ unit-pipewire.service-disabled
 unit-pipewire.socket
 unit-pipewire.socket-disabled
 unit-polkit-agent-helper.socket
+unit-prefix-0.5.2
 unit-remote-fs.target
 unit-run-initramfs.mount
 unit-run-wrappers.mount
@@ -7671,17 +7705,21 @@ wasip2-1.0.1+wasi-0.2.4
 wasip2-1.0.4+wasi-0.2.12
 wasm-bindgen-0.2.108
 wasm-bindgen-0.2.126
+wasm-bindgen-0.2.127
 wasm-bindgen-0.2.92
 wasm-bindgen-backend-0.2.92
 wasm-bindgen-futures-0.4.76
 wasm-bindgen-macro-0.2.108
 wasm-bindgen-macro-0.2.126
+wasm-bindgen-macro-0.2.127
 wasm-bindgen-macro-0.2.92
 wasm-bindgen-macro-support-0.2.108
 wasm-bindgen-macro-support-0.2.126
+wasm-bindgen-macro-support-0.2.127
 wasm-bindgen-macro-support-0.2.92
 wasm-bindgen-shared-0.2.108
 wasm-bindgen-shared-0.2.126
+wasm-bindgen-shared-0.2.127
 wasm-bindgen-shared-0.2.92
 wasm-tools-1.256.0
 wasm-tools-1.256.0-vendor

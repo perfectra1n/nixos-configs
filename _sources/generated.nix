@@ -6,6 +6,23 @@
   dockerTools,
 }:
 {
+  cargo-clean-all = {
+    pname = "cargo-clean-all";
+    version = "v0.6.5";
+    src = fetchFromGitHub {
+      owner = "dnlmlr";
+      repo = "cargo-clean-all";
+      rev = "v0.6.5";
+      fetchSubmodules = false;
+      sha256 = "sha256-CJzjw/g0Ap7TKC2m+bVlH+/iCUOQITmE6HGvrNzWQ3o=";
+    };
+    cargoLock."Cargo.lock" = {
+      lockFile = ./. + "/sha256-CJzjw_g0Ap7TKC2m+bVlH+_iCUOQITmE6HGvrNzWQ3o=/Cargo.lock";
+      outputHashes = {
+        
+      };
+    };
+  };
   ksops = {
     pname = "ksops";
     version = "4.5.1";
@@ -55,6 +72,14 @@
     src = fetchurl {
       url = "https://github.com/SnapXL/SnapX/releases/download/v0.4.0/snapx-ui-0.4-3.0.fc42.x86_64.rpm";
       sha256 = "sha256-nxfqMqFRUt/L7oGeM+ThVQiLY/nz8ZywtSKfhBbW63I=";
+    };
+  };
+  sofka = {
+    pname = "sofka";
+    version = "0.24.9";
+    src = fetchurl {
+      url = "https://github.com/nklmilojevic/sofka/releases/download/v0.24.9/sofka-v0.24.9-x86_64-unknown-linux-gnu.tar.gz";
+      sha256 = "sha256-WCrrwOYMfLMGz8Jlj2VApopCC6wgyNfnIPbjSA96PhE=";
     };
   };
   talosctl = {

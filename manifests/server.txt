@@ -77,8 +77,10 @@ age-1.3.1
 age-1.3.1-go-modules
 age-1.3.1_fish-completions
 aho-corasick-1.1.4
+aho-corasick-1.1.5
 akkoma.md
 alex-3.5.4.2
+aligned-0.4.3
 all
 alsa-firmware-1.2.4
 alsa-firmware-1.2.4-zstd
@@ -89,13 +91,17 @@ amf-headers-1.5.2
 amuled.md
 anchor-use.js
 anchor.min.js
+android_system_properties-0.1.6
 anki-sync-server.md
 ansi-terminal-1.1.5
 ansi-terminal-types-1.1.3
 ansi-wl-pprint-1.0.2
 anstream-0.6.21
+anstream-1.0.0
 anstyle-1.0.13
+anstyle-1.0.14
 anstyle-parse-0.2.7
+anstyle-parse-1.0.0
 anstyle-query-1.1.5
 anstyle-wincon-3.0.11
 anubis.md
@@ -113,6 +119,7 @@ argyllcms_jamtop
 arrayvec-0.7.6
 arrow-cpp-24.0.0
 arrow-testing
+as-slice-0.2.1
 ascent.dat
 asciidoc-10.2.1
 asciidoctor-2.0.26
@@ -152,6 +159,7 @@ auto-patchelf-0-unstable-2024-08-14
 auto-patchelf-hook
 auto-update-0.2.6
 autocfg-1.5.0
+autocfg-1.5.1
 autoconf-2.69
 autoconf-2.73
 autoconf-archive-2024.10.16
@@ -252,6 +260,7 @@ bison-3.8.2
 bison-get-version-3.8.2
 bitflags-1.3.2
 bitflags-2.10.0
+bitflags-2.13.1
 bitflags-2.9.1
 bitvec-1.1.6.0
 bitwarden-cli-2026.8.0
@@ -264,6 +273,7 @@ blaze-html-0.9.2.0-r1.cabal
 blaze-markup-0.8.3.0
 blaze-markup-0.8.3.0-r2.cabal
 block-buffer-0.10.4
+block2-0.6.2
 blood-elf-0-0.M1-1.9.1
 blood-elf-0-0.hex2-1.9.1
 blood-elf-0-1.9.1
@@ -318,11 +328,13 @@ build-replace.kaem
 build.kaem
 builtins.mk
 bumpalo-3.19.1
+bumpalo-3.20.3
 bundler-2.7.2
 busted-2.3.0-1.rockspec
 busted-luarocks-config.lua
 busybox-1.37.0
 byacc-20260126
+bytefmt-0.1.7
 bytemuck-1.24.0
 byteorder-1.0.4
 bytes-1.11.0
@@ -360,6 +372,8 @@ cargo-bootstrap-1.97.1
 cargo-c-0.10.22
 cargo-c-0.10.22-vendor
 cargo-c-0.10.22-vendor-staging
+cargo-clean-all-0.6.5
+cargo-clean-all-0.6.5_fish-completions
 cargo-deps-vendor
 cargo-deps-vendor-staging
 cargo-vendor-dir
@@ -376,6 +390,7 @@ cborg-0.2.10.0
 cborg-0.2.10.0-r3.cabal
 cc-1.2.46
 cc-1.2.50
+cc-1.4.4
 cc_arch-0.hex2-1.9.1
 cc_arch-1.9.1
 cc_arch-1.hex2-1.9.1
@@ -386,6 +401,7 @@ certspotter.md
 cfg-if-1.0.1
 cfg-if-1.0.4
 cfg_aliases-0.2.1
+cfg_aliases-0.2.2
 chafa-1.18.2
 character-ps-0.1
 charset-0.3.12
@@ -397,6 +413,7 @@ chezmoi-2.72.0
 chezmoi-2.72.0-go-modules
 chmod.yazi-0-unstable-2026-08-19
 chromaprint-1.6.1
+chrono-0.4.45
 cilium-cli-0.19.7
 citeproc-0.9.0.1
 cjson-1.7.19
@@ -404,8 +421,12 @@ clang-21.1.8
 clang-src-21.1.8
 clang-wrapper-21.1.8
 clap-4.5.58
+clap-4.6.6
 clap_builder-4.5.58
+clap_builder-4.6.6
+clap_derive-4.6.4
 clap_lex-1.0.0
+clap_lex-1.1.0
 claude
 claude-code-2.1.245
 claude-cred
@@ -426,7 +447,9 @@ codex-0.149.0-vendor
 codex-0.149.0-vendor-staging
 colm-0.13.0.7
 colorchoice-1.0.4
+colorchoice-1.0.5
 colord-1.4.8
+colored-3.1.1
 colour-2.3.7
 common.mk
 commonmark-0.2.6.1
@@ -444,6 +467,7 @@ config.fish
 config.fish.appendix
 config.guess-948ae97
 config.sub-948ae97
+console-0.16.4
 console-env
 const-random-0.1.18
 const-random-macro-0.1.16
@@ -452,6 +476,7 @@ contravariant-1.5.6
 cookie-0.5.1
 copy-extra-files
 copy-pkg-config-items-hook
+core-foundation-sys-0.8.7
 coreutils-9.11
 coreutils-9.11-binlore
 coreutils-9.11-lore-override
@@ -468,9 +493,13 @@ crab-hole.md
 cracklib-2.10.3
 crc32c-1.1.2
 crc32fast-1.5.0
+crossbeam-channel-0.5.16
 crossbeam-deque-0.8.6
+crossbeam-deque-0.8.7
 crossbeam-epoch-0.9.18
+crossbeam-epoch-0.9.20
 crossbeam-utils-0.8.21
+crossbeam-utils-0.8.22
 crt
 crt-builder
 crunchy-0.2.4
@@ -497,12 +526,14 @@ crypton-x509-validation-1.6.14
 crypton-x509-validation-1.6.14-r1.cabal
 cryptsetup-2.8.7
 ctestCheckHook
+ctrlc-3.5.2
 cups-2.4.19
 curl-0.4.49
 curl-8.21.0
 curl-8.21.0_fish-completions
 curl-impersonate-2.1.1
 curl-sys-0.4.84+curl-8.17.0
+cvt-0.1.2
 cyrus-sasl-2.1.28
 d3-flame-graph-templates-4.1.3
 dash-0.5.13.5
@@ -543,6 +574,7 @@ deranged-0.5.6
 desktop-file-utils-0.28
 dhcpcd-10.3.2
 dhcpcd-10.3.2_fish-completions
+dialoguer-0.12.0
 die-hook
 diffutils-3.12
 diffutils-3.12_fish-completions
@@ -555,6 +587,7 @@ digest-0.10.7
 direnv-2.37.1
 direnv-2.37.1-go-modules
 discourse.md
+dispatch2-0.3.1
 display.md
 displaydoc-0.2.5
 distributive-0.6.3
@@ -617,6 +650,7 @@ ed-1.22.5
 editline-1.17.1-unstable-2025-05-24
 eigen-3.4.1
 either-1.15.0
+either-1.18.0
 either-5.0.3
 either-5.0.3-r2.cabal
 elfutils-0.195
@@ -626,6 +660,7 @@ emacs.md
 emojis-0.1.4.1
 empty-directory
 empty-inhibitors
+encode_unicode-1.0.0
 ensure-all-wrappers-paths-exist
 ensure-newer-sources-hook
 ente.md
@@ -684,6 +719,7 @@ fallback-path
 fast-logger-3.2.6
 fastrand-1.9.0
 fastrand-2.3.0
+fastrand-2.5.0
 fc-cache
 fd-10.5.0
 fd-10.5.0-vendor
@@ -705,6 +741,7 @@ file-5.48-binlore
 file-5.48_fish-completions
 file-embed-0.0.16.0
 filepattern-0.1.3
+find-msvc-tools-0.1.11
 find-msvc-tools-0.1.5
 find-xml-catalogs-hook
 findutils-4.11.0
@@ -768,6 +805,7 @@ freefont-ttf-20120503
 freepats-20060219
 freetype-2.14.3
 fribidi-1.0.16
+fs_at-0.2.1
 fstrm-0.6.1
 full-border.yazi-0-unstable-2026-08-18
 furo-web-2025.12.19
@@ -775,8 +813,11 @@ furo-web-2025.12.19-npm-deps
 fuse-3.18.2
 fuse-overlayfs-1.18
 futures-core-0.3.31
+futures-core-0.3.34
 futures-io-0.3.31
 futures-lite-1.13.0
+futures-task-0.3.34
+futures-util-0.3.34
 fzf-0.74.3
 fzf-0.74.3-go-modules
 game-music-emu-0.6.5
@@ -825,6 +866,7 @@ getrandom-0.2.16
 getrandom-0.2.17
 getrandom-0.3.3
 getrandom-0.3.4
+getrandom-0.4.3
 gettext-1.0
 gflags-2.3.0
 gfortran-15.3.0
@@ -988,6 +1030,7 @@ hdf5-cpp-1.14.6
 hdrhistogram_c-0.11.10
 header.html
 heaps-0.4.1
+heck-0.5.0
 hedgehog-1.5
 hedgehog-1.5-r2.cabal
 heirloom-070715
@@ -995,6 +1038,7 @@ heirloom-devtools-070527
 heirloom-devtools-070527-builder
 heirloom-get-version-070715
 help2man-1.49.3
+hermit-abi-0.5.2
 hex0-1.9.1
 hex0-seed
 hex1-1.9.1
@@ -1083,6 +1127,8 @@ hwloc-2.14.0
 hypothesis-6.156.1-vendor
 hypothesis-6.156.1-vendor-staging
 iana-etc-20251215
+iana-time-zone-0.1.65
+iana-time-zone-haiku-0.1.2
 ibus-1.5.34
 icmake-9.03.01
 icu4c-77.1
@@ -1104,6 +1150,7 @@ indenter-0.3.3
 indexed-traversable-0.1.4
 indexed-traversable-0.1.4-r2.cabal
 indexed-traversable-instances-0.1.2.1
+indicatif-0.18.6
 indoc-2.0.6
 inih-62
 initrd-bin-env
@@ -1146,6 +1193,7 @@ ipw2200-firmware-3.1-zstd
 ipynb-0.2
 ipynb-0.2-r1.cabal
 is_executable-1.0.5
+is_executable-1.0.6
 is_terminal_polyfill-1.70.2
 isa-l-2.32.1
 isahc-1.7.2
@@ -1177,6 +1225,7 @@ jq-1.8.2-binlore
 js-dgtable-0.5.2
 js-flot-0.8.3
 js-jquery-3.7.1
+js-sys-0.3.104
 js-sys-0.3.85
 json-c-0.18
 json-glib-1.10.8
@@ -1266,6 +1315,7 @@ libc-0.2.171
 libc-0.2.177
 libc-0.2.178
 libc-0.2.180
+libc-0.2.189
 libc.a
 libc.a-builder
 libcaca-0.99.beta20
@@ -1489,6 +1539,7 @@ linux-headers-static-7.1
 linux-pam-1.7.2
 linux-pam-1.7.2_fish-completions
 linux-raw-sys-0.11.0
+linux-raw-sys-0.12.1
 litecli-1.17.1
 litemap-0.8.1
 livebook.md
@@ -1513,6 +1564,7 @@ lodepng-3.12.1
 log-0.4.21
 log-0.4.27
 log-0.4.29
+log-0.4.34
 logging-facade-0.3.1
 logict-0.8.2.0
 login.defs
@@ -1611,6 +1663,7 @@ meilisearch.md
 memcached-1.6.42
 memchr-2.7.6
 memchr-2.8.0
+memchr-2.8.3
 memoffset-0.9.1
 memory-0.18.0
 memory-0.18.0-r1.cabal
@@ -1739,6 +1792,7 @@ ngtcp2-1.23.0
 ninja-1.13.2
 nix-0.29.0
 nix-0.31.1
+nix-0.31.3
 nix-2.34.8
 nix-2.34.8_fish-completions
 nix-bash-completions-0.6.8
@@ -1823,6 +1877,7 @@ nodejs-slim-22.23.2
 nodejs-slim-24.19.0
 nom-8.0.0
 nordvpn.md
+normpath-1.5.1
 nothunks-0.3.1
 nothunks-0.3.1-r2.cabal
 npm-build-hook
@@ -1840,6 +1895,8 @@ ntfs3g-2026.7.7
 ntfs3g-2026.7.7_fish-completions
 nuke-refs
 num-conv-0.2.0
+num-traits-0.2.19
+num_cpus-1.17.0
 num_threads-0.1.7
 numactl-2.0.18
 nv-codec-headers
@@ -1849,6 +1906,8 @@ nvfetcher-0.8.0.0
 nvfetcher-0.8.0.0_fish-completions
 nyacc-1.09.1
 nyacc-1.09.1-builder
+objc2-0.6.4
+objc2-encode-4.1.0
 ocl-icd-2.3.5
 ocsinventory-agent.md
 oh-my-zsh.md
@@ -1857,6 +1916,7 @@ old-locale-1.0.0.7-r2.cabal
 old-time-1.1.1.0
 once_cell-1.19.0
 once_cell-1.21.3
+once_cell-1.21.4
 once_cell_polyfill-1.70.2
 onedrive.md
 onetbb-2022.3.0
@@ -2083,6 +2143,7 @@ pihole-web.md
 pin-project-1.1.10
 pin-project-internal-1.1.10
 pin-project-lite-0.2.16
+pin-project-lite-0.2.17
 pip-install-hook
 pipewire-1.6.8
 pixman-0.46.4
@@ -2120,6 +2181,7 @@ poppler-glib-26.06.0
 poppler-utils-26.06.0
 popt-1.19
 portable-atomic-1.12.0
+portable-atomic-1.15.0
 portable-atomic-util-0.2.4
 portaudio-190700_20210406
 portmaster.md
@@ -2144,6 +2206,7 @@ primitive-0.9.1.0-r1.cabal
 primitive-addr-0.1.0.3
 proc-macro2-1.0.103
 proc-macro2-1.0.106
+proc-macro2-1.0.107
 proc-macro2-1.0.86
 procps-4.0.7
 procps-4.0.7-binlore
@@ -2870,7 +2933,9 @@ quickcheck-unicode-1.0.1.0
 quote-1.0.36
 quote-1.0.42
 quote-1.0.44
+quote-1.0.47
 r-efi-5.3.0
+r-efi-6.0.0
 ragel-6.10
 rand-0.8.5
 rand_chacha-0.3.1
@@ -2885,6 +2950,7 @@ rav1e-0.8.1-vendor-staging
 raw
 raw-strings-qq-1.1
 rayon-1.11.0
+rayon-1.12.0
 rayon-core-1.13.0
 rdfind-1.8.0
 rdma-core-64.0
@@ -2905,15 +2971,19 @@ regclient-0.11.5
 regclient-0.11.5-go-modules
 regex-1.12.2
 regex-1.12.3
+regex-1.13.1
 regex-automata-0.4.13
 regex-automata-0.4.14
+regex-automata-0.4.18
 regex-base-0.94.0.3
 regex-posix-0.96.0.2
+regex-syntax-0.8.11
 regex-syntax-0.8.8
 regex-syntax-0.8.9
 regex-tdfa-1.3.2.5
 release-notes
 remove-references-to
+remove_dir_all-1.0.0
 replace-workspace-values
 rerebase-1.21.2
 resholve-0.10.7
@@ -3007,7 +3077,9 @@ rustfmt-1.97.1
 rustfmt-nightly-1.97.1
 rustix-1.1.2
 rustix-1.1.3
+rustix-1.1.4
 rustversion-1.0.22
+rustversion-1.0.23
 rusty-v8-150.4.0
 rusty-v8-150.4.0-vendor
 rusty-v8-150.4.0-vendor-staging
@@ -3098,8 +3170,10 @@ shadow-4.20.2_fish-completions
 shake-0.19.9
 shared-mime-info-2.4
 shared-mime-info-2.4_fish-completions
+shell-words-1.1.1
 shellInit
 shlex-1.3.0
+shlex-2.0.1
 should-not-typecheck-2.1.0
 silently-1.2.5.4
 simd-adler32-0.3.7
@@ -3121,6 +3195,7 @@ skylighting-format-context-0.1.0.2
 skylighting-format-latex-0.1
 skylighting-format-typst-0.1
 slab-0.4.11
+slab-0.4.12
 slang-2.3.3
 slirp4netns-1.3.4
 sluice-0.5.5
@@ -3135,6 +3210,8 @@ socat-1.8.1.3
 socket2-0.6.1
 sof-firmware-2025.12.2
 sof-firmware-2025.12.2-zstd
+sofka-0.24.9
+sofka-0.24.9_fish-completions
 softhsm-2.7.0
 some-1.0.6
 some-1.0.6-r3.cabal
@@ -3213,7 +3290,9 @@ syb-0.7.2.4
 symlink-0.1.0
 syn-2.0.111
 syn-2.0.115
+syn-2.0.119
 syn-2.0.68
+syn-3.0.4
 synapse.md
 synstructure-0.13.2
 sysctl-procps-4.0.7
@@ -3271,6 +3350,7 @@ tea-0.15.1
 tea-0.15.1-go-modules
 tempfile-3.20.0
 tempfile-3.23.0
+tempfile-3.27.0
 temporary-1.3
 terminal-size-0.3.4
 terminal-size-0.3.4-r1.cabal
@@ -3428,8 +3508,10 @@ unicode-data-0.6.0-r2.cabal
 unicode-ident-1.0.12
 unicode-ident-1.0.22
 unicode-ident-1.0.23
+unicode-ident-1.0.24
 unicode-transforms-0.4.0.1
 unicode-transforms-0.4.0.1-r9.cabal
+unicode-width-0.2.2
 uniplate-1.6.13
 uniplate-1.6.13-r1.cabal
 unit--.slice
@@ -3451,6 +3533,7 @@ unit-networking-scripted.target
 unit-nix-daemon.socket
 unit-nix-gc.timer
 unit-nixos-fake-graphical-session.target
+unit-prefix-0.5.2
 unit-remote-fs.target
 unit-run-initramfs.mount
 unit-run-wrappers.mount
@@ -3557,15 +3640,20 @@ wasi-0.11.1+wasi-snapshot-preview1
 wasi-0.14.2+wasi-0.2.4
 wasip2-1.0.1+wasi-0.2.4
 wasm-bindgen-0.2.108
+wasm-bindgen-0.2.127
 wasm-bindgen-macro-0.2.108
+wasm-bindgen-macro-0.2.127
 wasm-bindgen-macro-support-0.2.108
+wasm-bindgen-macro-support-0.2.127
 wasm-bindgen-shared-0.2.108
+wasm-bindgen-shared-0.2.127
 watchfiles-1.2.0-vendor
 watchfiles-1.2.0-vendor-staging
 wavpack-5.9.0
 wayland-1.26.0
 wayland-protocols-1.49
 wayland-scanner-1.26.0
+web-time-1.1.0
 webrtc-audio-processing-1.3
 webrtc-audio-processing-2.1
 weechat.md
@@ -3579,9 +3667,15 @@ which-2.25_fish-completions
 whois-5.6.6
 wildmidi-0.5.0
 winapi-util-0.1.11
+windows-core-0.62.2
+windows-implement-0.60.2
+windows-interface-0.59.3
 windows-link-0.1.3
 windows-link-0.2.1
+windows-result-0.4.1
+windows-strings-0.5.1
 windows-sys-0.48.0
+windows-sys-0.52.0
 windows-sys-0.59.0
 windows-sys-0.60.2
 windows-sys-0.61.2
@@ -3710,6 +3804,7 @@ zerocopy-0.8.31
 zerocopy-derive-0.8.31
 zerofrom-0.1.6
 zerofrom-derive-0.1.6
+zeroize-1.9.0
 zeromq-4.3.5
 zerotrie-0.2.3
 zerovec-0.11.5

@@ -202,4 +202,6 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 
 ## Out-of-tree pins — `nvfetcher.toml` → `_sources/generated.nix`
 
-`kubectl`, `talosctl` (static Go binaries via `mkBin`), `ksops`, `libratbag` (fork pin).
+`kubectl`, `talosctl` (static Go binaries via `mkBin`), `ksops`, `sofka` (prebuilt Rust binary,
+autoPatchelf'd), `cargo-clean-all` (built from source — the one pin using nvfetcher's `cargo_lock`,
+which ships upstream's `Cargo.lock` in `_sources/` so bumps need no `cargoHash`), `libratbag` (fork pin).
