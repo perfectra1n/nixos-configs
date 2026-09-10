@@ -98,16 +98,22 @@ let
 
 
   # idevicebackup2 writes STRAIGHT here — no local staging, by explicit request (2026-09-10):
-  # "just have it go straight to the SMB, I don't want it locally". What that trades away,
-  # recorded so the reasoning isn't lost if this ever looks slow or flaky:
-  #   - Speed. A backup is 86,484 files / 514 dirs, 76% under 64 KB (measured, not guessed), and
-  #     SMB is latency-bound PER FILE — so this is ~86k open/write/close round trips instead of
-  #     one bulk transfer off local NVMe. Expect the seed to take substantially longer.
-  #   - Availability. The NAS must now stay up for the WHOLE multi-hour transfer, not just a
-  #     closing sync; the 3x retry below is what makes a blip survivable rather than fatal.
-  #   - Resume state. Status.plist and the existing tree are read over CIFS on every retry.
-  # What it buys: no permanent ~40-50 GB per device on the desktop's NVMe, and no `rsync
-  # --delete` step that destroys the previous copy on every run.
+  # "just have it go straight to the SMB, I don't want it locally". It buys ~40-50 GB per device
+  # of NVMe back, and removes the `rsync --delete` step that used to destroy the previous copy
+  # on every run.
+  #
+  # The obvious objection — 86,484 files / 514 dirs with 76% under 64 KB, and SMB being
+  # latency-bound PER file — was MEASURED and does not hold: writing direct to CIFS sustained
+  # ~6.7 MB/s against ~7.7 MB/s to local NVMe. The phone's Wi-Fi throughput is the bottleneck,
+  # not the filesystem, so the per-file overhead hides behind it. Don't "optimise" this back to
+  # local staging without re-measuring.
+  #
+  # Two real costs remain:
+  #   - Availability. The NAS must stay up for the WHOLE multi-hour transfer, not just a closing
+  #     sync; RequiresMountsFor + the 3x retry below are what make a blip survivable.
+  #   - A resumed run stalls for several MINUTES before any bytes move, while the device
+  #     computes its delta against the existing tree. That is normal — `wchar` on the
+  #     idevicebackup2 pid climbing is the proof of life, not the journal.
   #
   # The CIFS automount from modules/smb-mounts.nix — first access triggers the mount.
   # NB the //…/main_smb share is the dataset main_pool/main_dataset/smb_folder — NOT

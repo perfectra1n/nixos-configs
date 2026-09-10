@@ -98,11 +98,22 @@ Expect per-device: discovery wait (up to 15 min), `backing up <name>…`, transf
 
 - `/mnt/main_smb/Jon/ios_backups/<UDID>/Status.plist` with `SnapshotState = finished`.
 
-`idevicebackup2` writes **straight to the share** — there is no local staging copy. That was a
-deliberate choice (2026-09-10) to keep ~40-50 GB per device off the desktop's NVMe. The cost is
-speed: a backup is 86,484 files across 514 directories with 76% under 64 KB, and SMB is
-latency-bound *per file*, so the seed is materially slower than it would be locally. It also
-means the NAS must stay reachable for the whole transfer, which is what the 3x retry covers.
+`idevicebackup2` writes **straight to the share** — there is no local staging copy (deliberate,
+2026-09-10, to keep ~40-50 GB per device off the desktop's NVMe).
+
+The obvious worry — 86,484 files across 514 directories, 76% under 64 KB, on a protocol that is
+latency-bound *per file* — was measured and **does not hold**: direct-to-CIFS sustained
+~6.7 MB/s versus ~7.7 MB/s to local NVMe. The phone's Wi-Fi throughput is the bottleneck, so the
+per-file overhead hides behind it.
+
+Two real costs remain. The NAS must stay reachable for the whole transfer (hence
+`RequiresMountsFor` and the 3x retry), and **a resumed run sits for several minutes before any
+bytes move** while the device computes its delta against the existing tree. That stall is
+normal — confirm progress with `wchar` on the `idevicebackup2` pid, not the journal:
+
+```sh
+sudo cat /proc/$(pgrep -x idevicebackup2)/io | grep wchar
+```
 
 > ⚠ **There is no history unless you arrange it.** `idevicebackup2` keeps one backup per device
 > and updates it **in place** on the share, so each run overwrites the previous state and no
