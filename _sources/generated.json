@@ -91,6 +91,21 @@
         },
         "version": "2.3.1"
     },
+    "netmuxd": {
+        "cargoLock": null,
+        "date": null,
+        "extract": null,
+        "name": "netmuxd",
+        "passthru": null,
+        "pinned": false,
+        "src": {
+            "name": null,
+            "sha256": "sha256-hbZZgoT8Y58qKCWERh0F4gkLeb3z7JSdKl5dPcZV3eQ=",
+            "type": "url",
+            "url": "https://github.com/jkcoxson/netmuxd/releases/download/v0.4.3/netmuxd-x86_64-unknown-linux-gnu.tar.gz"
+        },
+        "version": "0.4.3"
+    },
     "snapx-core": {
         "cargoLock": null,
         "date": null,

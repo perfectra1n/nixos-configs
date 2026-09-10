@@ -270,6 +270,11 @@
           # waiting to break the next laptop rebuild.
           doubletake = import ./pkgs/doubletake.nix { inherit pkgs; };
 
+          # Here as well as modules/ios-backup.nix so CI COMPILES it every run (-Werror, plus
+          # a --help smoke test) — it's the only C in the repo, built against libimobiledevice's
+          # API, so a nixpkgs bump that changes that API must fail here and not on a rebuild.
+          idevice-wifi-sync = import ./pkgs/idevice-wifi-sync.nix { inherit pkgs; };
+
           gen-manifests = pkgs.writeShellApplication {
             name = "gen-manifests";
             runtimeInputs = with pkgs; [ nix gnused gnugrep coreutils findutils ];

@@ -88,3 +88,17 @@ fetch.url = "https://github.com/nklmilojevic/sofka/releases/download/v$ver/sofka
 src.manual = "v0.6.5"
 fetch.github = "dnlmlr/cargo-clean-all"
 cargo_lock = ["Cargo.lock"]
+
+# netmuxd — jkcoxson/netmuxd: a full usbmuxd reimplementation (Rust) whose job here is ONE thing
+# nixpkgs' usbmuxd2 cannot do — see the muxer section of modules/ios-backup.nix. Modern iOS
+# advertises itself over Bonjour as "<MAC>@<link-local-v6>-supportsRP-NN" and serves lockdown on
+# 62078, while its mDNS SRV record points at a port that is closed; usbmuxd2's Dec-2023 snapshot
+# parses that name and trusts that port, so it silently never lists the device (verified against
+# iOS 26.6.1 on 2026-09-10). netmuxd matches devices by cross-referencing the mDNS TXT record
+# against /var/lib/lockdown pairing records instead, so it is immune to both. Not in nixpkgs.
+# Upstream's Linux tarball is one dynamically-linked Rust binary (glibc + libgcc_s), so
+# modules/ios-backup.nix unpacks + autoPatchelf's it, exactly like sofka above.
+[netmuxd]
+# renovate: datasource=github-releases depName=jkcoxson/netmuxd extractVersion=^v(?<version>.+)$
+src.manual = "0.4.3"
+fetch.url = "https://github.com/jkcoxson/netmuxd/releases/download/v$ver/netmuxd-x86_64-unknown-linux-gnu.tar.gz"

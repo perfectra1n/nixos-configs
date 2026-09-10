@@ -35,15 +35,6 @@ trufflehog = "3.97.1"
 #     from Bitwarden into sops-nix + chezmoi (single-key model, see .sops.yaml).
 #   - secrets:init / secrets:edit / secrets:key-install → mise drives them, but YOU supply
 #     the secret/decision (the token, the age key); editing secrets needs the key present.
-# What's automatable vs not:
-#   - apply / verify / hardware / dirs / update     → fully scripted below.
-#   - secrets:pull / secrets:pull-env               → refresh every Bitwarden-backed secret
-#     (two manifests in scripts/secrets-sync.py) into BOTH channels — sops secrets.yaml and the
-#     age-encrypted fish env vars: re-encrypt + commit. pull = both; pull-env = fish only.
-#   - secrets:key-bootstrap                         → fresh-install: pull the one age key
-#     from Bitwarden into sops-nix + chezmoi (single-key model, see .sops.yaml).
-#   - secrets:init / secrets:edit / secrets:key-install → mise drives them, but YOU supply
-#     the secret/decision (the token, the age key); editing secrets needs the key present.
 
 [tasks.apply]
 description = "Rebuild a host (default: this one), then apply the in-repo dotfiles"
@@ -515,4 +506,147 @@ echo
 echo ">> Scaffolded $dir (git-added): default.nix + spec.nix + placeholder hardware-configuration.nix"
 echo ">> flake.nix and the CI matrix both discover it automatically — nothing else to edit."
 echo ">> Next: mise run verify   (and on the box: mise run hardware)"
+'''
+
+# ── iOS device backups (desktop) — see modules/ios-backup.nix + docs/ios-backup.md ──
+# The chain is: pair over USB → allow Wi-Fi lockdown on the device → register the UDID in
+# sops → rebuild (which is what creates the service+timer) → nightly Wi-Fi backups. ios:pair
+# and ios:register are once-per-device; ios:status is the one you'll actually keep using,
+# because every break in that chain looks identical from outside ("no backups appeared").
+
+[tasks."ios:status"]
+description = "Health check the whole iOS backup chain: daemons, pairings, Wi-Fi lockdown key, mDNS, registration, timer, sizes. Read-only."
+run = "./scripts/ios-status.sh"
+
+[tasks."ios:pair"]
+description = "Pair an iPhone/iPad over USB (trust + backup encryption + Wi-Fi lockdown) in one guided pass"
+run = '''
+set -eu
+# Everything here needs the phone PLUGGED IN and UNLOCKED. USB isn't a preference: both the
+# Trust handshake and the Wi-Fi-lockdown write require it — which is the whole reason this
+# module lives on the desktop instead of in the cluster.
+command -v idevice-wifi-sync >/dev/null 2>&1 || {
+  echo "!! idevice-wifi-sync not on PATH — run 'mise run apply' first (modules/ios-backup.nix installs it)"
+  exit 1
+}
+
+echo ">> waiting for a USB device (plug the phone in and unlock it) …"
+deadline=$(( $(date +%s) + 120 ))
+until [ -n "$(idevice_id -l 2>/dev/null)" ]; do
+  if [ "$(date +%s)" -gt "$deadline" ]; then
+    echo "!! no USB device after 2 min — plugged in? unlocked? try a different cable/port (data, not charge-only)"
+    exit 1
+  fi
+  sleep 2
+done
+udid=$(idevice_id -l | head -1)
+count=$(idevice_id -l | wc -l)
+[ "$count" -gt 1 ] && echo ">> NOTE: $count devices attached; using $udid (unplug the others to pick another)"
+echo ">> device: $udid"
+
+# 1. Trust. The FIRST pair call pops the dialog and fails; the retry loop is what confirms it,
+#    so a plain `idevicepair pair` exit code means nothing on its own.
+if ! idevicepair validate -u "$udid" >/dev/null 2>&1; then
+  echo ">> pairing — accept the Trust dialog on the phone now"
+  idevicepair pair -u "$udid" || true
+  for _ in 1 2 3 4 5 6 7 8 9 10; do
+    idevicepair validate -u "$udid" >/dev/null 2>&1 && break
+    sleep 3
+  done
+fi
+idevicepair validate -u "$udid" >/dev/null 2>&1 || {
+  echo "!! still not paired — Trust declined, or the phone re-locked before responding"
+  exit 1
+}
+echo ">> paired (record: /var/lib/lockdown/$udid.plist)"
+
+# The tmpfiles rule that creates this is gated on the sops secret, which doesn't exist until
+# ios:register — so make it here. 0700 root: an unencrypted-metadata backup tree is private.
+sudo install -d -m 0700 -o root -g root /var/backup/ios
+
+# 2. Backup encryption. Enabling it twice prompts for the OLD password, so check first.
+#    Encrypted backups also carry keychain/health/Wi-Fi data that plain ones silently omit.
+if ideviceinfo -u "$udid" -q com.apple.mobile.backup -k WillEncrypt 2>/dev/null | grep -qx true; then
+  echo ">> backup encryption already on (change it with: idevicebackup2 -i changepw)"
+else
+  echo ">> enabling backup encryption — you'll be asked for a NEW password."
+  echo ">> PUT IT IN BITWARDEN NOW. There is no recovery, and a RESTORE is impossible without it."
+  sudo idevicebackup2 -u "$udid" -i encryption on /var/backup/ios
+fi
+
+# 3. The step every guide gets wrong — `idevicepair wifi on` has never existed in any release.
+#    See pkgs/idevice-wifi-sync.c for the full story.
+echo ">> allowing lockdown connections over Wi-Fi"
+idevice-wifi-sync on -u "$udid"
+
+echo
+echo ">> done. UDID: $udid"
+echo ">> next:  UDID=$udid NAME=<short-name> mise run ios:register"
+echo ">> then:  mise run apply     # this is what creates ios-backup.service/.timer"
+echo ">> then unplug the cable, give Bonjour a minute, and: mise run ios:status"
+'''
+
+[tasks."ios:register"]
+description = "Register a paired device for nightly backup: UDID=<udid> NAME=<name> mise run ios:register"
+run = '''
+set -eu
+: "${UDID:?usage: UDID=<udid> NAME=<name> mise run ios:register}"
+: "${NAME:?usage: UDID=<udid> NAME=<name> mise run ios:register}"
+export SOPS_AGE_KEY_FILE="$HOME/.config/age/age.agekey"
+
+# Refuse to register an unpaired device: the nightly job would DISCOVERY-TIMEOUT on it every
+# night, and that failure reads like a network problem rather than a missing pairing.
+[ -e "/var/lib/lockdown/$UDID.plist" ] || {
+  echo "!! no pairing record for $UDID — run 'mise run ios:pair' first"
+  echo "!! (paired now: $(ls /var/lib/lockdown/*.plist 2>/dev/null | grep -v SystemConfiguration | xargs -r -n1 basename | sed 's/.plist//' | tr '\n' ' '))"
+  exit 1
+}
+
+cur=$(sops --decrypt --extract '["ios"]["backup_devices"]' secrets/secrets.yaml 2>/dev/null || true)
+cur=$(printf '%s' "$cur" | sed '/^[[:space:]]*$/d')
+if printf '%s\n' "$cur" | grep -qF "$UDID"; then
+  echo ">> $UDID is already registered — nothing to do"
+  exit 0
+fi
+
+# Build the new block, then hand it to sops as a JSON string (python does the quoting so a
+# name with a space or quote can't corrupt the YAML).
+new=$({ [ -n "$cur" ] && printf '%s\n' "$cur"; printf '%s %s\n' "$UDID" "$NAME"; })
+# rstrip + "\n": the value MUST end with a newline. $(...) above strips trailing newlines,
+# and a secret written without one makes the service's `while read` loop drop the last device
+# entirely (it ran zero times and still exited 0 — see modules/ios-backup.nix). The service is
+# now robust to it either way, but write it correctly at the source too.
+jsonval=$(printf '%s' "$new" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read().rstrip("\n") + "\n"))')
+
+if ! sops --set "[\"ios\"][\"backup_devices\"] $jsonval" secrets/secrets.yaml; then
+  echo "!! sops --set failed — most likely the top-level 'ios:' group doesn't exist yet."
+  echo "!! Add it once by hand with 'mise run secrets:edit':"
+  echo
+  echo "ios:"
+  echo "  backup_devices: |"
+  printf '%s\n' "$new" | sed 's/^/    /'
+  echo
+  echo "!! secrets.yaml is git-tracked, so 'git checkout secrets/secrets.yaml' undoes a bad write."
+  exit 1
+fi
+
+echo ">> registered: $UDID ($NAME)"
+printf '%s\n' "$new" | sed 's/^/     /'
+echo ">> next: mise run apply     # brings ios-backup.service/.timer into existence"
+'''
+
+[tasks."ios:backup"]
+description = "Run the iOS backup now and follow the journal (Ctrl-C detaches; the run continues)"
+run = '''
+set -eu
+systemctl cat ios-backup.service >/dev/null 2>&1 || {
+  echo "!! ios-backup.service doesn't exist — the sops key ios/backup_devices is absent, so"
+  echo "!! modules/ios-backup.nix declared nothing. Register a device first:"
+  echo "!!   mise run ios:pair && UDID=… NAME=… mise run ios:register && mise run apply"
+  exit 1
+}
+sudo systemctl start --no-block ios-backup.service
+echo ">> started. Following the journal — Ctrl-C detaches, the backup keeps running."
+echo ">> First seeds can be 50-200 GB per device and run sequentially (service cap: 8h)."
+sudo journalctl -fu ios-backup --since '5 seconds ago'
 '''
