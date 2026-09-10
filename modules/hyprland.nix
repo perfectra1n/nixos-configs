@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, inputs, username, ... }:
 
 # Wayland + Hyprland stack (desktop, laptop). The ~/.config/hypr + waybar dotfiles
 # these tools expect are owned by chezmoi, NOT this repo (see README "Boundary").
@@ -114,10 +114,30 @@ in
     rm -rf /home/*/.cache/quickshell/qmlcache
   '';
 
-  # Electron/Chromium apps default to XWayland (blurry under fractional scale). This
-  # makes them use the Wayland (Ozone) backend → crisp. Hint=auto, so it falls back
-  # to X11 where there's no Wayland.
-  environment.sessionVariables.NIXOS_OZONE_WL = "1";
+  # Session-wide env. greetd runs the session command through a login shell, so
+  # /etc/set-environment IS on the path to the compositor — everything Hyprland spawns
+  # (keybinds, exec-once, your terminal, and every app started from it) inherits this.
+  #
+  # NIXOS_OZONE_WL: Electron/Chromium apps default to XWayland (blurry under fractional
+  # scale); this makes them use the Wayland (Ozone) backend → crisp. Hint=auto, so it
+  # falls back to X11 where there's no Wayland.
+  #
+  # The Qt pair is re-exported here even though home-manager's `qt` block (home/gui.nix)
+  # already declares it, because HM only lands those in ~/.config/environment.d — which is
+  # read by the SYSTEMD USER MANAGER and nothing else. `start-hyprland` is launched by greetd
+  # directly (a non-systemd-aware session, see the greetd comment below), so the compositor
+  # never sees environment.d: D-Bus-activated apps got the KDE platform theme while anything
+  # launched from a keybind did not. Missing QT_QPA_PLATFORMTHEME means the KDE platform theme
+  # plugin never loads, kdeglobals is never read, and Qt hands out its LIGHT default palette —
+  # Dolphin then paints black text on white alternating rows inside its dark window.
+  #   Read back out of the HM block rather than retyped: a hand-copied value is exactly what
+  # rotted before (a stale `env = QT_QPA_PLATFORMTHEME,qt5ct` in the chezmoi hyprland.conf
+  # silently disabled this whole stack, and qt5ct ships no Qt6 plugin at all).
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    inherit (config.home-manager.users.${username}.home.sessionVariables)
+      QT_QPA_PLATFORMTHEME QT_STYLE_OVERRIDE;
+  };
 
   # Login via greetd + tuigreet. Launch through `start-hyprland` (the wrapper that
   # programs.hyprland.enable installs — it exports the session env to systemd/dbus so
