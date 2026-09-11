@@ -1,0 +1,86 @@
+{
+  "chat.message": [
+    {
+      "command": "\"/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24/scripts/run.sh\" \"/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24/scripts/user-prompt-submit.mjs\"",
+      "matcher": null,
+      "plugin": "memini@memini",
+      "root": "/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24"
+    }
+  ],
+  "session.end": [
+    {
+      "command": "\"/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24/scripts/run.sh\" \"/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24/scripts/session-end.mjs\"",
+      "matcher": null,
+      "plugin": "memini@memini",
+      "root": "/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24"
+    }
+  ],
+  "session.idle": [
+    {
+      "command": "[ ! -f \"/home/perf3ct/.claude/plugins/cache/impeccable/impeccable/4.3.1/skills/impeccable/scripts/impeccable\" ] || \"/home/perf3ct/.claude/plugins/cache/impeccable/impeccable/4.3.1/skills/impeccable/scripts/impeccable\" hook",
+      "matcher": null,
+      "plugin": "impeccable@impeccable",
+      "root": "/home/perf3ct/.claude/plugins/cache/impeccable/impeccable/4.3.1"
+    },
+    {
+      "command": "\"/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24/scripts/run.sh\" \"/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24/scripts/stop.mjs\"",
+      "matcher": null,
+      "plugin": "memini@memini",
+      "root": "/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24"
+    },
+    {
+      "command": "bash \"/home/perf3ct/.claude/plugins/cache/claude-plugins-official/ralph-loop/1.0.0/hooks/stop-hook.sh\"",
+      "matcher": null,
+      "plugin": "ralph-loop@claude-plugins-official",
+      "root": "/home/perf3ct/.claude/plugins/cache/claude-plugins-official/ralph-loop/1.0.0"
+    }
+  ],
+  "session.start": [
+    {
+      "command": "bash \"/home/perf3ct/.claude/plugins/cache/claude-plugins-official/explanatory-output-style/1.0.0/hooks-handlers/session-start.sh\"",
+      "matcher": null,
+      "plugin": "explanatory-output-style@claude-plugins-official",
+      "root": "/home/perf3ct/.claude/plugins/cache/claude-plugins-official/explanatory-output-style/1.0.0"
+    },
+    {
+      "command": "node \"/home/perf3ct/.claude/plugins/cache/lupina/lupina/0.1.0/hooks/session-start.ts\"",
+      "matcher": "startup|resume|clear",
+      "plugin": "lupina@lupina",
+      "root": "/home/perf3ct/.claude/plugins/cache/lupina/lupina/0.1.0"
+    },
+    {
+      "command": "\"/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24/scripts/run.sh\" \"/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24/scripts/session-start.mjs\"",
+      "matcher": null,
+      "plugin": "memini@memini",
+      "root": "/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24"
+    },
+    {
+      "command": "\"/home/perf3ct/.claude/plugins/cache/claude-plugins-official/superpowers/6.3.0/hooks/run-hook.cmd\" session-start",
+      "matcher": "startup|clear|compact",
+      "plugin": "superpowers@claude-plugins-official",
+      "root": "/home/perf3ct/.claude/plugins/cache/claude-plugins-official/superpowers/6.3.0"
+    }
+  ],
+  "tool.execute.after": [
+    {
+      "command": "[ ! -f \"/home/perf3ct/.claude/plugins/cache/impeccable/impeccable/4.3.1/skills/impeccable/scripts/impeccable\" ] || \"/home/perf3ct/.claude/plugins/cache/impeccable/impeccable/4.3.1/skills/impeccable/scripts/impeccable\" hook",
+      "matcher": "Edit|Write",
+      "plugin": "impeccable@impeccable",
+      "root": "/home/perf3ct/.claude/plugins/cache/impeccable/impeccable/4.3.1"
+    },
+    {
+      "command": "\"/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24/scripts/run.sh\" \"/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24/scripts/post-tool-use.mjs\"",
+      "matcher": "Edit|MultiEdit|Write|Bash|NotebookEdit|Agent|Task|apply_patch|mcp__.*memini.*__memory_(recall|briefing|get)",
+      "plugin": "memini@memini",
+      "root": "/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24"
+    }
+  ],
+  "tool.execute.before": [
+    {
+      "command": "\"/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24/scripts/run.sh\" \"/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24/scripts/pre-tool-use.mjs\"",
+      "matcher": "Edit|MultiEdit|Write|Read|Glob|Grep",
+      "plugin": "memini@memini",
+      "root": "/home/perf3ct/.claude/plugins/cache/memini/memini/0.7.24"
+    }
+  ]
+}

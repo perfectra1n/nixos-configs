@@ -247,6 +247,16 @@
           touch $out
         '';
 
+      # The opencode generator's pure translation tests (${VAR}->{env:VAR}, frontmatter
+      # splitting, agent/command conversion). Filesystem-free on purpose so it passes in the
+      # build sandbox, where $HOME has no Claude install to read.
+      checks.x86_64-linux.gen-opencode-tests =
+        let pkgs = nixpkgs.legacyPackages.x86_64-linux; in
+        pkgs.runCommand "gen-opencode-tests" { nativeBuildInputs = [ pkgs.python3 ]; } ''
+          python3 ${./scripts/gen_opencode.py} --self-test
+          touch $out
+        '';
+
       checks.x86_64-linux.uncached-delta =
         let pkgs = nixpkgs.legacyPackages.x86_64-linux; in
         pkgs.runCommand "uncached-delta-selftest" { nativeBuildInputs = [ pkgs.python3 ]; } ''
@@ -274,6 +284,11 @@
           # a --help smoke test) — it's the only C in the repo, built against libimobiledevice's
           # API, so a nixpkgs bump that changes that API must fail here and not on a rebuild.
           idevice-wifi-sync = import ./pkgs/idevice-wifi-sync.nix { inherit pkgs; };
+
+          # Regenerates dotfiles/dot_config/opencode/ from the tracked Claude config. Run it
+          # after enabling/disabling a Claude plugin or changing mcp.json — the skill FARM
+          # self-heals on every chezmoi apply, but agents/commands/MCP are committed output.
+          gen-opencode = import ./pkgs/gen-opencode.nix { inherit pkgs; };
 
           gen-manifests = pkgs.writeShellApplication {
             name = "gen-manifests";

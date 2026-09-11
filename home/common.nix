@@ -156,6 +156,9 @@ in
     claude-code          # nixpkgs lags releases; swap for the flake if you want latest
     codex                # OpenAI's Codex CLI (claude-code's sibling agent); config/auth live in
                          # ~/.codex (config.toml) — chezmoi-owned once captured, nothing here writes it
+    opencode             # third agent CLI. Its whole config is DERIVED from the Claude setup by
+                         # `nix run .#gen-opencode` (the two share secrets.fish vars but no file
+                         # formats — Claude expands ${VAR}, opencode {env:VAR}); see docs/opencode.md
     beads                # `bd` — graph-based issue tracker / memory for AI coding agents
     mise                 # version manager; activated via chezmoi (fish/conf.d/mise.fish)
     kopia                # backup/snapshot tool — the CLI bundles the web UI (`kopia server

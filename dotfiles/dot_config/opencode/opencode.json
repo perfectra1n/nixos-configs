@@ -1,0 +1,88 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "CLAUDE.md",
+    "AGENTS.md"
+  ],
+  "mcp": {
+    "claude-design": {
+      "type": "remote",
+      "url": "https://api.anthropic.com/v1/design/mcp"
+    },
+    "konflate": {
+      "type": "remote",
+      "url": "{env:KONFLATE_MCP_URL}"
+    },
+    "kubesearch": {
+      "headers": {
+        "Authorization": "Bearer {env:KUBESEARCH_MCP_BEARER}"
+      },
+      "type": "remote",
+      "url": "{env:KUBESEARCH_MCP_URL}"
+    },
+    "linkedin": {
+      "headers": {
+        "X-API-Key": "{env:LINKEDIN_MCP_API_KEY}"
+      },
+      "type": "remote",
+      "url": "{env:LINKEDIN_MCP_URL}"
+    },
+    "memini": {
+      "headers": {
+        "Authorization": "Bearer {env:MEMINI_API_KEY}"
+      },
+      "type": "remote",
+      "url": "{env:MEMINI_BASE_URL}/mcp"
+    },
+    "playwright": {
+      "command": [
+        "npx",
+        "@playwright/mcp@latest"
+      ],
+      "type": "local"
+    },
+    "protondb": {
+      "headers": {
+        "Authorization": "Bearer {env:PROTONDB_MCP_BEARER}"
+      },
+      "type": "remote",
+      "url": "{env:PROTONDB_MCP_URL}"
+    },
+    "trilium-atvik": {
+      "headers": {
+        "Authorization": "Bearer {env:TRILIUM_ATVIK_MCP_BEARER}",
+        "X-Trilium-Token": "{env:TRILIUM_ATVIK_ETAPI_TOKEN}",
+        "X-Trilium-Url": "{env:TRILIUM_ATVIK_URL}"
+      },
+      "type": "remote",
+      "url": "{env:TRILIUM_ATVIK_MCP_URL}"
+    },
+    "trilium-personal": {
+      "headers": {
+        "Authorization": "Bearer {env:TRILIUM_PERSONAL_MCP_BEARER}",
+        "X-Trilium-Token": "{env:TRILIUM_PERSONAL_ETAPI_TOKEN}",
+        "X-Trilium-Url": "{env:TRILIUM_PERSONAL_URL}"
+      },
+      "type": "remote",
+      "url": "{env:TRILIUM_PERSONAL_MCP_URL}"
+    }
+  },
+  "model": "anthropic/claude-opus-5",
+  "plugin": [
+    "./plugin/claude-hooks-bridge.ts"
+  ],
+  "provider": {
+    "anthropic": {
+      "options": {
+        "apiKey": "{env:ANTHROPIC_AUTH_TOKEN}",
+        "baseURL": "{env:ANTHROPIC_BASE_URL}/v1"
+      }
+    }
+  },
+  "skills": {
+    "paths": [
+      "{env:HOME}/.local/share/opencode-claude-skills"
+    ]
+  },
+  "small_model": "anthropic/claude-haiku-4-5-20251001"
+}
