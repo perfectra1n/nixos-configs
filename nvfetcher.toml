@@ -74,7 +74,7 @@ fetch.github = "perfectra1n/libratbag"
 # unpacks + autoPatchelf's it rather than compiling the kube-rs tree on every bump.
 [sofka]
 # renovate: datasource=github-releases depName=nklmilojevic/sofka extractVersion=^v(?<version>.+)$
-src.manual = "0.24.9"
+src.manual = "0.26.0"
 fetch.url = "https://github.com/nklmilojevic/sofka/releases/download/v$ver/sofka-v$ver-x86_64-unknown-linux-gnu.tar.gz"
 
 # cargo-clean-all — dnlmlr/cargo-clean-all: `cargo clean-all` recursively deletes target/ dirs.

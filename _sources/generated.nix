@@ -84,10 +84,10 @@
   };
   sofka = {
     pname = "sofka";
-    version = "0.24.9";
+    version = "0.26.0";
     src = fetchurl {
-      url = "https://github.com/nklmilojevic/sofka/releases/download/v0.24.9/sofka-v0.24.9-x86_64-unknown-linux-gnu.tar.gz";
-      sha256 = "sha256-WCrrwOYMfLMGz8Jlj2VApopCC6wgyNfnIPbjSA96PhE=";
+      url = "https://github.com/nklmilojevic/sofka/releases/download/v0.26.0/sofka-v0.26.0-x86_64-unknown-linux-gnu.tar.gz";
+      sha256 = "sha256-axMg+oJxbLqMcVyqIUrcs2qpcFk15bnL68QVKeqA8j4=";
     };
   };
   talosctl = {
