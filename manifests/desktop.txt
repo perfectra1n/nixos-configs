@@ -558,6 +558,7 @@ builtins.mk
 bumpalo-3.16.0
 bumpalo-3.19.1
 bumpalo-3.20.3
+bun-1.3.13
 bundler-2.7.2
 burpsuite-2026.8
 burpsuite-2026.8-bwrap
@@ -2516,6 +2517,7 @@ gdk-pixbuf-2.44.7
 gdk-pixbuf-loader-loaders-wrapped
 gemfile-and-lockfile
 gen-bin-stubs
+generate-schema.ts
 generic-array-0.14.7
 generic-deriving-1.14.7
 generically-0.1.1
@@ -3034,6 +3036,8 @@ icu_provider-2.1.1
 icu_provider-2.2.0
 icu_segmenter-2.2.0
 icu_segmenter_data-2.2.0
+idevice-wifi-sync
+idevice-wifi-sync_fish-completions
 idna-1.1.0
 idna_adapter-1.2.1
 idna_adapter-1.2.2
@@ -3644,6 +3648,7 @@ libpipeline-1.5.8
 libplacebo-5.264.1
 libplacebo-7.360.1
 libplist-2.7.0
+libplist-2.7.0_fish-completions
 libpng-1.2.59
 libpng-1.6.58
 libpng-apng-1.6.58
@@ -4120,6 +4125,8 @@ mmorph-1.2.2-r2.cabal
 mobile-broadband-provider-info-20240407
 moby-29.8.0
 mockery-0.3.5
+models-dev-node_modules-sdk-v0.0.5-unstable-2026-08-31
+models-dev-sdk-v0.0.5-unstable-2026-08-31
 modemmanager-1.24.2
 modemmanager-1.24.2_fish-completions
 modemmanager-qt-6.30.0
@@ -4194,6 +4201,7 @@ net.conf_fish-completions
 netbird.md
 netcat-gnu-0.7.1
 nethogs-0.9.0
+netmuxd-0.4.3
 netpbm-11.15.3
 netstat-net-tools-2.10
 nettle-3.10.2
@@ -4460,6 +4468,8 @@ openapv-0.2.1.3
 openblas-0.3.33
 opencl-headers-2026.05.29
 opencloud.md
+opencode-1.18.29
+opencode-node_modules-1.18.29
 opencore-amr-0.1.6
 opencv-4.13.0
 openexr-3.4.13
@@ -7455,6 +7465,7 @@ unit-fs.target
 unit-fstrim.timer
 unit-getty.target
 unit-initrd.target
+unit-ios-backup.timer
 unit-keys.target
 unit-local-fs.target
 unit-logrotate.timer
@@ -7479,6 +7490,7 @@ unit-script-cups-pre-start
 unit-script-ensure-printers-start
 unit-script-initrd-find-nixos-closure-start
 unit-script-initrd-nixos-activation-start
+unit-script-ios-backup-start
 unit-script-linger-users-start
 unit-script-mandb-start
 unit-script-network-local-commands-start
