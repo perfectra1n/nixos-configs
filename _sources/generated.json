@@ -145,11 +145,11 @@
         "pinned": false,
         "src": {
             "name": null,
-            "sha256": "sha256-WCrrwOYMfLMGz8Jlj2VApopCC6wgyNfnIPbjSA96PhE=",
+            "sha256": "sha256-axMg+oJxbLqMcVyqIUrcs2qpcFk15bnL68QVKeqA8j4=",
             "type": "url",
-            "url": "https://github.com/nklmilojevic/sofka/releases/download/v0.24.9/sofka-v0.24.9-x86_64-unknown-linux-gnu.tar.gz"
+            "url": "https://github.com/nklmilojevic/sofka/releases/download/v0.26.0/sofka-v0.26.0-x86_64-unknown-linux-gnu.tar.gz"
         },
-        "version": "0.24.9"
+        "version": "0.26.0"
     },
     "talosctl": {
         "cargoLock": null,
