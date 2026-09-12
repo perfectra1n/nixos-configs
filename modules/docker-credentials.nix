@@ -1,7 +1,8 @@
 { config, lib, username, secrets, ... }:
 
 # Renders ~/.docker/config.json's content from sops so `docker pull/push` to the two Gitea
-# instances + ghcr.io works non-interactively, without a plaintext token ever living on disk.
+# instances, the duck Forgejo + ghcr.io works non-interactively, without a plaintext token
+# ever living on disk.
 # The home-manager side (the ~/.docker/config.json symlink) lives in home/docker.nix.
 #
 # WHY a pre-base64'd secret (not interpolate user+token like git-credentials does): Docker's
@@ -15,8 +16,8 @@
 # `docker build` (buildx) WRITES state under $DOCKER_CONFIG. A read-only /run dir would break it.
 # So home/docker.nix symlinks only config.json and leaves ~/.docker writable.
 #
-# COUPLING: the two Gitea registry hostnames reuse the git/*_host placeholders declared in
-# git-credentials.nix (keeps the duck host encrypted, consistent with git creds). So this module
+# COUPLING: the Gitea/Forgejo registry hostnames reuse the git/*_host placeholders declared in
+# git-credentials.nix (keeps the duck hosts encrypted, consistent with git creds). So this module
 # must ride alongside git-credentials.nix — both are listed on desktop + laptop in flake.nix.
 #
 # EVAL GATE: same tolerate-missing-secret trick as git-credentials.nix — declare the secrets +
@@ -33,6 +34,7 @@ lib.mkIf declareSecret {
   sops.secrets = {
     "docker/main_gitea_auth" = { };
     "docker/duck_gitea_auth" = { };
+    "docker/duck_forgejo_auth" = { };
     "docker/ghcr_auth" = { };
     "docker/dockerhub_auth" = { };
   };
@@ -46,6 +48,7 @@ lib.mkIf declareSecret {
         "auths": {
           "${ph "git/main_gitea_host"}": { "auth": "${ph "docker/main_gitea_auth"}" },
           "${ph "git/duck_gitea_host"}": { "auth": "${ph "docker/duck_gitea_auth"}" },
+          "${ph "git/duck_forgejo_host"}": { "auth": "${ph "docker/duck_forgejo_auth"}" },
           "ghcr.io": { "auth": "${ph "docker/ghcr_auth"}" },
           "https://index.docker.io/v1/": { "auth": "${ph "docker/dockerhub_auth"}" }
         }

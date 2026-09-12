@@ -1,8 +1,8 @@
 { config, lib, username, secrets, ... }:
 
 # Renders ~/.git-credentials' content from sops so `git push/pull` to GitHub, the two Gitea
-# instances and the Forgejo instance works non-interactively, without a plaintext token ever
-# living in a dotfile.
+# instances and the two Forgejo instances works non-interactively, without a plaintext token
+# ever living in a dotfile.
 #
 # WHY sops.templates (not a plain sops.secret): a template interpolates secret PLACEHOLDERS
 # into eval-time plaintext. The tokens AND the Gitea hostnames both come from Bitwarden (see
@@ -41,6 +41,8 @@ lib.mkIf declareSecret {
     "git/forgejo_token" = { };
     "git/forgejo_host" = { };
     "git/forgejo_alt_host" = { }; # second hostname for the SAME Forgejo; git keys creds by host
+    "git/duck_forgejo_token" = { };
+    "git/duck_forgejo_host" = { };
   };
 
   sops.templates."git-credentials" = {
@@ -53,6 +55,7 @@ lib.mkIf declareSecret {
       https://perf3ct:${ph "git/duck_gitea_token"}@${ph "git/duck_gitea_host"}
       https://perfectra1n:${ph "git/forgejo_token"}@${ph "git/forgejo_host"}
       https://perfectra1n:${ph "git/forgejo_token"}@${ph "git/forgejo_alt_host"}
+      https://perfectra1n:${ph "git/duck_forgejo_token"}@${ph "git/duck_forgejo_host"}
     '';
   };
 }

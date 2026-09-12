@@ -63,8 +63,11 @@ SOPS_MANIFEST = [
     ("git/forgejo_token",      "Main Forgejo",                "field",     "main-forgejo-token"),
     ("git/forgejo_host",       "Main Forgejo",                "host",      ""),
     ("git/forgejo_alt_host",   "Main Forgejo",                "field",     "alt-host"),  # same instance, second hostname
+    ("git/duck_forgejo_token", "Duck Forgejo",                "field",     "API Key"),
+    ("git/duck_forgejo_host",  "Duck Forgejo",                "host",      ""),
     ("docker/main_gitea_auth", "Main Gitea",                  "basicauth", "perf3ct:Personal Access Token 1"),
     ("docker/duck_gitea_auth", "Duck Gitea",                  "basicauth", "perf3ct:API Key (Main)"),
+    ("docker/duck_forgejo_auth", "Duck Forgejo",              "basicauth", "perfectra1n:API Key"),
     ("docker/ghcr_auth",       "Github",                      "basicauth", "perfectra1n:Updated Super Token (API key)"),
     ("docker/dockerhub_auth",  "Dockerhub / hub.docker.com",  "basicauth", "@:Access Token"),
     # LAN attic binary cache (modules/nix-cache.nix). The URL carries ?priority=10 on purpose:
