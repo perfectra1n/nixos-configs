@@ -119,7 +119,9 @@ function setupgitrepo
     git add .
     git commit -m "Initial commit to setup repo via Fish"
     git remote add origin https://$MAIN_GITEA_HOST/perf3ct/(basename (pwd))
-    git push --set-upstream origin master
+    # HEAD, not a literal branch — follows init.defaultBranch (dot_gitconfig) instead of
+    # duplicating the branch name here
+    git push --set-upstream origin HEAD
 end
 
 function fixvolsyncrestic --description "Fix a Restic repo that has been locked."
