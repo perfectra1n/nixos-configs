@@ -27,7 +27,7 @@ hyprswitch = "61ddaa30563c1f091ca5fbe5d7203c19f42b519c"
 network-indicator = "d197967a2cda718ff7a883083b486b20dcc562c4"
 
 # renovate: datasource=git-refs depName=nixpkgs packageName=https://github.com/NixOS/nixpkgs branch=nixos-unstable
-nixpkgs = "8ce4ef6cb6f871616146b9fe26d2a5ae594e94fe"
+nixpkgs = "eaad089433ca2bb662274377d33df3d0e51ef28b"
 
 # renovate: datasource=git-refs depName=sops-nix packageName=https://github.com/Mic92/sops-nix branch=master
 sops-nix = "13616fff713a9f94055c66f15687ebdc17a335df"
