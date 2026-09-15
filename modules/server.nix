@@ -24,9 +24,7 @@
   };
 
   # Trim journald so logs don't fill a small root disk.
-  services.journald.extraConfig = ''
-    SystemMaxUse=500M
-  '';
+  services.journald.settings.Journal.SystemMaxUse = "500M";
 
   environment.systemPackages = with pkgs; [
     htop
