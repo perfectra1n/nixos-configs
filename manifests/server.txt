@@ -329,7 +329,7 @@ build.kaem
 builtins.mk
 bumpalo-3.19.1
 bumpalo-3.20.3
-bun-1.3.13
+bun-1.4.2
 bundler-2.7.2
 busted-2.3.0-1.rockspec
 busted-luarocks-config.lua
@@ -428,7 +428,7 @@ clap_builder-4.6.6
 clap_derive-4.6.4
 clap_lex-1.0.0
 clap_lex-1.1.0
-claude-code-2.1.266
+claude-code-2.1.268
 claude-cred
 cleanup
 clevis.md
@@ -820,8 +820,8 @@ futures-io-0.3.31
 futures-lite-1.13.0
 futures-task-0.3.34
 futures-util-0.3.34
-fzf-0.74.3
-fzf-0.74.3-go-modules
+fzf-0.74.4
+fzf-0.74.4-go-modules
 game-music-emu-0.6.5
 garage.md
 gawk-5.4.1
@@ -971,6 +971,7 @@ go-1.22.12-linux-amd64-bootstrap
 go-1.24.13-linux-amd64-bootstrap
 go-1.25.14
 go-1.26.7
+go-1.27.1
 go-containerregistry-0.22.0
 go-md2man-2.0.7
 go-md2man-2.0.7-go-modules
@@ -1122,8 +1123,8 @@ http-semantics-0.3.0
 http-types-0.12.4
 http2-5.3.10
 http2-5.3.10-r1.cabal
-hugo-0.165.0
-hugo-0.165.0-go-modules
+hugo-0.166.0
+hugo-0.166.0-go-modules
 hwdata-0.411
 hwdb.bin
 hwloc-2.14.0
@@ -1866,7 +1867,7 @@ nixos-rebuild-ng-26.11
 nixos-rebuild-ng-26.11_fish-completions
 nixos-rebuild.8.scd
 nixos-render-docs-0.0
-nixos-system-server-26.11.20260911.eaad089
+nixos-system-server-26.11.20260913.ef34387
 nixos-test-driver-docstrings
 nixos-tmpfiles.d
 nixos-version
@@ -2681,7 +2682,7 @@ python3.14-pyodbc-5.3.0
 python3.14-pyopenssl-26.3.0
 python3.14-pyotp-2.10.0
 python3.14-pyparsing-3.3.2
-python3.14-pypdf-6.18.0
+python3.14-pypdf-6.18.1
 python3.14-pypdfium2-5.11.0
 python3.14-pypng-0.20250521.0
 python3.14-pyproject-api-1.10.0
@@ -2862,7 +2863,7 @@ python3.14-trove-classifiers-2026.6.1.19
 python3.14-trustme-1.2.1
 python3.14-truststore-0.10.4
 python3.14-ttp-0.10.1
-python3.14-ttp-templates-0.5.11
+python3.14-ttp-templates-0.6.4
 python3.14-twisted-26.4.0
 python3.14-typeguard-4.5.2
 python3.14-typer-0.25.1
@@ -3491,8 +3492,8 @@ tree-sitter-vimdoc-neovim-0.12.5
 trezord.md
 trifecta-2.1.4
 trifecta-2.1.4-r2.cabal
-trufflehog-3.97.2
-trufflehog-3.97.2-go-modules
+trufflehog-3.97.4
+trufflehog-3.97.4-go-modules
 twolame-2017-09-27
 typed-process-0.2.13.0
 typenum-1.19.0

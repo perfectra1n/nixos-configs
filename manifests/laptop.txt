@@ -547,7 +547,7 @@ builtins.mk
 bumpalo-3.16.0
 bumpalo-3.19.1
 bumpalo-3.20.3
-bun-1.3.13
+bun-1.4.2
 bundler-2.7.2
 burpsuite-2026.8
 burpsuite-2026.8-bwrap
@@ -1738,7 +1738,7 @@ clap_lex-0.7.2
 clap_lex-0.7.3
 clap_lex-1.0.0
 clap_lex-1.1.0
-claude-code-2.1.266
+claude-code-2.1.268
 claude-cred
 cldr-annotations-48.2
 cleaned-mkDummySrc
@@ -2442,8 +2442,8 @@ fwupd-2.1.6
 fwupd-2.1.6_fish-completions
 fwupd-efi-1.8
 fwupd-test-firmware-0-unstable-2022-04-02
-fzf-0.74.3
-fzf-0.74.3-go-modules
+fzf-0.74.4
+fzf-0.74.4-go-modules
 galaxy-dummy-service-0.2.0
 game-music-emu-0.6.5
 gamemode-1.8.2
@@ -2662,6 +2662,7 @@ go-1.24.13-linux-386-bootstrap
 go-1.24.13-linux-amd64-bootstrap
 go-1.25.14
 go-1.26.7
+go-1.27.1
 go-containerregistry-0.22.0
 go-md2man-2.0.7
 go-md2man-2.0.7-go-modules
@@ -2753,8 +2754,8 @@ gupnp-igd-1.6.0
 gusb-0.4.9
 gutenprint-5.3.5
 gutenprint_5.0.1-1lsb3.1_amd64.deb
-gvfs-1.60.2
-gvfs-1.60.2_fish-completions
+gvfs-1.60.3
+gvfs-1.60.3_fish-completions
 gweather-locations-2026.2
 gwenview-26.08.1
 gyre-fonts-2.501
@@ -2918,8 +2919,8 @@ http-types-0.12.4
 http2-5.3.10
 http2-5.3.10-r1.cabal
 httparse-1.10.1
-hugo-0.165.0
-hugo-0.165.0-go-modules
+hugo-0.166.0
+hugo-0.166.0-go-modules
 hunspell-1.7.3
 hwdata-0.411
 hwdb.bin
@@ -4266,7 +4267,7 @@ nixos-rebuild-ng-26.11
 nixos-rebuild-ng-26.11_fish-completions
 nixos-rebuild.8.scd
 nixos-render-docs-0.0
-nixos-system-laptop-26.11.20260911.eaad089
+nixos-system-laptop-26.11.20260913.ef34387
 nixos-test-driver-docstrings
 nixos-tmpfiles.d
 nixos-version
@@ -4405,7 +4406,7 @@ once_cell_polyfill-1.70.2
 onedrive.md
 onetbb-2022.3.0
 oniguruma-6.9.10
-onnx-1.21.0
+onnx-1.22.0
 onnx-src
 onnxruntime-1.27.1
 onnxruntime-webgpu-prebuilt-1.24.2
@@ -4443,8 +4444,8 @@ openpgl-0.7.1
 openprinting-ppds-postscript-lexmark-20160218-1lsb3.2.noarch.rpm
 openresolv-3.17.4
 openresolv-3.17.4_fish-completions
-openrgb-1.0rc3.1
-openrgb-1.0rc3.1_fish-completions
+openrgb-1.0
+openrgb-1.0_fish-completions
 openshadinglanguage-1.15.5.0
 opensp-1.5.2
 openssh-10.5p1
@@ -4995,8 +4996,8 @@ primal-check-0.3.4
 primitive-0.9.1.0
 primitive-0.9.1.0-r1.cabal
 primitive-addr-0.1.0.3
-prismlauncher-11.0.3
-prismlauncher-unwrapped-11.0.3
+prismlauncher-11.1.0
+prismlauncher-unwrapped-11.1.0
 prison-6.30.0
 proc-macro-crate-3.5.0
 proc-macro2-1.0.103
@@ -5405,7 +5406,7 @@ python3.14-cmake-4.4.2
 python3.14-colorama-0.4.6
 python3.14-colour-0.1.5
 python3.14-commentjson-0.9.0
-python3.14-configargparse-1.7.5
+python3.14-configargparse-1.7.7
 python3.14-configobj-5.0.9
 python3.14-configparser-7.2.0
 python3.14-constantly-23.10.4
@@ -5648,7 +5649,7 @@ python3.14-objgraph-3.6.2
 python3.14-ocrmypdf-17.11.0
 python3.14-oldest-supported-numpy-2023.12.21
 python3.14-olefile-0.47
-python3.14-onnx-1.21.0
+python3.14-onnx-1.22.0
 python3.14-openapi-schema-validator-0.8.1
 python3.14-openapi-spec-validator-0.8.4
 python3.14-opencv-python-headless-4.13.0
@@ -5761,7 +5762,7 @@ python3.14-pyodbc-5.3.0
 python3.14-pyopenssl-26.3.0
 python3.14-pyotp-2.10.0
 python3.14-pyparsing-3.3.2
-python3.14-pypdf-6.18.0
+python3.14-pypdf-6.18.1
 python3.14-pypdfium2-5.11.0
 python3.14-pypng-0.20250521.0
 python3.14-pyproject-api-1.10.0
@@ -5975,7 +5976,7 @@ python3.14-trove-classifiers-2026.6.1.19
 python3.14-trustme-1.2.1
 python3.14-truststore-0.10.4
 python3.14-ttp-0.10.1
-python3.14-ttp-templates-0.5.11
+python3.14-ttp-templates-0.6.4
 python3.14-twisted-26.4.0
 python3.14-typeguard-4.5.2
 python3.14-typer-0.25.1
@@ -7077,8 +7078,8 @@ trilium-desktop-cmfix-wmclass_fish-completions
 trivy-0.74.0
 trivy-0.74.0-go-modules
 trivy-0.74.0_fish-completions
-trufflehog-3.97.2
-trufflehog-3.97.2-go-modules
+trufflehog-3.97.4
+trufflehog-3.97.4-go-modules
 tsx-4.23.12
 tsx-pnpm-deps
 ttf-parser-0.25.1
