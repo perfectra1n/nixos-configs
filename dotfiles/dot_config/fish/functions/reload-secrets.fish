@@ -1,8 +1,8 @@
 function reload-secrets --description 'Reload rotated secret env vars into THIS shell + tmux (after secrets:pull + chezmoi apply)'
     # A child process (mise/chezmoi) can never mutate this already-running shell's env — env is
     # copied at spawn and private. So after rotating a secret, THIS function (which runs IN the
-    # shell) is what refreshes the current session; new shells self-heal via config.fish's `set -gx`.
-    set --local file $FISHCONFIG/secrets.fish
+    # shell) is what refreshes the current session; new shells self-heal via conf.d/00-secrets.fish's `set -gx`.
+    set --local file $__fish_config_dir/conf.d/00-secrets.fish
     if not test -f $file
         echo "reload-secrets: $file not found — run 'chezmoi apply' first" >&2
         return 1

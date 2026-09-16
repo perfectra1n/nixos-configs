@@ -81,9 +81,9 @@ channels — but the channels never mix:
 The `.age` files currently in the source (all `encrypted_` + age ciphertext at rest, so the repo
 stays publishable):
 
-- `dot_config/fish/fishconfig.d/encrypted_private_secrets.fish.age` — env-var secrets
-  (`ANTHROPIC_API_KEY`, …), sourced by `config.fish`. Refreshed from Bitwarden via
-  `mise run secrets:pull-env`.
+- `dot_config/fish/conf.d/encrypted_private_00-secrets.fish.age` — env-var secrets
+  (`ANTHROPIC_API_KEY`, …), auto-sourced from `conf.d/` before `config.fish` runs. Refreshed
+  from Bitwarden via `mise run secrets:pull-env`.
 - `private_dot_kube/encrypted_private_config.age` → `~/.kube/config` (mode 600).
 - `dot_talos/encrypted_private_config.age` → `~/.talos/config`.
 

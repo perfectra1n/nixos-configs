@@ -1,3 +1,6 @@
+# macOS PATH/env (Homebrew, Go, the Amazon toolbox).
+test "$__platform" = darwin; or return
+
 fish_add_path $HOME/Library/Python/3.8/bin
 fish_add_path /opt/homebrew/bin
 fish_add_path /opt/homebrew/sbin

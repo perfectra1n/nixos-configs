@@ -1,5 +1,7 @@
 # This is the config.fish
-set -Ux FISHCONFIG $HOME/.config/fish/fishconfig.d
+# Aliases, per-OS PATH/env, secrets and tool hooks live in conf.d/ (fish sources that BEFORE this
+# file, alphabetically — conf.d/00-platform.fish sets the per-OS guard); reusable commands are
+# autoloaded from functions/. This file is what's left: PATH, tmux attach, prompt, keybinds, nvm.
 
 # Multi-dot directory navigation (... -> cd ../.., .... -> cd ../../.., etc.)
 function multicd
@@ -16,16 +18,15 @@ set -x REPO_DIR $HOME/repos
 # expansion being done in ~/.tmux.conf.
 set -Ux TMUX_PLUGIN_MANAGER_PATH $HOME/.tmux/plugins/
 
-# Secret env vars — decrypted from chezmoi-managed encrypted_private_secrets.fish.age.
-# MUST load BEFORE the `tmux attach` below: a fresh top-level shell blocks there for the life of
-# the tmux session and never reaches the rest of this file, so sourcing secrets later would leave
-# the env unset for any tmux server this shell spawns. Vars are `set -gx` (per-session), so every
-# new shell re-reads the current file after a rotation — no sticky universal store to fight.
-test -f $FISHCONFIG/secrets.fish; and source $FISHCONFIG/secrets.fish
-
 # Check if the shell is interactive
 if status is-interactive
     if not set -q TMUX
+        # The secret env (conf.d/00-secrets.fish, decrypted from the chezmoi .age) has already run —
+        # fish sources conf.d/ before this file — so the tmux server spawned here inherits it. That
+        # ordering is load-bearing: a fresh top-level shell blocks in `tmux attach` for the life of
+        # the session and never reaches anything below, so secrets sourced from THIS file later would
+        # leave every tmux pane without them. Vars are `set -gx` (per-session), so each new shell
+        # re-reads the current file after a rotation — no sticky universal store to fight.
         # VS Code terminals must NOT auto-attach: its restored/hidden terminals were
         # silently mounting session 0 as a second client, and a second client's
         # terminal-probe replies land in TUIs as keystrokes (the yazi insta-quit
@@ -65,12 +66,6 @@ fish_add_path -a $HOME/.pyenv/bin
 fish_add_path -a $HOME/bin
 fish_add_path -a $HOME/.cargo/bin
 fish_add_path -a $HOME/.krew/bin
-
-
-source $FISHCONFIG/fish_functions.fish
-source $FISHCONFIG/fish_aliases.fish
-source $FISHCONFIG/claude-edge.fish
-source $FISHCONFIG/mise.fish
 
 set -Ux SPACESHIP_HOST_SHOW_FULL "true"
 set -Ux SPACESHIP_HOST_SHOW always
@@ -131,38 +126,7 @@ end
 set --export BUN_INSTALL "$HOME/.bun"
 set --export PATH $BUN_INSTALL/bin $PATH
 
-# First, let's check if it's WSL
-if test -n "$IS_WSL" 
-    or test -n "$WSL_DISTRO_NAME"
-    source $FISHCONFIG/os_confs.d/linux-wsl.fish
-else
-    # Based on the operating system
-    # source the specific configuration file
-    # force it to be lowercase
-    switch (uname | tr '[:upper:]' '[:lower:]')
-        case darwin
-            # BECAUSE WHY
-            alias sed gsed
-            source $FISHCONFIG/os_confs.d/osx.fish
-        case linux
-            # Check if the OS is CentOS or Amazon Linux. amazon_linux.fish is NOT in
-            # this (public) repo — work boxes keep a local unmanaged copy, so only
-            # source it if it exists.
-            if grep -q 'ID="amzn"' /etc/os-release
-                test -f $FISHCONFIG/os_confs.d/amazon_linux.fish
-                and source $FISHCONFIG/os_confs.d/amazon_linux.fish
-            else if grep -q 'ID="centos"' /etc/os-release
-                source $FISHCONFIG/os_confs.d/centos.fish
-            else
-                source $FISHCONFIG/os_confs.d/linux.fish
-            end
-        case dragonfly freebsd netbsd openbsd 
-            source $FISHCONFIG/os_confs.d/bsd.fish
-    end
-    
-end
-
-# Initialize nvm if it exists (must come after Linuxbrew to take precedence)
+# Initialize nvm if it exists (must come after Linuxbrew — conf.d/30-os-linux.fish — to take precedence)
 # Check for fisher-installed nvm.fish first
 if type -q nvm
     # nvm.fish is installed via fisher

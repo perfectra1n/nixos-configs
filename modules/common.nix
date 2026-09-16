@@ -121,6 +121,10 @@ in
     # hashedPasswordFile = config.sops.secrets."passwords/${username}".path;
   };
   programs.fish.enable = true;
+  # NixOS's default shellAliases (l/ll/ls) land in /etc/fish/config.fish, which fish sources
+  # AFTER the user's conf.d/ and BEFORE the user's config.fish — so they'd silently override the
+  # chezmoi-owned conf.d/10-aliases.fish. Null them for fish only; bash keeps its own from .bashrc.
+  programs.fish.shellAliases = { l = null; ll = null; ls = null; };
 
   # mutableUsers = true (default): the install-time password is preserved across the
   # first flake switch and never lives in the repo. Flip to false once you manage the

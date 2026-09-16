@@ -147,7 +147,7 @@ AGE_KEY = Path.home() / ".config" / "age" / "age.agekey"
 # FISHENV_AGE overrides the source path for dry-run tests against a throwaway copy.
 FISHENV_AGE = Path(
     os.environ.get("FISHENV_AGE")
-    or REPO_ROOT / "dotfiles" / "dot_config" / "fish" / "fishconfig.d" / "encrypted_private_secrets.fish.age"
+    or REPO_ROOT / "dotfiles" / "dot_config" / "fish" / "conf.d" / "encrypted_private_00-secrets.fish.age"
 )
 
 

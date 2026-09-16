@@ -1,4 +1,6 @@
-#!/usr/bin/fish
+# Linux PATH/env for the homelab boxes (plain Linux + WSL). The amzn/centos work-box flavours never
+# got this file and still don't — see 00-platform.fish for the guard values.
+contains -- $__platform linux linux-wsl; or return
 
 # Add the path for Golang
 fish_add_path /usr/local/go/bin
@@ -19,7 +21,7 @@ if test -d "/home/linuxbrew/.linuxbrew/bin"
         else
             /home/linuxbrew/.linuxbrew/bin/brew $argv
         end
-    end 
+    end
 
 end
 

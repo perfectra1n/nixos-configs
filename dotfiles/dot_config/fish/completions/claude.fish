@@ -1,4 +1,4 @@
-# Completions for the `claude` wrapper function (fishconfig.d/fish_functions.fish).
+# Completions for the `claude` wrapper function (functions/claude.fish).
 # Only the wrapper's OWN flag is declared here — everything else is Claude Code's own
 # completion surface, which this must not shadow.
 #

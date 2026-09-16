@@ -1,12 +1,13 @@
-# Also source the Linux one, not sure if I want this or not
-source $FISHCONFIG/os_confs.d/linux.fish
+# WSL extras on top of 30-os-linux.fish, which also loads on linux-wsl (this file used to
+# `source linux.fish` itself for that).
+test "$__platform" = linux-wsl; or return
 
 #Specific to WSL
 fish_add_path /mnt/c/Windows
 fish_add_path /mnt/d/Programs/VSCode/bin
 fish_add_path /mnt/c/"Program Files"/Docker/Docker/resources/bin
 
-function cmd 
+function cmd
     set CMD $argv[1]
     set ARGS $argv[2..-1]
     set WIN_PWD (wslpath -w (pwd))

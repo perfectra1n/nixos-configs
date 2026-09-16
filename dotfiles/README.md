@@ -48,7 +48,7 @@ and push. On another machine you `chezmoi apply` to recreate everything.
 ```
 
 Secrets never enter the repo as plaintext: they live in a single age-encrypted
-file (`encrypted_private_secrets.fish.age`) that chezmoi decrypts on `apply`.
+file (`encrypted_private_00-secrets.fish.age`) that chezmoi decrypts on `apply`.
 
 ---
 
@@ -59,12 +59,12 @@ file (`encrypted_private_secrets.fish.age`) that chezmoi decrypts on `apply`.
 | Area | Paths |
 |------|-------|
 | Shells | `~/.bashrc`, `~/.bash_aliases` (zsh retired — `.chezmoiremove` evicts old copies) |
-| Fish | all of `~/.config/fish/` (`config.fish`, `fishconfig.d/`, `conf.d/`, `functions/`, `completions/`, `scripts/`, `fish_plugins`) |
+| Fish | all of `~/.config/fish/` (`config.fish`, `conf.d/`, `functions/`, `completions/`, `scripts/`, `fish_plugins`) |
 | Git / Vim | `~/.gitconfig`, `~/.vimrc` |
 | Editors/tools | `~/.config/nvim`, `lazygit`, `lazydocker`, `k9s`, `mise`, `starship.toml` |
 | Desktop | `~/.config/i3`, `hypr`, `waybar`, `polybar`, `picom`, `rofi`, `alacritty`, `btop` |
 | Helm / gh | `~/.config/helm/repositories.yaml`, `~/.config/gh/config.yml` (prefs only) |
-| **Secrets** | `~/.config/fish/fishconfig.d/secrets.fish` → stored encrypted |
+| **Secrets** | `~/.config/fish/conf.d/00-secrets.fish` → stored encrypted |
 
 ### NOT managed — see [`.chezmoiignore`](.chezmoiignore)
 
@@ -144,14 +144,10 @@ Bitwarden-backed: the authoritative list is the `FISHENV_MANIFEST` in
 [`scripts/secrets-sync.py`](../scripts/secrets-sync.py) (print both channels with
 `./scripts/secrets-sync.py inventory`), and `mise run secrets:pull` refreshes the lot.
 
-`secrets.fish` is a plain fish script of `set -Ux NAME value` lines. chezmoi stores
-it **only** as `dot_config/fish/fishconfig.d/encrypted_private_secrets.fish.age`
-(age ciphertext). It is sourced near the top of `config.fish`:
-
-```fish
-# Secret env vars — decrypted from chezmoi-managed encrypted_private_secrets.fish.age
-test -f $FISHCONFIG/secrets.fish; and source $FISHCONFIG/secrets.fish
-```
+`00-secrets.fish` is a plain fish script of `set -gx NAME value` lines. chezmoi stores
+it **only** as `dot_config/fish/conf.d/encrypted_private_00-secrets.fish.age`
+(age ciphertext). Because it lands in `conf.d/`, fish sources it automatically before
+`config.fish` — nothing has to `source` it by hand.
 
 These values were **removed from fish's universal scope** (`set -eU ...`), so the
 encrypted file is the single source of truth — no stale plaintext copy lingers in
@@ -176,21 +172,21 @@ rotate the age key, update **both** the SOPS recipients and the chezmoi
 
 ```fish
 # add a new secret file encrypted
-echo 'set -gx SOME_TOKEN abc123' > ~/.config/fish/fishconfig.d/morestuff.fish
-chezmoi add --encrypt ~/.config/fish/fishconfig.d/morestuff.fish   # or: czaddsecret <path>
+echo 'set -gx SOME_TOKEN abc123' > ~/.config/fish/conf.d/morestuff.fish
+chezmoi add --encrypt ~/.config/fish/conf.d/morestuff.fish   # or: czaddsecret <path>
 
 # edit an existing encrypted secret (decrypts to a temp file, re-encrypts on save)
-chezmoi edit ~/.config/fish/fishconfig.d/secrets.fish              # or: czedit <path>
+chezmoi edit ~/.config/fish/conf.d/00-secrets.fish              # or: czedit <path>
 
 # view a decrypted secret without editing
-chezmoi cat ~/.config/fish/fishconfig.d/secrets.fish              # or: chezmoi decrypt <source.age>
+chezmoi cat ~/.config/fish/conf.d/00-secrets.fish              # or: chezmoi decrypt <source.age>
 ```
 
 ---
 
 ## Daily workflow & fish helpers
 
-Helper functions live in `~/.config/fish/fishconfig.d/fish_functions.fish`:
+Helper functions are autoloaded from `~/.config/fish/functions/<name>.fish` (one file per function):
 
 | Function | Runs | Use for |
 |----------|------|---------|
@@ -211,7 +207,7 @@ Helper functions live in `~/.config/fish/fishconfig.d/fish_functions.fish`:
 ### Typical loop
 
 ```fish
-vim ~/.config/fish/fishconfig.d/fish_aliases.fish   # 1. edit a real file
+vim ~/.config/fish/conf.d/10-aliases.fish        # 1. edit a real file
 czdiff                                               # 2. (optional) preview
 czpush                                               # 3. re-add + commit + push
 ```
@@ -273,7 +269,7 @@ add` generates them):
 | `private_` | target mode `0600` | `private_config.yml` |
 | `executable_` | target mode `0755` | `executable_launch.sh` |
 | `empty_` | keep even if file is empty | `empty_centos.fish` |
-| `encrypted_` | stored as age ciphertext | `encrypted_private_secrets.fish.age` |
+| `encrypted_` | stored as age ciphertext | `encrypted_private_00-secrets.fish.age` |
 | `.tmpl` | rendered as a Go template on apply | `dot_gitconfig.tmpl` |
 | `.keep` (file) | placeholder so an otherwise-empty dir is tracked | `themes/.keep` |
 
@@ -308,8 +304,8 @@ Confirm `ls -l ~/.config/age/age.agekey` (mode `600`) and that
 `age-keygen -y ~/.config/age/age.agekey` prints the same `recipient` as the config.
 
 **Secrets aren't set in a new shell**
-Open a *login* shell (`fish --login`) or `exec fish`. `config.fish` sources
-`secrets.fish`; check it exists with `chezmoi apply` first, then
+Open a *login* shell (`fish --login`) or `exec fish`. fish auto-sources
+`conf.d/00-secrets.fish`; check it exists with `chezmoi apply` first, then
 `echo $ANTHROPIC_API_KEY | string length` (should be non-zero).
 
 **`chezmoi diff` shows permission-only changes (mode 0744 → 0755)**

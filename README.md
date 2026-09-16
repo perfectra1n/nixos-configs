@@ -123,7 +123,7 @@ declare a `sops.secrets.*` entry, so the wiring is inert on a fresh checkout.
 | Channel | At rest (in this repo, encrypted) | Decrypts to | Update with |
 |---|---|---|---|
 | **System (sops-nix)** | `secrets/secrets.yaml` | `/run/secrets/*` (tmpfs) at rebuild | `mise run secrets:pull` — every key is Bitwarden-backed |
-| **Shell env (fish)** | `dotfiles/.../encrypted_private_secrets.fish.age` | `~/.config/fish/fishconfig.d/secrets.fish` via `chezmoi apply` | `mise run secrets:pull` (or `secrets:pull-env` for this channel alone) |
+| **Shell env (fish)** | `dotfiles/.../encrypted_private_00-secrets.fish.age` | `~/.config/fish/conf.d/00-secrets.fish` via `chezmoi apply` | `mise run secrets:pull` (or `secrets:pull-env` for this channel alone) |
 | **File snapshots** | standalone `.age` files in `dotfiles/` (kubeconfig, talosconfig) | their target paths via `chezmoi apply` | `chezmoi add --encrypt <target>` after the live file changes — cluster-generated artifacts, deliberately NOT in Bitwarden |
 
 Bitwarden is the source of truth for the first two channels: **every** sops key and

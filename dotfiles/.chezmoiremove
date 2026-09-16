@@ -22,3 +22,19 @@
 # read (fish auto-loads conf.d/*.fish, not *.fish.bak) but it WAS deployed, so deleting the source
 # alone would leave it orphaned in ~ forever.
 .config/fish/conf.d/fish_frozen_key_bindings.fish.bak
+
+# 2026-09-16: fishconfig.d/ retired — its contents moved to fish's native conf.d/ (eager: aliases,
+# per-OS env, secrets, tool hooks), functions/ (autoloaded) and completions/. Evict the previously
+# managed targets, INCLUDING the decrypted secrets.fish plaintext. Files only, never the directory:
+# work boxes keep an unmanaged os_confs.d/amazon_linux.fish in there that must not be nuked (move
+# it to conf.d/ by hand — nothing sources it any more; the empty dirs can just be rmdir'd).
+.config/fish/fishconfig.d/secrets.fish
+.config/fish/fishconfig.d/fish_aliases.fish
+.config/fish/fishconfig.d/fish_functions.fish
+.config/fish/fishconfig.d/claude-edge.fish
+.config/fish/fishconfig.d/mise.fish
+.config/fish/fishconfig.d/os_confs.d/linux.fish
+.config/fish/fishconfig.d/os_confs.d/linux-wsl.fish
+.config/fish/fishconfig.d/os_confs.d/osx.fish
+.config/fish/fishconfig.d/os_confs.d/bsd.fish
+.config/fish/fishconfig.d/os_confs.d/centos.fish

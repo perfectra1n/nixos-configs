@@ -50,6 +50,7 @@
   },
   "dankUpsMonitor": {
     "enabled": true,
-    "mainsBarStatistic": "load"
+    "mainsBarStatistic": "load",
+    "upsDevice": "cyberpower@localhost"
   }
 }

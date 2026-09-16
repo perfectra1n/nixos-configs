@@ -1,10 +1,12 @@
-#!/usr/bin/env fish
-# claude-edge.fish — Manage multiple Claude Code versions side-by-side
+# claude-edge — Manage multiple Claude Code versions side-by-side
 #
-# INSTALL
-#   1. Copy this file to ~/.config/fish/fishconfig.d/claude-edge.fish
-#   2. Ensure config.fish sources it (or `source` it once)
-#   3. Run:  claude-edge install
+# LAYOUT (fish-native; everything below is autoloaded on first use, so it costs nothing at startup)
+#   functions/claude-edge.fish     – this entrypoint
+#   functions/__ce_*.fish          – helpers
+#   completions/claude-edge.fish   – tab completions
+#   conf.d/claude-edge.fish        – CLAUDE_EDGE_DIR / CLAUDE_EDGE_BIN / __CE_GCS defaults (the one
+#                                    eager piece: the helpers read those vars directly)
+# Then run:  claude-edge install
 #
 # COMMANDS
 #   claude-edge install [VER]    – download & activate a version (default: latest)
@@ -29,212 +31,9 @@
 #   • Auto-updates are DISABLED so it never touches your stable install.
 #     Run `claude-edge update` yourself.
 #
-# CONFIGURATION (set these in your config.fish *before* this file is sourced)
+# CONFIGURATION (export before the shell starts — config.fish runs AFTER conf.d, so it's too late there)
 #   CLAUDE_EDGE_DIR   – storage root          (default: ~/.claude-edge)
 #   CLAUDE_EDGE_BIN   – where the symlink goes (default: ~/.local/bin/claude-edge)
-
-# ── defaults ──────────────────────────────────────────────────────────────────
-set -q CLAUDE_EDGE_DIR; or set -g CLAUDE_EDGE_DIR "$HOME/.claude-edge"
-set -q CLAUDE_EDGE_BIN; or set -g CLAUDE_EDGE_BIN "$HOME/.local/bin/claude-edge"
-
-set -g __CE_GCS "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases"
-
-# ── helpers: messages ─────────────────────────────────────────────────────────
-function __ce_info
-    echo (set_color green)"[claude-edge]"(set_color normal)" $argv"
-end
-function __ce_warn
-    echo (set_color yellow)"[claude-edge]"(set_color normal)" $argv" >&2
-end
-function __ce_err
-    echo (set_color red)"[claude-edge]"(set_color normal)" $argv" >&2
-end
-
-# ── helper: detect platform ──────────────────────────────────────────────────
-function __ce_platform
-    set -l os
-    set -l arch
-    switch (uname -s)
-        case Darwin; set os darwin
-        case Linux;  set os linux
-        case '*'
-            __ce_err "Unsupported OS: "(uname -s)
-            return 1
-    end
-    switch (uname -m)
-        case x86_64 amd64;  set arch x64
-        case arm64 aarch64; set arch arm64
-        case '*'
-            __ce_err "Unsupported arch: "(uname -m)
-            return 1
-    end
-    if test "$os" = darwin -a "$arch" = x64
-        if test (sysctl -n sysctl.proc_translated 2>/dev/null) = 1
-            set arch arm64
-        end
-    end
-    if test "$os" = linux
-        if test -f /lib/libc.musl-x86_64.so.1
-            or test -f /lib/libc.musl-aarch64.so.1
-            or ldd /bin/ls 2>&1 | string match -q '*musl*'
-            echo "linux-$arch-musl"
-        else
-            echo "linux-$arch"
-        end
-    else
-        echo "$os-$arch"
-    end
-end
-
-# ── helper: resolve channel/version to a concrete version ────────────────────
-function __ce_resolve_version
-    set -l target $argv[1]
-    test -z "$target"; and set target latest
-    switch "$target"
-        case stable latest
-            set -l ver (curl -fsSL "$__CE_GCS/$target" 2>/dev/null | string trim)
-            if test -z "$ver"
-                __ce_err "Failed to resolve channel '$target'"
-                return 1
-            end
-            echo $ver
-        case '*'
-            echo $target
-    end
-end
-
-# ── helper: paths ─────────────────────────────────────────────────────────────
-function __ce_version_dir
-    echo "$CLAUDE_EDGE_DIR/versions/$argv[1]"
-end
-
-function __ce_version_bin
-    echo "$CLAUDE_EDGE_DIR/versions/$argv[1]/claude"
-end
-
-# ── helper: active version from symlink ───────────────────────────────────────
-function __ce_active_version
-    if test -L "$CLAUDE_EDGE_BIN"
-        set -l target (realpath "$CLAUDE_EDGE_BIN" 2>/dev/null)
-        if test -n "$target"
-            string replace -r '.*/versions/([^/]+)/claude$' '$1' "$target"
-            return 0
-        end
-    else if test -x "$CLAUDE_EDGE_BIN"
-        env DISABLE_AUTOUPDATER=1 "$CLAUDE_EDGE_BIN" --version 2>/dev/null | string trim
-        return 0
-    end
-    return 1
-end
-
-# ── helper: list installed versions ───────────────────────────────────────────
-function __ce_installed_versions
-    if test -d "$CLAUDE_EDGE_DIR/versions"
-        for d in $CLAUDE_EDGE_DIR/versions/*/
-            set -l v (basename $d)
-            if test -x "$CLAUDE_EDGE_DIR/versions/$v/claude"
-                echo $v
-            end
-        end | sort -V
-    end
-end
-
-# ── helper: find the *stable* claude binary (not our edge one) ────────────────
-function __ce_stable_bin
-    for p in $PATH
-        set -l candidate "$p/claude"
-        if test -x "$candidate"
-            set -l real_candidate (realpath "$candidate" 2>/dev/null)
-            set -l real_edge (realpath "$CLAUDE_EDGE_BIN" 2>/dev/null)
-            if test -n "$real_candidate" -a -n "$real_edge" -a "$real_candidate" != "$real_edge"
-                echo "$candidate"
-                return 0
-            else if test -z "$real_edge"
-                echo "$candidate"
-                return 0
-            end
-        end
-    end
-    return 1
-end
-
-# ── core: download a specific version ─────────────────────────────────────────
-function __ce_download_version
-    set -l ver $argv[1]
-    set -l force $argv[2]
-    set -l platform (__ce_platform); or return 1
-
-    set -l dest_dir (__ce_version_dir $ver)
-    set -l dest_bin "$dest_dir/claude"
-
-    if test -x "$dest_bin" -a "$force" != --force
-        __ce_info "Version $ver already installed"
-        return 0
-    end
-
-    __ce_info "Downloading $ver for $platform …"
-
-    set -l manifest (curl -fsSL "$__CE_GCS/$ver/manifest.json" 2>/dev/null)
-    if test -z "$manifest"
-        __ce_err "Failed to fetch manifest for $ver — version may not exist"
-        return 1
-    end
-
-    set -l checksum
-    if command -q jq
-        set checksum (echo $manifest | jq -r ".platforms[\"$platform\"].checksum // empty" 2>/dev/null)
-    else if command -q python3
-        set checksum (echo $manifest | python3 -c "
-import sys, json
-m = json.load(sys.stdin)
-print(m.get('platforms',{}).get('$platform',{}).get('checksum',''))
-" 2>/dev/null)
-    end
-
-    if test -z "$checksum"
-        __ce_err "Platform $platform not found in manifest for $ver"
-        return 1
-    end
-
-    mkdir -p "$dest_dir"
-    if not curl -fsSL "$__CE_GCS/$ver/$platform/claude" -o "$dest_bin"
-        __ce_err "Failed to download binary"
-        rm -rf "$dest_dir"
-        return 1
-    end
-
-    set -l actual
-    if command -q sha256sum
-        set actual (sha256sum "$dest_bin" | cut -d' ' -f1)
-    else
-        set actual (shasum -a 256 "$dest_bin" | cut -d' ' -f1)
-    end
-
-    if test "$actual" != "$checksum"
-        __ce_err "Checksum mismatch! Expected $checksum, got $actual"
-        rm -rf "$dest_dir"
-        return 1
-    end
-
-    chmod +x "$dest_bin"
-    __ce_info "Downloaded and verified $ver ✓"
-end
-
-# ── core: activate a version (symlink) ────────────────────────────────────────
-function __ce_activate_version
-    set -l ver $argv[1]
-    set -l bin (__ce_version_bin $ver)
-
-    if not test -x "$bin"
-        __ce_err "Version $ver is not installed"
-        return 1
-    end
-
-    mkdir -p (dirname "$CLAUDE_EDGE_BIN")
-    rm -f "$CLAUDE_EDGE_BIN"
-    ln -sf "$bin" "$CLAUDE_EDGE_BIN"
-    __ce_info "Active version → $ver"
-end
 
 # ── main entrypoint ───────────────────────────────────────────────────────────
 function claude-edge --description "Manage & run multiple Claude Code versions"
@@ -500,23 +299,3 @@ function claude-edge --description "Manage & run multiple Claude Code versions"
             env DISABLE_AUTOUPDATER=1 "$CLAUDE_EDGE_BIN" $argv
     end
 end
-
-# ── tab completions ───────────────────────────────────────────────────────────
-complete -c claude-edge -f
-complete -c claude-edge -n "__fish_use_subcommand" -a install   -d "Download & install a version"
-complete -c claude-edge -n "__fish_use_subcommand" -a update    -d "Pull newest build from channel"
-complete -c claude-edge -n "__fish_use_subcommand" -a use       -d "Switch the active version"
-complete -c claude-edge -n "__fish_use_subcommand" -a versions  -d "Show remote channels & local installs"
-complete -c claude-edge -n "__fish_use_subcommand" -a list      -d "List installed versions"
-complete -c claude-edge -n "__fish_use_subcommand" -a run       -d "Launch edge binary"
-complete -c claude-edge -n "__fish_use_subcommand" -a version   -d "Print active version"
-complete -c claude-edge -n "__fish_use_subcommand" -a status    -d "Show stable & edge info"
-complete -c claude-edge -n "__fish_use_subcommand" -a diff      -d "Compare stable vs edge"
-complete -c claude-edge -n "__fish_use_subcommand" -a which     -d "Print binary path"
-complete -c claude-edge -n "__fish_use_subcommand" -a clean     -d "Remove old versions"
-complete -c claude-edge -n "__fish_use_subcommand" -a uninstall -d "Remove everything"
-complete -c claude-edge -n "__fish_use_subcommand" -a help      -d "Show help"
-complete -c claude-edge -n "__fish_seen_subcommand_from run"     -F
-complete -c claude-edge -n "__fish_seen_subcommand_from install" -a "stable latest" -d "Channel"
-complete -c claude-edge -n "__fish_seen_subcommand_from update"  -a "stable latest" -d "Channel"
-complete -c claude-edge -n "__fish_seen_subcommand_from use"     -a "(__ce_installed_versions)" -d "Version"

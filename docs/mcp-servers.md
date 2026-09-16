@@ -17,7 +17,7 @@ block (or vice-versa), so nothing loads.
 |----------|-------|-------|------|
 | **Server block** | git (plaintext) | transport + URL + headers, as `${VAR}` refs — **no secrets** | [`dotfiles/dot_config/claude/mcp.json`](../dotfiles/dot_config/claude/mcp.json) |
 | **Manifest rows** | git (plaintext) | which Bitwarden item/field each `${VAR}` pulls from | `FISHENV_MANIFEST` in [`scripts/secrets-sync.py`](../scripts/secrets-sync.py) |
-| **The secret** | Bitwarden → age | the actual URL + bearer, synced into `secrets.fish` | `dot_config/fish/fishconfig.d/encrypted_private_secrets.fish.age` |
+| **The secret** | Bitwarden → age | the actual URL + bearer, synced into `secrets.fish` | `dot_config/fish/conf.d/encrypted_private_00-secrets.fish.age` |
 
 ## How it wires together at launch
 
@@ -33,11 +33,11 @@ flowchart TD
     subgraph repo["git repo · nixos-configs (tracked, publishable)"]
         MAN["scripts/secrets-sync.py<br/>FISHENV_MANIFEST rows"]
         MCPSRC["dotfiles/dot_config/claude/mcp.json<br/>server block — ${VAR} refs, no secrets"]
-        AGE["dotfiles/.../encrypted_private_secrets.fish.age<br/>age ciphertext"]
+        AGE["dotfiles/.../encrypted_private_00-secrets.fish.age<br/>age ciphertext"]
     end
 
     subgraph home["$HOME · rendered only by 'chezmoi apply'"]
-        FISH["~/.config/fish/.../secrets.fish<br/>set -Ux MEMINI_MCP_URL / _BEARER"]
+        FISH["~/.config/fish/conf.d/00-secrets.fish<br/>set -Ux MEMINI_MCP_URL / _BEARER"]
         MCPREND["~/.config/claude/mcp.json<br/>← what Claude actually reads"]
     end
 
@@ -64,10 +64,10 @@ Plain-text version of the same flow:
 
 ```
  SECRET CHANNEL
-   Bitwarden item ──(secrets-sync.py, FISHENV_MANIFEST)──▶ encrypted_private_secrets.fish.age  (git)
+   Bitwarden item ──(secrets-sync.py, FISHENV_MANIFEST)──▶ encrypted_private_00-secrets.fish.age  (git)
       "Memini MCP"                                                    │ chezmoi apply
       fields: mcp_url, mcp_bearer                                     ▼
-                                              ~/.config/fish/.../secrets.fish
+                                              ~/.config/fish/conf.d/00-secrets.fish
                                               set -Ux MEMINI_MCP_URL '…'
                                               set -Ux MEMINI_MCP_BEARER '…'
                                                                       │ sourced by config.fish
@@ -90,7 +90,7 @@ Plain-text version of the same flow:
 
 Two load-bearing details:
 
-- **The `claude` fish wrapper** (in [`fish_functions.fish`](../dotfiles/dot_config/fish/fishconfig.d/fish_functions.fish))
+- **The `claude` fish wrapper** (in [`functions/claude.fish`](../dotfiles/dot_config/fish/functions/claude.fish))
   launches `command claude --mcp-config=~/.config/claude/mcp.json`. Servers defined this way are
   **not** written to `~/.claude.json` and **do not** appear in `claude mcp list` — that subcommand
   only shows *persisted* (user/project/local) servers. They load into the session regardless; the
@@ -220,7 +220,7 @@ is four steps:
 2. Delete the rows from `FISHENV_MANIFEST` in `scripts/secrets-sync.py`.
 3. Delete the `set -Ux <VAR> …` lines from the encrypted file and re-encrypt:
    ```fish
-   czedit ~/.config/fish/fishconfig.d/secrets.fish   # = chezmoi edit; decrypts → edit → re-encrypts
+   czedit ~/.config/fish/conf.d/00-secrets.fish   # = chezmoi edit; decrypts → edit → re-encrypts
    ```
 4. Purge the values already in the universal store (they persist until unset), and delete the
    Bitwarden item if it's truly retired:

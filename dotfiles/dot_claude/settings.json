@@ -1,12 +1,12 @@
 {
+  "env": {
+    "IS_SANDBOX": "1",
+    "CLAUDE_CODE_ENABLE_TODO_TOOLS": "1"
+  },
   "attribution": {
     "commit": "",
     "pr": "",
     "sessionUrl": false
-  },
-  "env": {
-    "IS_SANDBOX": "1",
-    "CLAUDE_CODE_ENABLE_TODO_TOOLS": "1"
   },
   "model": "opus[1m]",
   "statusLine": {

@@ -206,7 +206,7 @@ export SOPS_AGE_KEY_FILE="$agekey"
 
 # Commit both files together. A channel that was a no-op leaves its file unchanged and simply
 # drops out of the commit; if BOTH are unchanged the `|| echo` makes this a clean exit 0.
-fishage="dotfiles/dot_config/fish/fishconfig.d/encrypted_private_secrets.fish.age"
+fishage="dotfiles/dot_config/fish/conf.d/encrypted_private_00-secrets.fish.age"
 nix run .#commit-push -- "chore(secrets): refresh from Bitwarden" secrets/secrets.yaml "$fishage"
 echo ">> secrets refreshed from Bitwarden (sops + fish env) + committed"
 echo ">> new shells pick up the fish env automatically; for a shell that's ALREADY open run 'reload-secrets'"
@@ -222,7 +222,7 @@ agekey="$HOME/.config/age/age.agekey"
 # This channel is chezmoi/age, not sops — no SOPS_AGE_KEY_FILE needed.
 ./scripts/secrets-sync.py fishenv
 
-fishage="dotfiles/dot_config/fish/fishconfig.d/encrypted_private_secrets.fish.age"
+fishage="dotfiles/dot_config/fish/conf.d/encrypted_private_00-secrets.fish.age"
 nix run .#commit-push -- "chore(secrets): refresh fish env from Bitwarden" "$fishage"
 echo ">> fish env secrets refreshed from Bitwarden + committed"
 echo ">> new shells pick up the change automatically; for a shell that's ALREADY open run 'reload-secrets'"
