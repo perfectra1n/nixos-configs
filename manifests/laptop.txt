@@ -3782,6 +3782,8 @@ lifted-async-0.10.2.7
 lifted-base-0.2.3.12
 lilv-0.28.0
 linebender_resource_handle-0.1.1
+linenoise-2.0
+linenoise.pc.in
 link
 linked-hash-map-0.5.6
 linked_hash_set-0.1.6
@@ -3865,6 +3867,7 @@ lpeg-1.1.0-2.rockspec
 lpeg-1.1.0.1
 lpeg-luarocks-config.lua
 lrdf-0.6.1
+lrzsz-0.12.20
 lsb_release
 lsof-4.99.7
 lttng-ust-2.15.1
@@ -4859,6 +4862,7 @@ phf_generator-0.13.1
 phf_macros-0.13.1
 phf_shared-0.13.1
 pico-args-0.5.0
+picocom-2024-07
 picotts-0-unstable-2021-05-06
 pict-rs.md
 pihole-ftl.md

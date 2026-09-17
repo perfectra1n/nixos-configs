@@ -1528,6 +1528,8 @@ libz-sys-1.1.23
 lifted-async-0.10.2.7
 lifted-base-0.2.3.12
 lilv-0.28.0
+linenoise-2.0
+linenoise.pc.in
 link
 linux-6.18.51
 linux-6.18.51-modules
@@ -1578,6 +1580,7 @@ lpeg-1.1.0-2.rockspec
 lpeg-1.1.0.1
 lpeg-luarocks-config.lua
 lrdf-0.6.1
+lrzsz-0.12.20
 lsof-4.99.7
 lttng-ust-2.15.1
 lua-2.3.4
@@ -2145,6 +2148,7 @@ perl5.42.3-po4a-0.74
 pg_config
 pg_config.env
 pg_config.env.mk
+picocom-2024-07
 pict-rs.md
 pihole-ftl.md
 pihole-web.md

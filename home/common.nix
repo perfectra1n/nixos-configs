@@ -55,6 +55,8 @@ in
     tcpdump              # capture on headless boxes (`sudo tcpdump -i …`); GUI hosts get wireshark via pentest.nix
     iperf3               # throughput testing — `iperf3 -s` on one end, `-c <host>` on the other
     socat                # bidirectional relay: test/forward arbitrary sockets, serial, TLS
+    picocom              # minimal serial console (`picocom -b 115200 /dev/ttyUSB0`) — rootless
+                         # via the dialout group in modules/common.nix
     netcat-gnu           # `nc` — quick port checks + ad-hoc listeners
     whois
     ipcalc               # subnet math: CIDR splits, network/broadcast/host ranges

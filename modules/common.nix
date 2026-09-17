@@ -113,7 +113,8 @@ in
   users.users.${username} = {
     isNormalUser = true;
     description = username;
-    extraGroups = [ "wheel" "docker" ];
+    # dialout: serial devices (/dev/ttyUSB*, /dev/ttyACM*) for picocom in home/common.nix
+    extraGroups = [ "wheel" "docker" "dialout" ];
     shell = pkgs.fish;
     # To manage the password declaratively, generate a hash, store it in sops
     # (secrets/secrets.yaml under "passwords/${username}"), flip mutableUsers
