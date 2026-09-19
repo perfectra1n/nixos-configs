@@ -2657,10 +2657,8 @@ gnutar-musl-get-version-1.12
 gnutar-static-1.35
 gnutar-static-get-version-1.35
 gnutls-3.8.13
-go-1.22.12-linux-amd64-bootstrap
 go-1.24.13-linux-386-bootstrap
 go-1.24.13-linux-amd64-bootstrap
-go-1.25.14
 go-1.26.7
 go-containerregistry-0.22.0
 go-md2man-2.0.7
