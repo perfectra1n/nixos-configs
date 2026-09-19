@@ -30,7 +30,8 @@
     "impeccable@impeccable": true,
     "pr-review-toolkit@claude-plugins-official": true,
     "atvik@atvik": true,
-    "lupina@lupina": true
+    "lupina@lupina": true,
+    "forge-shepherd@atvik": true
   },
   "extraKnownMarketplaces": {
     "custom-claude-skills": {
@@ -50,13 +51,6 @@
       "source": {
         "source": "github",
         "repo": "pbakaus/impeccable"
-      },
-      "autoUpdate": true
-    },
-    "atvik": {
-      "source": {
-        "source": "github",
-        "repo": "AtvikSecurity/claude-extensions"
       },
       "autoUpdate": true
     },
