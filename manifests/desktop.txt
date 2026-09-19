@@ -3021,7 +3021,7 @@ initrd-bin-env
 initrd-fstab
 initrd-group
 initrd-hostname
-initrd-linux-7.2.4
+initrd-linux-7.2.6
 initrd-passwd
 initrd-release
 initrd-shadow
@@ -3779,9 +3779,9 @@ linenoise.pc.in
 link
 linked-hash-map-0.5.6
 linked_hash_set-0.1.6
-linux-7.2.4
-linux-7.2.4-modules
-linux-7.2.4-modules-shrunk
+linux-7.2.6
+linux-7.2.6-modules
+linux-7.2.6-modules-shrunk
 linux-cachyos-config
 linux-firmware-20260910
 linux-firmware-20260910-zstd
@@ -4341,7 +4341,7 @@ nvidia-cdi-generator
 nvidia-container-toolkit-1.19.1
 nvidia-egl-external-platforms
 nvidia-egl-external-platforms-x32
-nvidia-open-610.57.04-7.2.4
+nvidia-open-610.57.04-7.2.6
 nvidia-settings-610.57.04
 nvidia-settings-610.57.04_fish-completions
 nvidia-vaapi-driver-0.0.18
@@ -7195,7 +7195,7 @@ vlc-3.0.23-2
 vmware-bootstrap
 vmware-config
 vmware-modconfig
-vmware-modules-workstation-25h2-20251015-7.2.4
+vmware-modules-workstation-25h2-20251015-7.2.6
 vmware-unpack-env-25H2u1
 vmware-unpack-env-25H2u1-bwrap
 vmware-unpack-env-25H2u1-fhsenv-profile
