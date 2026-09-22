@@ -41,9 +41,10 @@
     options ixgbe allow_unsupported_sfp=1
   '';
 
-  # 4TB 990 PRO — bulk data (Steam library at /data/steam + repos). One-time formatted
-  # ext4 (uniform with root; xfs/btrfs perf is a wash on NVMe for Steam+git, and ext4
-  # keeps shrink/repartition open). nofail: a dead DATA drive must not drop boot to
+  # 4TB 990 PRO — bulk data. Now the Steam library ONLY: Docker's data-root and repos
+  # moved off to /fast-u2 (below), leaving this drive to sequential game reads. One-time
+  # formatted ext4 (uniform with root; xfs/btrfs perf is a wash on NVMe for Steam+git, and
+  # ext4 keeps shrink/repartition open). nofail: a dead DATA drive must not drop boot to
   # emergency mode — the box still boots, just without /data. The Steam library is added
   # in Steam's own UI (libraryfolders.vdf is Steam-owned), so the flake's job ends here.
   fileSystems."/data" = {
@@ -52,30 +53,46 @@
     options = [ "nofail" ];
   };
 
-  # ~/repos lives on /data but must APPEAR at its canonical home path — chezmoi's
+  # 1.92TB PM9A3 U.2 — Docker's data-root + repos (see both below). Split off /data so
+  # overlay2's write churn stops sharing a device with the Steam library. This is an
+  # enterprise part: power-loss protection and ~1 DWPD, against the 990 PRO's ~0.3 —
+  # the right endurance profile for Docker's write amplification. Formatted ext4 -m 1,
+  # NOT the mkfs default 5%: a root-only reserve buys nothing here because dockerd runs
+  # as root and would write into it anyway, so the 1% is just fragmentation headroom.
+  fileSystems."/fast-u2" = {
+    device = "/dev/disk/by-uuid/5c61eeb5-4ff9-425d-9543-5f286faf3928";
+    fsType = "ext4";
+    options = [ "nofail" ];
+  };
+
+  # ~/repos lives on /fast-u2 but must APPEAR at its canonical home path — chezmoi's
   # sourceDir (modules/dotfiles.nix) bakes /home/<user>/repos/nixos-configs, and a bind
   # mount (unlike a symlink) is invisible to path-resolving tools. systemd orders this
-  # after /data automatically (RequiresMountsFor on the bind source).
+  # after /fast-u2 automatically (RequiresMountsFor on the bind source).
   fileSystems."/home/${username}/repos" = {
-    device = "/data/repos";
+    device = "/fast-u2/repos";
     fsType = "none";
     options = [ "bind" "nofail" ];
   };
 
-  # Belt-and-braces: recreate the /data skeleton if it's ever lost (fresh disk, restore) —
-  # the repos bind and Steam both need their dirs to exist before they can populate them.
+  # Belt-and-braces: recreate both skeletons if ever lost (fresh disk, restore) — the repos
+  # bind and Steam each need their dir to exist before they can populate it. Note these now
+  # sit on DIFFERENT drives: repos on the U.2, Steam left behind on /data.
   systemd.tmpfiles.rules = [
-    "d /data/repos 0755 ${username} users -"
+    "d /fast-u2/repos 0755 ${username} users -"
     "d /data/steam 0755 ${username} users -"
   ];
 
-  # Docker's data-root lives on /data, not the root NVMe: container volumes (tyrfing's
-  # postgres in particular) burst-write hard enough to stall the root disk that also
-  # backs $HOME — which presented as "the network drops under load" (it was app IO stalls,
-  # not the network). RequiresMountsFor keeps a nofail-degraded boot (dead /data) from
-  # silently recreating an empty data-root on / — Docker just stays down until /data is back.
-  virtualisation.docker.daemon.settings."data-root" = "/data/docker";
-  systemd.services.docker.unitConfig.RequiresMountsFor = [ "/data/docker" ];
+  # Docker's data-root is on /fast-u2, and never the root NVMe: container volumes (tyrfing's
+  # postgres in particular) burst-write hard enough to stall the root disk that also backs
+  # $HOME — which presented as "the network drops under load" (it was app IO stalls, not the
+  # network). It sat on /data until the U.2 arrived; moving it again gets overlay2's write
+  # amplification onto a part actually rated for it (PM9A3, PLP, ~1 DWPD vs the 990 PRO's
+  # ~0.3) and stops it competing with Steam reads. RequiresMountsFor keeps a nofail-degraded
+  # boot (dead /fast-u2) from silently recreating an empty data-root on / — Docker just stays
+  # down until the drive is back.
+  virtualisation.docker.daemon.settings."data-root" = "/fast-u2/docker";
+  systemd.services.docker.unitConfig.RequiresMountsFor = [ "/fast-u2/docker" ];
 
   # VMware Workstation host (builds vmmon/vmnet kernel modules against the running kernel —
   # here the CachyOS one). unfree. Provides `vmware` + the networking/USB-arbitrator services.
