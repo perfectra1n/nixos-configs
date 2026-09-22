@@ -4284,6 +4284,8 @@ node-gyp-13.0.1
 node-gyp-13.0.1-npm-deps
 node-sqlcipher-4.0.5
 node-sqlcipher-pnpm-deps
+node_exporter-1.12.1
+node_exporter-1.12.1-go-modules
 nodejs-22.23.2
 nodejs-24.20.0
 nodejs-install-executables
@@ -6605,6 +6607,9 @@ smallcheck-1.2.1.1
 smallvec-1.15.1
 smallvec-1.15.2
 smart-enter.yazi-0-unstable-2026-09-01
+smartctl_exporter-0.14.0
+smartctl_exporter-0.14.0-go-modules
+smartmontools-7.5
 smithay-client-toolkit-0.19.2
 smithay-client-toolkit-0.20.0
 smithay-clipboard-0.7.3

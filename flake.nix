@@ -133,6 +133,7 @@
             ./modules/common.nix
             ./modules/facter.nix
             ./modules/system-diff.nix
+            ./modules/node-exporter.nix # node + smartctl exporters, every host (metrics land in the homelab's vmetrics)
             ./modules/nix-cache.nix # LAN attic binary cache: sops-rendered substituter + watch-store push (inert until secrets land)
             ./modules/snowflake-py314-fix.nix # snowflake-connector-python 4.4.0 bump until nixpkgs#511615 lands (snow is on every host via home/common.nix)
             ./hosts/${hostName}
