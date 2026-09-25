@@ -6639,8 +6639,8 @@ socket2-0.6.1
 socks-0.3.4
 sof-firmware-2025.12.2
 sof-firmware-2025.12.2-zstd
-sofka-0.27.2
-sofka-0.27.2_fish-completions
+sofka-0.29.2
+sofka-0.29.2_fish-completions
 softbuffer-0.4.8
 softhsm-2.7.0
 software-and-algorithms-1.0.jar
