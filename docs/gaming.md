@@ -75,11 +75,11 @@ Verify what's actually active with `gamemoded -s` while a game runs.
 
 These aren't flake-owned — they live in your chezmoi Hyprland config or Steam launch options:
 
-- **VRR / G-Sync (Hyprland)** — `misc:vrr = 1` (or `2`/fullscreen-only) in `hyprland.conf`.
+- **VRR / G-Sync (Hyprland)** — `misc.vrr = 1` (or `2`/fullscreen-only) in `hyprland.lua`.
   On NVIDIA Wayland multi-monitor, VRR can be finicky (only engages reliably with one active
   output) — running the game through **gamescope** is the robust path for VRR + frame pacing.
-- **Tearing for competitive titles** — `general:allow_tearing = 1` in `hyprland.conf` plus a
-  per-window `windowrulev2 = immediate, class:^(game)$`, and `mangohud gamemoderun %command%`
+- **Tearing for competitive titles** — `general.allow_tearing = true` in `hyprland.lua` plus a
+  per-window `hl.window_rule({ match = { class = "^(game)$" }, immediate = true })`, and `mangohud gamemoderun %command%`
   / `gamescope -f -- %command%` in Steam.
 - **Per-game launch options** — `gamemoderun mangohud %command%`; `gamescope --hdr-enabled -f --`
   for HDR on the QD-OLED; `RADV_PERFTEST=...` (AMD) / DLSS env (NVIDIA) as needed.

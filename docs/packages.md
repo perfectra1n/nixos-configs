@@ -38,7 +38,7 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 
 - Packages: `kitty`, `google-chrome`, `firefox`, `brave`, `vscode`, `dbeaver-bin`,
   `evolution`, `copyq`, `handbrake`, `wineWow64Packages.stable`, `winetricks`, `blender`.
-- **KDE file stack** (the `$fileManager` in `hyprland.conf` since the Nemo→Dolphin swap):
+- **KDE file stack** (the `fileManager` in `hyprland.lua` since the Nemo→Dolphin swap):
   `kdePackages.dolphin` + `kio-extras` (Trash/network — Dolphin's Trash is broken without it),
   `ark` (archive context menu), `kdegraphics-thumbnailers` + `ffmpegthumbs` (thumbnails —
   Dolphin does *not* use `ffmpegthumbnailer`, that's the GTK/tumbler path), `breeze-icons`,
@@ -95,19 +95,19 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 
 ## Wayland + Hyprland — `modules/hyprland.nix` (graphical: D L)
 
-- `programs.hyprland`, `services.greetd` (tuigreet), `security.polkit`, `xdg.portal` (+gtk).
+- `programs.hyprland`, `programs.dms-greeter` (greetd + DMS greeter), `security.polkit`, `xdg.portal` (+gtk).
 - `NIXOS_OZONE_WL = "1"`.
 - DankMaterialShell: `programs.dank-material-shell` (`systemd.enable = false`,
   `plugins.hyprlandSubmapIndicator`, `plugins.linuxWallpaperEngine`). Imports `chromium-cm-fix.nix` + DMS modules.
 - Packages: `waybar`, `rofi`, `wl-clipboard`, `grim`, `slurp`, `swappy`, `grimblast`,
-  `hyprlock`, `hypridle`, `brightnessctl`, `playerctl`, `pavucontrol`, `hyprsome`,
+  `hyprlock`, `hypridle`, `brightnessctl`, `playerctl`, `pavucontrol`,
   `pyprland`, `hyprswitch` (`hyprshell`, from flake input).
 
 ## GPU drivers
 
 - `modules/nvidia.nix` (D): `videoDrivers = ["nvidia"]`, modesetting, `open`, power mgmt,
-  shader-cache env, `hypr/gpu.conf` fragment.
-- `modules/amd.nix` (L): `videoDrivers = ["amdgpu"]`, mesa/RADV, `hypr/gpu.conf` fragment.
+  shader-cache env, `hypr/nix/gpu.lua` fragment.
+- `modules/amd.nix` (L): `videoDrivers = ["amdgpu"]`, mesa/RADV, `hypr/nix/gpu.lua` fragment.
 
 ## Gaming — `modules/gaming.nix` (graphical: D L)
 
@@ -133,7 +133,7 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
   plugin — launched by the plugin, not an exec-once), `prismlauncher`, `nomachine-client`, `anydesk`,
   `zoom-us`, `playwright`, `playwright-test`, `playwright-mcp`.
 - Playwright env vars + `/opt/google/chrome/chrome` tmpfiles symlink.
-- Writes the `hypr/autostart.conf` exec-once fragment (see architecture.md).
+- Writes the `hypr/nix/autostart.lua` `hyprland.start` fragment (see architecture.md).
 
 ## SnapX — `modules/snapx.nix` (graphical: D L)
 

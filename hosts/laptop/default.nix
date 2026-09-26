@@ -46,7 +46,15 @@
   # unlock itself. If the sensor is a closed Touch-OEM (TOD) device, also set the matching
   # libfprint-2-tod1 driver; the common open-driver readers (e.g. Goodix goodixmoc) work as-is.
   # After rebuild, enroll with `fprintd-enroll`, then turn on Settings → Lock Screen →
-  # Fingerprint in DMS. The greeter (tuigreet) is intentionally left password-only.
+  # Fingerprint in DMS.
+  #
+  # The greeter accepts fingerprint too, and needs NOTHING declared for it: enabling fprintd
+  # auto-sets fprintAuth on the system `login` service, and NixOS renders /etc/pam.d/greetd as
+  # `auth substack login` — so pam_fprintd reaches the greeter through that indirection rather
+  # than appearing in greetd's own stack. The DMS greeter resolves it (it re-checks the
+  # include/substack targets, `login` among them) and then confirms against fprintd over D-Bus
+  # so a stale PAM line can't fake a reader. Turn it on in Settings → Greeter; that flag lives
+  # in settings.json, which greetd copies at service start, so it takes effect NEXT boot.
   services.fprintd.enable = true;
 
   # Dedicated password-only PAM stack for the DMS lock screen's PASSWORD field. DMS's lock runs
@@ -59,8 +67,8 @@
   # Fingerprint unlock is unaffected — it stays in DMS's own fprint context.
   security.pam.services.dankshell.fprintAuth = false;
 
-  # Hyprland per-host fragments the chezmoi hyprland.conf `source`s (alongside gpu.conf
-  # from modules/amd.nix and autostart.conf from modules/desktop-apps.nix). Kept here, not
+  # Hyprland per-host Lua fragments the chezmoi hyprland.lua `require`s as nix.* (alongside
+  # nix/gpu.lua from modules/amd.nix and nix/autostart.lua from modules/desktop-apps.nix). Kept here, not
   # in chezmoi, so the shared dotfile stays host-agnostic. One ${username} binding — Nix
   # can't merge a dynamic key across separate bindings (see modules/desktop-apps.nix).
   home-manager.users.${username}.xdg.configFile = {
@@ -68,26 +76,37 @@
     # Scale 1.333 (= 4/3) → logical 1920x1200: Hyprland needs the scale to divide the mode
     # into whole pixels (2560/1.333 = 1920, 1600/1.333 = 1200). 1.333 is the middle ground
     # between 1.25 (2048x1280, smaller UI) and 1.6 (1600x1000, larger UI) — bump toward 1.6
-    # if it's still too small. The bare line is a catch-all so an external display still works.
-    "hypr/monitors.conf".text = ''
-      monitor = eDP-1, 2560x1600@165, 0x0, 1.333
-      monitor = , preferred, auto, auto
+    # if it's still too small. The empty-output entry is a catch-all so an external display
+    # still works. Returned for hyprland.lua's HDR toggle, which finds no HDR entry here and
+    # says so instead of doing anything.
+    "hypr/nix/monitors.lua".text = ''
+      -- Written by the flake (hosts/laptop/default.nix). Do not edit by hand.
+      local monitors = {
+        { output = "eDP-1", mode = "2560x1600@165", position = "0x0", scale = 1.333 },
+        { output = "", mode = "preferred", position = "auto", scale = "auto" },
+      }
+      for _, m in ipairs(monitors) do hl.monitor(m) end
 
-      # Steam is XWayland-only and renders its desktop UI at 1x; scale it to match the panel
-      # so it isn't tiny. Same value as the monitor scale above.
-      env = STEAM_FORCE_DESKTOPUI_SCALING,1.333
+      -- Steam is XWayland-only and renders its desktop UI at 1x; scale it to match the panel
+      -- so it isn't tiny. Same value as the monitor scale above.
+      hl.env("STEAM_FORCE_DESKTOPUI_SCALING", "1.333")
+
+      return monitors
     '';
     # Touchpad defaults for a laptop. natural_scroll + tap-to-click are the common wants;
     # disable_while_typing avoids stray cursor jumps. Tune via the Hyprland input wiki.
-    "hypr/input.conf".text = ''
-      input {
-        touchpad {
-          natural_scroll = false
-          tap-to-click = true
-          disable_while_typing = true
-          scroll_factor = 0.3   # 0.5 (half of the 1.0 default) still scrolled too fast; 0.3 tames it
-        }
-      }
+    "hypr/nix/input.lua".text = ''
+      -- Written by the flake (hosts/laptop/default.nix). Do not edit by hand.
+      hl.config({
+        input = {
+          touchpad = {
+            natural_scroll = false,
+            tap_to_click = true,
+            disable_while_typing = true,
+            scroll_factor = 0.3, -- 0.5 (half of the 1.0 default) still scrolled too fast; 0.3 tames it
+          },
+        },
+      })
     '';
   };
 }

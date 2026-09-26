@@ -126,7 +126,7 @@
   # source at runtime, so the host-specific config went away with the coupling that forced it.
 
   # Autologin straight into Hyprland at boot. greetd's initial_session fires once with no
-  # greeter; the tuigreet default_session (modules/hyprland.nix) still handles later logins
+  # greeter; the DMS greeter default_session (modules/hyprland.nix) still handles later logins
   # (e.g. after logout). Single-user box convenience — anyone with physical access lands in
   # the session. Matches the greeter's `--cmd start-hyprland` so the session env is exported
   # identically (the wrapper programs.hyprland.enable installs).
@@ -135,8 +135,8 @@
     user = username;
   };
 
-  # Hyprland per-host fragments the chezmoi hyprland.conf `source`s (alongside gpu.conf
-  # from modules/nvidia.nix and autostart.conf from modules/desktop-apps.nix). Kept here,
+  # Hyprland per-host Lua fragments the chezmoi hyprland.lua `require`s as nix.* (alongside
+  # nix/gpu.lua from modules/nvidia.nix and nix/autostart.lua from modules/desktop-apps.nix). Kept here,
   # not in chezmoi, so the shared dotfile stays host-agnostic and each box owns its layout.
   # Both attrs live under ONE ${username} binding — Nix can't merge a dynamic key across
   # separate bindings in a module (see the note in modules/desktop-apps.nix).
@@ -160,15 +160,16 @@
     # iGPU's own (permanently disconnected) outputs hold whichever names are left. A port-name
     # rule that loses that race silently binds to a DEAD iGPU connector, so both real panels
     # match no rule and fall back to Hyprland defaults (60Hz, scale 1, no transform, auto-placed
-    # left-to-right) — the layout looks "smashed" and hdr-toggle.sh pushes HDR at a phantom
+    # left-to-right) — the layout looks "smashed" and the HDR toggle pushes HDR at a phantom
     # output. `desc:` matches the EDID make/model/serial, which no probe order can renumber.
     # Strings come from the `description` field of `hyprctl monitors all`; re-check only when a
     # panel is actually replaced — re-cabling and port swaps no longer matter.
     #
-    # hyprsome still cares about ports: it namespaces workspaces by Hyprland monitor *id*
-    # (id 0 -> ws 1-10, id 1 -> ws 11-20), and at COLD BOOT ids follow DRM connector order, so
-    # the lowest-numbered CONNECTED port wins id 0. Keep the Alienware on the lower of the two
-    # good nvidia DPs so it stays id 0 = hyprsome's primary and new windows/games default to it
+    # The per-monitor workspace binds still care about ports: hyprland.lua namespaces workspaces
+    # by Hyprland monitor *id* (id 0 -> ws 1-10, id 1 -> ws 11-20; the old hyprsome scheme), and
+    # at COLD BOOT ids follow DRM connector order, so the lowest-numbered CONNECTED port wins id 0.
+    # Keep the Alienware on the lower of the two good nvidia DPs so it stays id 0 = the primary
+    # workspace set and new windows/games default to it
     # instead of the portrait KTC. NOTE: the old Dell would NOT link on the 5090's remaining DP
     # (DP-6 — dead/marginal); never retested with the KTC. Live hotplug can assign ids out of
     # connector order — only a cold boot is canonical.
@@ -191,32 +192,44 @@
     # WITH and WITHOUT local dimming are identical (417.7 both). On a panel like that HDR buys
     # raised blacks and tone-mapped SDR, not highlight headroom. Re-check with `edid-decode`
     # if the panel ever changes.
-    #   bitdepth, 10    = 10-bit output (required for HDR)
-    #   cm, hdr         = wide gamut + PQ/ST2084 transfer (HDR10; no Dolby Vision on Wayland)
+    #   bitdepth = 10   = 10-bit output (required for HDR)
+    #   cm = "hdr"      = wide gamut + PQ/ST2084 transfer (HDR10; no Dolby Vision on Wayland)
     #   sdrbrightness   = brightness multiplier for SDR content in HDR mode — the dimness knob
     #   sdrsaturation   = SDR saturation in HDR mode (raise slightly if colors look pale)
-    # Tune sdrbrightness live (no rebuild): hyprctl keyword monitor "<full Alienware line>".
+    # Tune sdrbrightness live (no rebuild) — hl.monitor MERGES into the existing rule for that
+    # output, so only the changed field is needed:
+    #   hyprctl eval 'hl.monitor({ output = "desc:Dell Inc. AW3225QF 5K46YZ3", sdrbrightness = 10 })'
     # sdrbrightness 12.5 ~ near-peak SDR white; sdrsaturation 1.2 counters SDR-in-HDR washout.
     # Tuned by eye — drop sdrbrightness if too bright/fatiguing. Do NOT add the old
     # xx_color_management_v4 / ENABLE_HDR_WSI / cm_auto_hdr env vars — cm-v4 is stable now
     # and they break it.
-    "hypr/monitors.conf".text = ''
-      monitor = desc:Dell Inc. AW3225QF 5K46YZ3, 3840x2160@240, 0x0, 1.5, bitdepth, 10, cm, hdr, sdrbrightness, 12.5, sdrsaturation, 1.2
-      monitor = desc:Shenzhen KTC Technology Group U27T6 0000000000001, 3840x2160@160, -1440x-560, 1.5, transform, 1
+    # The module RETURNS its spec list: hyprland.lua's HDR toggle (Super+Shift+B) re-applies the
+    # `cm = "hdr"` entries from it, so this file stays the single source of truth for HDR.
+    "hypr/nix/monitors.lua".text = ''
+      -- Written by the flake (hosts/desktop/default.nix). Do not edit by hand.
+      local monitors = {
+        { output = "desc:Dell Inc. AW3225QF 5K46YZ3", mode = "3840x2160@240", position = "0x0", scale = 1.5,
+          bitdepth = 10, cm = "hdr", sdrbrightness = 12.5, sdrsaturation = 1.2 },
+        { output = "desc:Shenzhen KTC Technology Group U27T6 0000000000001", mode = "3840x2160@160",
+          position = "-1440x-560", scale = 1.5, transform = 1 },
+      }
+      for _, m in ipairs(monitors) do hl.monitor(m) end
 
-      # Focus the Alienware at login so new windows open there by default. Belt-and-braces on
-      # top of its 0x0 placement. Lives here rather than in the chezmoi hyprland.conf because
-      # it names a specific panel: it was `focusmonitor DP-1` there, and once DP-1 became a
-      # disconnected iGPU connector it silently no-op'd for who knows how long. `desc:` can't
-      # rot that way.
-      exec-once = hyprctl dispatch focusmonitor desc:Dell Inc. AW3225QF 5K46YZ3
+      -- Focus the Alienware at login so new windows open there by default. Belt-and-braces on
+      -- top of its 0x0 placement. Lives here rather than in the chezmoi hyprland.lua because
+      -- it names a specific panel: it was `focusmonitor DP-1` there, and once DP-1 became a
+      -- disconnected iGPU connector it silently no-op'd for who knows how long. `desc:` can't
+      -- rot that way.
+      hl.on("hyprland.start", function()
+        hl.dispatch(hl.dsp.focus({ monitor = "desc:Dell Inc. AW3225QF 5K46YZ3" }))
+      end)
+
+      return monitors
     '';
     # Mouse feel (host-specific). sensitivity 0 = no accel change; flat = raw 1:1 movement.
-    "hypr/input.conf".text = ''
-      input {
-        sensitivity = 0
-        accel_profile = flat
-      }
+    "hypr/nix/input.lua".text = ''
+      -- Written by the flake (hosts/desktop/default.nix). Do not edit by hand.
+      hl.config({ input = { sensitivity = 0, accel_profile = "flat" } })
     '';
   };
 }

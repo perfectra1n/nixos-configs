@@ -45,7 +45,7 @@ need mDNS, and desktop has no miracast.nix to inherit it from.
 - `boot.kernelPackages = pkgs.linuxPackages_cachyos` (CachyOS kernel, via the `chaotic`
   input) — pairs with the `scx` scheduler.
 - systemd-boot (UEFI); Bluetooth + Blueman.
-- greetd `initial_session` autologin straight into Hyprland (tuigreet still handles relogin).
+- greetd `initial_session` autologin straight into Hyprland (the DMS greeter still handles relogin).
 - NVIDIA driver pinned to `nvidiaPackages.latest` (see `modules/nvidia.nix`).
 - Swap `modules/nvidia.nix` → `modules/amd.nix` if the box is AMD.
 - Nightly Wi-Fi iOS device backups (`modules/ios-backup.nix`) — desktop-only because it is

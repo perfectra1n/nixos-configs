@@ -52,17 +52,18 @@ UI whenever. Likewise DMS's pinned input device
 ## hypr-cheatsheet — live keybind overlay
 
 **What it does.** A rofi dmenu listing *every active keybind* with a human description; fuzzy-type
-to filter. Bound in the chezmoi `hyprland.conf` (e.g. `SUPER + /`).
+to filter. Bound in the chezmoi `hyprland.lua` (`SUPER + /`).
 
 **Why it never drifts.** The data comes **live from `hyprctl binds -j`** at invocation — not from
 parsing the config file — so it reflects exactly what the compositor has loaded, including submaps.
-It relies on the chezmoi binds using the `bindd =` variant (which carries a `.description`);
-plain `bind =` rows degrade gracefully to showing the raw dispatcher.
+It relies on the chezmoi binds passing `{ description = … }` to `hl.bind`. Under the Lua config
+every bind reports dispatcher `__lua` (plus an opaque registry ref), so an undescribed bind shows a
+blank description column rather than that noise.
 
 **Implementation notes** (the non-obvious bits):
 
 - A jq filter decodes Hyprland's modmask bitmask (SHIFT=1, CTRL=4, ALT=8, SUPER=64) into readable
-  combos and drops the noise `submap → reset` rows.
+  combos.
 - rofi's look is **forced inline** (`-font`, `-theme-str`) rather than trusting
   `~/.config/rofi/config.rasi`: the column alignment is space-padding (needs a real monospace
   font — config.rasi names one that isn't installed), and the nord theme's transparent window
@@ -81,7 +82,7 @@ also *decodes* faster). Every other grim call — saved screenshots, scripts —
 normal compression. Matching on `xdph_` keeps it surgical.
 
 **HDR context.** Screenshots on the HDR output used to wedge (black/stale grabs); that was fixed
-compositor-side with `render:keep_unmodified_copy = 0` in the chezmoi `hyprland.conf` (`=2`
+compositor-side with `render.keep_unmodified_copy = 0` in the chezmoi `hyprland.lua` (`=2`
 freezes the HDR monitor, `=1` forces an FP16 copy everywhere). The old `screenshot-hdr.sh`
 SDR-flip wrapper is retired — `dotfiles/.chezmoiremove` actively deletes it from every machine —
 and **flameshot is the sole screenshot tool** (PrintScreen → `flameshot gui`, grabs via the
@@ -97,6 +98,6 @@ wrapped grim portal above).
   separate `scripts/` dir for deployed tools, so the source, rationale comment, and installation
   live in one place. (Repo-side helper scripts like `scripts/host.sh` are a different category:
   they run from the checkout, not from PATH.)
-- **Session daemons autostart via `exec-once`** in the flake-owned `hypr/autostart.conf` fragment,
+- **Session daemons autostart via `hyprland.start`** (Lua's `exec-once`) in the flake-owned `hypr/nix/autostart.lua` fragment,
   not systemd user units — `graphical-session.target` is inactive under this session (see
   [idle-watchdog.md](idle-watchdog.md#why-exec-once-and-not-a-systemd-user-unit)).

@@ -1,4 +1,4 @@
-# pyprland (pypr) — started by `exec-once = pypr` in hyprland.conf.
+# pyprland (pypr) — started from the flake's hypr/nix/autostart.lua (hyprland.start).
 # The "term" scratchpad is the Wayland equivalent of the old i3 tdrop dropdown:
 # kitty, full width, ~45% tall, slides in from the top, lazily spawned and
 # respawned automatically if you close it. Toggle: Super+grave -> `pypr toggle term`.

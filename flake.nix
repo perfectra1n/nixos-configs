@@ -46,6 +46,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # DMS greeter (greetd login screen, Quickshell) — split out of the dms repo into its own;
+    # dms' `nixosModules.greeter` is now an empty stub that only warns. Follows nixpkgs so its
+    # Go build + quickshell come from the same package set as dms. modules/hyprland.nix.
+    dank-greeter = {
+      url = "github:AvengeMedia/dank-greeter";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Network Indicator DMS plugin — OUR FORK's branch, not the registry's gemb0-0 pin.
     # `flake = false` because the plugin is plain QML (plugin.json at repo root — exactly
     # the layout `plugins.<id>.src` expects); modules/hyprland.nix mkForce-overrides the

@@ -261,8 +261,8 @@ in
   # control). The NixOS module rather than a bare package because pairing needs firewall
   # ports 1714-1764 TCP+UDP open, which the module does; a plain home.packages entry
   # would install a client that can never discover the phone. Works fine outside Plasma
-  # (it's Qt, not plasmashell-bound). The kdeconnectd daemon itself is exec-once'd in
-  # autostart.conf below — Hyprland runs no XDG autostart, and D-Bus activation alone
+  # (it's Qt, not plasmashell-bound). The kdeconnectd daemon itself is started from
+  # nix/autostart.lua below — Hyprland runs no XDG autostart, and D-Bus activation alone
   # would leave the daemon (and thus discovery) dormant until something first talked to it.
   programs.kdeconnect.enable = true;
 
@@ -359,96 +359,101 @@ in
       PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
     };
 
-    # Session autostart — exec-once daemons, written by the flake and sourced by the chezmoi
-    # hyprland.conf. This `hypr/autostart.conf` fragment is an allowed exception to the chezmoi
-    # boundary (alongside hypr/gpu.conf — see CLAUDE.md): the flake owns it because it
-    # autostarts daemons the flake itself installs. exec-once runs only at session start, NOT on
-    # `hyprctl reload` — re-login after changes.
+    # Session autostart — `hyprland.start` daemons (Lua's exec-once), written by the flake and
+    # required by the chezmoi hyprland.lua as nix.autostart. This `hypr/nix/autostart.lua` fragment
+    # is an allowed exception to the chezmoi boundary (alongside hypr/nix/gpu.lua — see CLAUDE.md):
+    # the flake owns it because it autostarts daemons the flake itself installs. hyprland.start
+    # fires only at session start, NOT on `hyprctl reload` — re-login after changes.
     # Historically exec-once was also the ONLY thing that worked here, because nothing activated
     # graphical-session.target so graphical-session-BOUND user services never fired (default.target
     # -bound ones did — see the watchdog unit below). The first exec-once below now activates that
     # target, so this file's entries are a convention rather than a constraint.
-    # REQUIRES the chezmoi ~/.config/hypr/hyprland.conf to `source ~/.config/hypr/autostart.conf`.
-    xdg.configFile."hypr/autostart.conf".text = ''
-      # FIRST, before any daemon: tell systemd a graphical session exists. greetd launches
-      # `start-hyprland` directly, which is a "non-systemd-aware session" — it exports the env to
-      # systemd/dbus but never activates graphical-session.target, so that target sat inactive for
-      # the whole session. nixos-fake-graphical-session.target is NixOS's own shim for exactly this
-      # (`BindsTo=graphical-session.target`); starting it pulls the real target in. It has to be
-      # started INDIRECTLY like this because graphical-session.target sets RefuseManualStart=yes.
-      #
-      # Latent until 2026-08-05, when xdg-desktop-portal 1.20.4 → 1.22.1 swapped its unit's
-      # `Requires=dbus.service` for `Requisite=graphical-session.target`. Requisite fails outright
-      # if the target is not ALREADY active, so the portal broke on the first switch that shipped
-      # 1.22.1 — "Failed to start user unit xdg-desktop-portal.service" and no file pickers or
-      # screenshare, in a session where the portal had happily run for hours before.
-      #
-      # Everything below deliberately STAYS exec-once (and dms-idle-watchdog stays bound to
-      # default.target) — that is unchanged behavior, not an oversight. Migrating them onto
-      # graphical-session.target is now POSSIBLE but is a separate change with its own testing.
-      exec-once = systemctl --user start nixos-fake-graphical-session.target
+    # REQUIRES the chezmoi ~/.config/hypr/hyprland.lua to `require("nix.autostart")`.
+    xdg.configFile."hypr/nix/autostart.lua".text = ''
+      -- Written by the flake (modules/desktop-apps.nix). Do not edit by hand.
+      -- hyprland.start is the Lua replacement for exec-once: it fires once per session,
+      -- NOT on config reload, so the same re-login-after-changes rule applies.
+      hl.on("hyprland.start", function()
+        -- FIRST, before any daemon: tell systemd a graphical session exists. greetd launches
+        -- `start-hyprland` directly, which is a "non-systemd-aware session" — it exports the env to
+        -- systemd/dbus but never activates graphical-session.target, so that target sat inactive for
+        -- the whole session. nixos-fake-graphical-session.target is NixOS's own shim for exactly this
+        -- (`BindsTo=graphical-session.target`); starting it pulls the real target in. It has to be
+        -- started INDIRECTLY like this because graphical-session.target sets RefuseManualStart=yes.
+        --
+        -- Latent until 2026-08-05, when xdg-desktop-portal 1.20.4 → 1.22.1 swapped its unit's
+        -- `Requires=dbus.service` for `Requisite=graphical-session.target`. Requisite fails outright
+        -- if the target is not ALREADY active, so the portal broke on the first switch that shipped
+        -- 1.22.1 — "Failed to start user unit xdg-desktop-portal.service" and no file pickers or
+        -- screenshare, in a session where the portal had happily run for hours before.
+        --
+        -- Everything below deliberately STAYS exec-once (and dms-idle-watchdog stays bound to
+        -- default.target) — that is unchanged behavior, not an oversight. Migrating them onto
+        -- graphical-session.target is now POSSIBLE but is a separate change with its own testing.
+        hl.exec_cmd("systemctl --user start nixos-fake-graphical-session.target")
 
-      # NO hypridle here — DMS owns idle/lock/DPMS. DMS ships a full idle pipeline
-      # (Services/IdleService.qml: monitor-off + lock + suspend timers, AC/battery-aware)
-      # and explicitly replaces swayidle/hypridle. Running both = two ext-idle-notify
-      # clients fighting over `dpms off`, and DMS surfaces could pause idle so hypridle
-      # never fired under the lock. Set the monitor-off timeout in DMS Settings →
-      # Power & Sleep (acMonitorTimeout/batteryMonitorTimeout, in seconds); DMS's
-      # IdleService keeps running while its own lock is shown, so it blanks on the lock
-      # screen too. lock-before-suspend + DPMS-on-wake are handled by DMS (loginctl
-      # integration), so the old before/after_sleep hooks are redundant.
+        -- NO hypridle here — DMS owns idle/lock/DPMS. DMS ships a full idle pipeline
+        -- (Services/IdleService.qml: monitor-off + lock + suspend timers, AC/battery-aware)
+        -- and explicitly replaces swayidle/hypridle. Running both = two ext-idle-notify
+        -- clients fighting over `dpms off`, and DMS surfaces could pause idle so hypridle
+        -- never fired under the lock. Set the monitor-off timeout in DMS Settings →
+        -- Power & Sleep (acMonitorTimeout/batteryMonitorTimeout, in seconds); DMS's
+        -- IdleService keeps running while its own lock is shown, so it blanks on the lock
+        -- screen too. lock-before-suspend + DPMS-on-wake are handled by DMS (loginctl
+        -- integration), so the old before/after_sleep hooks are redundant.
 
-      # Status bar / shell — DankMaterialShell (Quickshell): bar + dock + notifications +
-      # launcher. Uses exec-once (NOT DMS's systemd unit); keep
-      # programs.dank-material-shell.systemd.enable = false (modules/hyprland.nix). The original
-      # reason — an inactive graphical-session.target — is gone as of the first exec-once above,
-      # so switching to DMS's unit is now a real option; it just hasn't been tested here yet.
-      # To use Waybar instead, swap for ~/.config/waybar/launch.sh.
-      exec-once = dms run
+        -- Status bar / shell — DankMaterialShell (Quickshell): bar + dock + notifications +
+        -- launcher. Uses exec-once (NOT DMS's systemd unit); keep
+        -- programs.dank-material-shell.systemd.enable = false (modules/hyprland.nix). The original
+        -- reason — an inactive graphical-session.target — is gone as of the first exec-once above,
+        -- so switching to DMS's unit is now a real option; it just hasn't been tested here yet.
+        -- To use Waybar instead, swap for ~/.config/waybar/launch.sh.
+        hl.exec_cmd("dms run")
 
-      # NO idle-inhibit watchdog exec-once here anymore — it runs as the dms-idle-watchdog
-      # systemd user service (defined below in this module). A unit gets Restart=on-failure
-      # supervision (a bare exec-once died permanently on the first SIGPIPE from a journald
-      # hiccup) and auto-restarts on rebuild via sd-switch (exec-once needed a re-login). It
-      # binds to default.target because graphical-session.target is inactive here — the same
-      # fact that forces everything ELSE in this file to stay exec-once. Watch it with:
-      #   journalctl --user -t dms-idle-watchdog
+        -- NO idle-inhibit watchdog exec-once here anymore — it runs as the dms-idle-watchdog
+        -- systemd user service (defined below in this module). A unit gets Restart=on-failure
+        -- supervision (a bare exec-once died permanently on the first SIGPIPE from a journald
+        -- hiccup) and auto-restarts on rebuild via sd-switch (exec-once needed a re-login). It
+        -- binds to default.target because graphical-session.target is inactive here — the same
+        -- fact that forces everything ELSE in this file to stay exec-once. Watch it with:
+        --   journalctl --user -t dms-idle-watchdog
 
-      # Clipboard manager daemon
-      exec-once = copyq
+        -- Clipboard manager daemon
+        hl.exec_cmd("copyq")
 
-      # pyprland daemon — dropdown terminal scratchpad (config in ~/.config/pypr/config.toml).
-      # Toggle bound to Super+grave. Needs the pyprland package (modules/hyprland.nix).
-      exec-once = pypr
+        -- pyprland daemon — dropdown terminal scratchpad (config in ~/.config/pypr/config.toml).
+        -- Toggle bound to Super+grave. Needs the pyprland package (modules/hyprland.nix).
+        hl.exec_cmd("pypr")
 
-      # hyprshell — GTK4 Alt+Tab window switcher daemon. It registers the Alt+Tab switch key
-      # itself (config: chezmoi ~/.config/hyprshell/config.ron), so there are NO Hyprland binds
-      # for it. Package (hyprshell) comes from the hyprswitch flake input (modules/hyprland.nix).
-      exec-once = hyprshell run
+        -- hyprshell — GTK4 Alt+Tab window switcher daemon. It registers the Alt+Tab switch key
+        -- itself (config: chezmoi ~/.config/hyprshell/config.ron), so there are NO Hyprland binds
+        -- for it. Package (hyprshell) comes from the hyprswitch flake input (modules/hyprland.nix).
+        hl.exec_cmd("hyprshell run")
 
-      # flameshot screenshot daemon — owns the tray icon and serves `flameshot gui` (bound to
-      # PrintScreen in chezmoi ~/.config/hypr/hyprland.conf) without a cold-start spawn on each
-      # capture. Wayland grabs go through the xdg-desktop-portal Screenshot path. Package:
-      # modules/hyprland.nix.
-      exec-once = flameshot
+        -- flameshot screenshot daemon — owns the tray icon and serves `flameshot gui` (bound to
+        -- PrintScreen in chezmoi ~/.config/hypr/hyprland.lua) without a cold-start spawn on each
+        -- capture. Wayland grabs go through the xdg-desktop-portal Screenshot path. Package:
+        -- modules/hyprland.nix.
+        hl.exec_cmd("flameshot")
 
-      # ownCloud sync client, minimized to tray.
-      exec-once = owncloud --background
+        -- ownCloud sync client, minimized to tray.
+        hl.exec_cmd("owncloud --background")
 
-      # KDE Connect daemon (programs.kdeconnect in this module) — must run persistently for
-      # the phone to discover/stay paired with this host; D-Bus activation would only start
-      # it on first use. kdeconnect-indicator (tray UI) is intentionally NOT autostarted —
-      # launch it (or kdeconnect-app) on demand; the daemon alone handles sync/notifications.
-      exec-once = kdeconnectd
+        -- KDE Connect daemon (programs.kdeconnect in this module) — must run persistently for
+        -- the phone to discover/stay paired with this host; D-Bus activation would only start
+        -- it on first use. kdeconnect-indicator (tray UI) is intentionally NOT autostarted —
+        -- launch it (or kdeconnect-app) on demand; the daemon alone handles sync/notifications.
+        hl.exec_cmd("kdeconnectd")
 
-      # NOTE: no OBS autostart, and no cleanroom exec-once either — cleanroom (modules/cleanroom.nix)
-      # ships its own systemd user unit bound to graphical-session.target, plus D-Bus activation, so
-      # an exec-once here would race its own single-instance guard. Unlike the old NV Broadcast setup
-      # there IS a reason to have it running before a call: cleanroom is the producer, and a
-      # producerless v4l2loopback advertises no format at all.
+        -- NOTE: no OBS autostart, and no cleanroom exec-once either — cleanroom (modules/cleanroom.nix)
+        -- ships its own systemd user unit bound to graphical-session.target, plus D-Bus activation, so
+        -- an exec-once here would race its own single-instance guard. Unlike the old NV Broadcast setup
+        -- there IS a reason to have it running before a call: cleanroom is the producer, and a
+        -- producerless v4l2loopback advertises no format at all.
 
-      # NOTE: no linux-wallpaperengine exec-once — the DMS `linuxWallpaperEngine` plugin
-      # (modules/hyprland.nix) owns wallpaper launch + saved state (output, scene id) now.
+        -- NOTE: no linux-wallpaperengine exec-once — the DMS `linuxWallpaperEngine` plugin
+        -- (modules/hyprland.nix) owns wallpaper launch + saved state (output, scene id) now.
+      end)
     '';
 
     # The idle-inhibit watchdog as a SUPERVISED user service — the one daemon here that is NOT

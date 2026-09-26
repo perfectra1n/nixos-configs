@@ -8,8 +8,11 @@ blender-bin = "32a73188c4026cea3f8ed97078ace45bf9f7f578"
 # renovate: datasource=git-refs depName=chaotic packageName=https://github.com/chaotic-cx/nyx branch=nyxpkgs-unstable
 chaotic = "5215e4ba5d3b531ca0344fe8670b63c44ff19c1a"
 
-# renovate: datasource=git-refs depName=cleanroom packageName=https://github.com/perfectra1n/cleanroom branch=master
-cleanroom = "73919d42f17f3fd0308df77d71f46294da921287"
+# renovate: datasource=git-refs depName=cleanroom packageName=https://github.com/perfectra1n/cleanroom branch=main
+cleanroom = "9d24ce961927a7d8fcdec9f7dcd33885ab54ba80"
+
+# renovate: datasource=git-refs depName=dank-greeter packageName=https://github.com/AvengeMedia/dank-greeter branch=master
+dank-greeter = "1cd1193e1d423d21130ea8338d4c357093326b34"
 
 # renovate: datasource=git-refs depName=dms packageName=https://github.com/AvengeMedia/DankMaterialShell branch=stable
 dms = "fe293b7379a51f62a4db7043fc09df71f78e72ef"

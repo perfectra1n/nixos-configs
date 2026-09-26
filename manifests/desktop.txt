@@ -2035,6 +2035,9 @@ dlpack-src
 dlv-list-0.3.0
 dlv-list-0.5.2
 dmenu-5.4
+dms-greeter-1.6.2
+dms-greeter-1.6.2-go-modules
+dms-greeter-session
 dms-idle-inhibit-watchdog
 dms-plugin-hyprlandSubmapIndicator-1.0.0
 dms-plugin-linuxWallpaperEngine-1.1.2
@@ -2318,6 +2321,7 @@ findutils-get-version-4.11.0
 findutils-static-4.11.0
 findutils-static-get-version-4.11.0
 fingertree-0.1.6.3
+fira-code-6.2
 firefox-155.0.1
 firefox-syncserver.md
 firefox-unwrapped-155.0.1
@@ -2839,6 +2843,10 @@ hm-modules-messages
 hm-setup-env
 hm_homeperf3ct.cache.keep
 hm_homeperf3ct.localstate.keep
+hm_hyprnixautostart.lua
+hm_hyprnixgpu.lua
+hm_hyprnixinput.lua
+hm_hyprnixmonitors.lua
 hmac-0.12.1
 hmac-sha256-1.1.14
 home-0.5.12
@@ -2933,10 +2941,6 @@ hyprpicker-0.4.7
 hyprshell-4.10.8
 hyprshell-4.10.8_fish-completions
 hyprshell-deps-4.10.8
-hyprsome-0.1.12-unstable-2024-05-20
-hyprsome-0.1.12-unstable-2024-05-20-vendor
-hyprsome-0.1.12-unstable-2024-05-20-vendor-staging
-hyprsome-0.1.12-unstable-2024-05-20_fish-completions
 hyprutils-0.14.1
 hyprwayland-scanner-0.4.6
 hyprwire-0.3.1
@@ -3047,6 +3051,7 @@ integer-conversion-0.1.1
 integer-conversion-0.1.1-r2.cabal
 integer-logarithms-1.0.5
 integer-sqrt-0.1.5
+inter-4.1
 interactiveShellInit
 interpolate_name-0.2.4
 intltool-0.51.0
@@ -3949,6 +3954,7 @@ mariadb-connector-c-3.3.5
 mariadb-connector-odbc-3.2.6
 markdown-unlit-0.6.0
 matchers-0.2.0
+material-symbols-4.0.0-unstable-2026-06-12
 matomo.md
 matrixmultiply-0.3.11
 matugen-4.2.0
@@ -6971,9 +6977,6 @@ trufflehog-3.97.2-go-modules
 tsx-4.23.12
 tsx-pnpm-deps
 ttf-parser-0.25.1
-tuigreet-0.11.1
-tuigreet-0.11.1-vendor
-tuigreet-0.11.1-vendor-staging
 turbojpeg-1.5.1
 turbojpeg-sys-1.2.0
 twolame-2017-09-27
@@ -7078,6 +7081,7 @@ unit-run-initramfs.mount
 unit-run-wrappers.mount
 unit-script-cups-pre-start
 unit-script-ensure-printers-start
+unit-script-greetd-pre-start
 unit-script-initrd-find-nixos-closure-start
 unit-script-initrd-nixos-activation-start
 unit-script-ios-backup-start

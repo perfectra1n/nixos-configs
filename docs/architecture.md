@@ -61,7 +61,7 @@ repo-root `.chezmoiroot` (one line, `dotfiles`) redirects chezmoi there, so it n
 Nix tree and the flake never renders `dotfiles/`. `modules/dotfiles.nix` pins chezmoi's
 `sourceDir` to this checkout — the one load-bearing path the merge introduced (the repo must live
 where `sourceDir` points). Merging buys atomic cross-boundary commits (change a fragment and the
-`hyprland.conf` that sources it in one commit) and a single clone/bootstrap; it does NOT collapse
+`hyprland.lua` that requires it in one commit) and a single clone/bootstrap; it does NOT collapse
 the tooling — chezmoi keeps live-editing + age encryption, sops-nix keeps system secrets. The old
 standalone `chezmoi-dotfiles` repo is archived for history, and the `chezmoi/gitea_token` sops
 secret that used to gate cloning it is retired (its now-orphaned ciphertext in `secrets.yaml` can
@@ -72,13 +72,18 @@ Consequences baked into the code:
   those generate files under `~/.config` and would fight chezmoi. fish-as-login-shell is
   set system-side (`modules/common.nix`); `mise` is installed as a bare package and
   activated by a chezmoi-managed `fish/conf.d` snippet.
-- **Two allowed flake-written fragments**, both `source`d by the chezmoi `hyprland.conf`:
-  - `hypr/gpu.conf` — GPU env vars, written by `modules/{nvidia,amd}.nix` (hardware-specific,
+- **Allowed flake-written fragments** — Lua modules under `hypr/nix/`, all `require`d (as
+  `nix.*`) by the chezmoi `hyprland.lua`. The `nix/` directory is the ownership marker, mirroring
+  DMS's `dms/`:
+  - `hypr/nix/gpu.lua` — GPU env vars, written by `modules/{nvidia,amd}.nix` (hardware-specific,
     so the flake is the right owner).
-  - `hypr/autostart.conf` — the `exec-once` daemon list, written by `modules/desktop-apps.nix`.
-    The flake owns it because it autostarts daemons the *flake* installs (`dms`, `pypr`,
-    `hyprshell`, `solaar`, `linux-wallpaperengine`, …); keeping the list next to the packages stops the
-    two drifting apart. **Requires** the chezmoi `hyprland.conf` to `source` it.
+  - `hypr/nix/monitors.lua` + `hypr/nix/input.lua` — per-host monitor layout and mouse/touchpad
+    feel, written by `hosts/<name>/default.nix`. `monitors.lua` `return`s its spec list so the
+    chezmoi config's HDR toggle can re-apply the `cm = "hdr"` entries without restating them.
+  - `hypr/nix/autostart.lua` — the `hyprland.start` daemon list (Lua's `exec-once`), written by
+    `modules/desktop-apps.nix`. The flake owns it because it autostarts daemons the *flake*
+    installs (`dms`, `pypr`, `hyprshell`, …); keeping the list next to the packages stops the two
+    drifting apart. **Requires** the chezmoi `hyprland.lua` to `require("nix.autostart")`.
 
 ## Secrets — sops-nix
 

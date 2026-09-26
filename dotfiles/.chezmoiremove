@@ -1,7 +1,15 @@
-# Hyprland 0.55+ generates a default hyprland.lua, and a .lua config takes
-# PRECEDENCE over our hyprland.conf — silently hijacking the whole config
-# (no DMS/autostart, defaults everywhere). Nuke any stray copy on every apply.
-.config/hypr/hyprland.lua
+# 2026-09-26: Hyprland config migrated hyprlang → Lua (hyprland.lua is now the managed file; it
+# takes precedence whenever both exist, so a leftover .conf is dead weight that only misleads).
+# The shell helpers spoke legacy `hyprctl dispatch`/`keyword`, which Lua mode rejects — they are
+# native Lua functions in hyprland.lua now. dms/binds.conf became dms/binds.lua. copyq-cursor.sh
+# was already unbound (DMS owns the clipboard) and would be broken for the same IPC reason.
+# (This file used to evict a stray hyprland.lua, back when a generated one hijacked the .conf.)
+.config/hypr/hyprland.conf
+.config/hypr/dms/binds.conf
+.config/hypr/stack-all.sh
+.config/hypr/stack-push.sh
+.config/hypr/hdr-toggle.sh
+.config/hypr/copyq-cursor.sh
 
 # Retired: screenshots now go straight through `flameshot gui` (PrintScreen) with the wrapped grim
 # portal + render:keep_unmodified_copy=0 for HDR. Drop the old SDR-flip wrapper from any machine.

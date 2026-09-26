@@ -113,7 +113,7 @@ in
     trilium-atvik   # second instance (Atvik server) — wrapper defined above; wraps
                     # pkgs.trilium-desktop, so it inherits the rebind + HDR flag for free.
     posy-cursors    # Windows cursor (Posy's Improved Cursors). Theme name "Posy_Cursor"
-                    # set in home/gui.nix dconf + chezmoi (hyprland.conf XCURSOR_THEME).
+                    # set in home/gui.nix dconf + chezmoi (hyprland.lua XCURSOR_THEME).
                     # cc-by-nc license → unfree (allowUnfree covers it).
   ];
 

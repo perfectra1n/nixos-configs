@@ -20,7 +20,7 @@ explains the *why*.
 
 DMS ([DankMaterialShell](../modules/hyprland.nix)) owns the whole idle pipeline — monitor-off,
 lock, suspend — and explicitly replaces `swayidle`/`hypridle` (which is why there is **no
-hypridle** in `autostart.conf`). Part of that pipeline: DMS honors every
+hypridle** in `nix/autostart.lua`). Part of that pipeline: DMS honors every
 `org.freedesktop.ScreenSaver` inhibit by mirroring it into a **compositor-level Wayland
 idle-inhibitor** that blocks DPMS for *everything*.
 
@@ -230,4 +230,4 @@ that timeout, it doesn't set the timeout itself.
 - [[dms-monitors-wont-sleep-steam-inhibit]] — the original Steam-leak diagnosis.
 - [[wallpaperengine-audio-defeats-idle-watchdog]] — why the per-stream audio check excludes wallpaper-engine.
 - [[idle-inhibit-watchdog-no-app-list]] — the watchdog is generic; a silent journal + stuck screen means a Wayland-surface inhibitor.
-- [architecture.md](architecture.md) — the chezmoi boundary and why the flake owns `autostart.conf`.
+- [architecture.md](architecture.md) — the chezmoi boundary and why the flake owns `nix/autostart.lua`.

@@ -15,13 +15,18 @@ Hosts: `desktop` (NVIDIA), `laptop` (AMD), `server` (headless).
 - **Flakes only see git-tracked files.** `git add` any NEW file before `nixos-rebuild`
   or `nix flake check`, or it's invisible. This is the #1 gotcha.
 - **The chezmoi boundary is sacred — ownership decision tree** for any config/thing:
-  - **Colors / themes / palettes → DMS** (DankMaterialShell matugen): e.g. `hypr/dms/colors.conf`,
+  - **Colors / themes / palettes → DMS** (DankMaterialShell matugen): e.g. `hypr/dms/colors.lua`,
     `gtk-3.0/dank-colors.css`. Don't hardcode theme colors in chezmoi or the flake.
-  - **Host-specific / hardware config → the flake**, written as per-host `xdg.configFile`
-    *fragments* that the chezmoi-managed `hyprland.conf` `source`s: `hypr/gpu.conf` (GPU,
-    `modules/{nvidia,amd}.nix`), `hypr/monitors.conf` + `hypr/input.conf` (monitor scale +
-    touchpad, `hosts/<name>/default.nix`), `hypr/autostart.conf` (`exec-once` daemons,
-    `modules/desktop-apps.nix`).
+  - **Host-specific / hardware config → the flake**, written as per-host `xdg.configFile` Lua
+    *fragments* under `hypr/nix/` that the chezmoi-managed `hyprland.lua` `require`s as `nix.*`:
+    `hypr/nix/gpu.lua` (GPU, `modules/{nvidia,amd}.nix`), `hypr/nix/monitors.lua` +
+    `hypr/nix/input.lua` (monitor layout + touchpad, `hosts/<name>/default.nix`; `monitors.lua`
+    must `return` its spec list — the HDR toggle reads it), `hypr/nix/autostart.lua`
+    (`hyprland.start` daemons, `modules/desktop-apps.nix`).
+  - **Hyprland is on the Lua config** (`hyprland.lua`; hyprlang `.conf` is deprecated). In Lua mode
+    `hyprctl dispatch <legacy string>` fails and `hyprctl keyword` is refused — use
+    `hyprctl eval '<lua>'` and never add a helper that speaks legacy IPC. Validate offline with
+    `Hyprland --verify-config -c <dir>/hyprland.lua` (it follows `require`s and flags unknown keys).
   - **All other `~/.config/*` user config → chezmoi** (hypr, fish, kitty, tmux, gtk `settings.ini`).
     NEVER have the flake (home-manager `gtk`/`qt`, `programs.fish`, `programs.neovim`, generic
     `xdg.configFile`) write a `~/.config` file chezmoi manages. The chezmoi SOURCE lives in THIS
@@ -31,7 +36,7 @@ Hosts: `desktop` (NVIDIA), `laptop` (AMD), `server` (headless).
   - ⚠️ A chezmoi↔home-manager collision on a `~/.config` file makes `home-manager-<user>.service`
     fail with "would be clobbered" and **silently stops ALL HM file updates** until resolved — e.g.
     a chezmoi-owned `gtk-3.0/settings.ini` vs `home/gui.nix`'s `gtk` block blocked `monitors.conf`
-    (and every other HM file) from ever updating.
+    (now `nix/monitors.lua`, and every other HM file) from ever updating.
 - **Nix and chezmoi are PEERS sharing one repo, not nested.** Neither tool applies or templates the
   other's tree: chezmoi never sees `flake.nix`/`modules/` (the `.chezmoiroot` redirect scopes it to
   `dotfiles/`), and the flake never renders `dotfiles/`. Secrets stay split — system secrets in

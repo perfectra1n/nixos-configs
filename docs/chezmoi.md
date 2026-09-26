@@ -100,8 +100,8 @@ Easy to conflate, opposite jobs:
   credentials, `fish_variables` (machine-generated *and* used to hold secrets), browser profiles,
   and re-auth-instead-of-sync tool state (`gh hosts.yml`, `tea`, `argocd`, `kopia`).
 - **`.chezmoiremove`** — targets chezmoi *actively deletes* on every apply. Used to retire files
-  fleet-wide: the stray Hyprland-generated `hyprland.lua` (which would silently take precedence
-  over `hyprland.conf`), the retired `screenshot-hdr.sh`, the pre-LazyVim `nvim/init.vim`.
+  fleet-wide: the pre-Lua `hyprland.conf` and its legacy-IPC helper scripts, the retired
+  `screenshot-hdr.sh`, the pre-LazyVim `nvim/init.vim`.
   Declarative cleanup — a deleted source file alone does NOT remove the deployed copy from
   machines that already have it.
 
@@ -110,8 +110,8 @@ Easy to conflate, opposite jobs:
 A chezmoi↔home-manager **collision** on any `~/.config` file makes
 `home-manager-<user>.service` fail with *"would be clobbered"* — and that **silently stops ALL HM
 file updates** (every `xdg.configFile`, not just the colliding one) until resolved. This is why
-the boundary is a hard rule: the flake writes only the sanctioned `hypr/*.conf` fragments that the
-chezmoi `hyprland.conf` `source`s (see [architecture.md](architecture.md#the-chezmoi-boundary)),
+the boundary is a hard rule: the flake writes only the sanctioned `hypr/nix/*.lua` fragments that
+the chezmoi `hyprland.lua` `require`s (see [architecture.md](architecture.md#the-chezmoi-boundary)),
 and app-owned config (DMS `settings.json`) is managed as a writable chezmoi *snapshot*, never a
 lock.
 

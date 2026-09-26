@@ -180,8 +180,8 @@ Verbs: `switch` (now + boot default) · `test` (now, not persisted) · `boot` (n
 - **The Nix half** (everything outside `dotfiles/`) owns packages, services, system state.
   Edit + `nixos-rebuild`.
 - **The chezmoi half** (`dotfiles/`) owns `~/.config/*` (hypr, waybar, nvim, fish, …). The two
-  never touch the same file. GPU/monitor *fragments* the flake writes (e.g. `hypr/gpu.conf`) are
-  sourced by the chezmoi `hyprland.conf`.
+  never touch the same file. GPU/monitor *fragments* the flake writes (e.g. `hypr/nix/gpu.lua`) are
+  `require`d by the chezmoi `hyprland.lua`.
 - **Secrets live in two separate systems that never overlap.** The flake's **sops-nix**
   (`secrets/secrets.yaml`) holds *system* secrets → decrypted at activation into
   `/run/secrets`. chezmoi's **age** encryption holds *user/shell* dotfile secrets →

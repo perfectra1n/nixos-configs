@@ -5,12 +5,13 @@
 let
   # hypr-cheatsheet — a searchable rofi overlay of every active keybind. The data is read
   # LIVE from `hyprctl binds -j`, so it never drifts from the chezmoi-owned binds. Those binds
-  # use the `bindd =` variant (MODS, KEY, <description>, dispatcher, args), so each row carries
-  # a human-readable `.description` — the middle column below. Binds with no description fall
-  # back to just showing the dispatcher, so this degrades gracefully if any plain `bind =` slips in.
+  # pass `{ description = … }` to hl.bind, so each row carries a human-readable `.description`
+  # — the middle column below. Under the Lua config EVERY bind reports dispatcher "__lua" with an
+  # opaque registry ref as its arg, so an undescribed bind falls back to a blank rather than that
+  # noise; a legacy hyprlang dispatcher (if one ever reappears) still shows as-is.
   # The jq filter decodes Hyprland's modmask bitmask (SHIFT=1, CTRL=4, ALT=8, SUPER=64) into
-  # readable combos and drops the noise `submap → reset` rows. Bind it in hyprland.conf, e.g.
-  #   bindd = SUPER, slash, Show this keybind cheatsheet, exec, hypr-cheatsheet
+  # readable combos. Bound in the chezmoi hyprland.lua, e.g.
+  #   hl.bind("SUPER + slash", hl.dsp.exec_cmd("hypr-cheatsheet"), { description = "…" })
   hypr-cheatsheet =
     let
       filter = pkgs.writeText "hypr-binds.jq" ''
@@ -20,12 +21,12 @@ let
             if (m/8|floor)%2==1 then "ALT"   else empty end,
             if (m/64|floor)%2==1 then "SUPER" else empty end ] | join("+");
         .[]
-        | select((.dispatcher == "submap" and .arg == "reset") | not)
         | ( (if .submap != "" then "[" + .submap + "] " else "" end)
             + (mods(.modmask) as $m | if $m=="" then "" else $m + " + " end)
             + (if .key != "" then .key else "code:" + (.keycode|tostring) end) ) as $combo
         | ( .description // "" ) as $desc
-        | ( .dispatcher + (if (.arg // "") != "" then " " + .arg else "" end) ) as $action
+        | ( if .dispatcher == "__lua" then ""
+            else .dispatcher + (if (.arg // "") != "" then " " + .arg else "" end) end ) as $action
         | $combo + "\t" + $desc + "\t" + $action
       '';
     in
@@ -33,7 +34,7 @@ let
       name = "hypr-cheatsheet";
       runtimeInputs = with pkgs; [ hyprland jq gawk rofi ];
       # Two columns: key combo │ what it does (the bind's description, falling back to the raw
-      # dispatcher for any plain `bind =`). Two things make rofi render this nicely, and BOTH
+      # dispatcher for a legacy bind). Two things make rofi render this nicely, and BOTH
       # are forced here so the sheet is self-contained rather than at the mercy of the
       # chezmoi-owned ~/.config/rofi/config.rasi:
       #   * a real MONOSPACE font — column alignment is space-padding, which only lines up in a
@@ -60,6 +61,7 @@ in
     ./chromium-cm-fix.nix                            # HDR brightness fix for Chromium/Electron (overlay)
     inputs.dms.nixosModules.dank-material-shell      # DankMaterialShell (Quickshell shell) — config below
     inputs.dms-plugin-registry.nixosModules.default  # exposes programs.dank-material-shell.plugins.<id>
+    inputs.dank-greeter.nixosModules.default         # greetd greeter, styled from the DMS theme — below
   ];
 
   programs.hyprland.enable = true; # compositor + xdg-desktop-portal-hyprland
@@ -131,7 +133,7 @@ in
   # plugin never loads, kdeglobals is never read, and Qt hands out its LIGHT default palette —
   # Dolphin then paints black text on white alternating rows inside its dark window.
   #   Read back out of the HM block rather than retyped: a hand-copied value is exactly what
-  # rotted before (a stale `env = QT_QPA_PLATFORMTHEME,qt5ct` in the chezmoi hyprland.conf
+  # rotted before (a stale `env = QT_QPA_PLATFORMTHEME,qt5ct` in the old chezmoi hyprland.conf
   # silently disabled this whole stack, and qt5ct ships no Qt6 plugin at all).
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
@@ -139,23 +141,41 @@ in
       QT_QPA_PLATFORMTHEME QT_STYLE_OVERRIDE;
   };
 
-  # Login via greetd + tuigreet. Launch through `start-hyprland` (the wrapper that
-  # programs.hyprland.enable installs — it exports the session env to systemd/dbus so
-  # portals, screenshare, Electron, … work). Running `Hyprland` directly triggers the
-  # "started without start-hyprland" warning.
-  services.greetd = {
+  # Login via greetd + the DMS greeter (Quickshell, same visual language as the DMS lock
+  # screen). Picked over regreet/gtkgreet so the login screen has NO second theme source:
+  # configHome hands it this user's live settings/session/colors, keeping the palette owned
+  # by DMS+matugen per the CLAUDE.md ownership rules.
+  #
+  # Deliberately NOT setting services.greetd here. The greeter module supplies
+  # default_session.command with mkDefault, so any plain assignment in this file would
+  # silently WIN and we'd keep booting the old greeter with no error to explain it. The module
+  # also flips services.greetd.enable and leaves default_session.user at nixpkgs' "greeter",
+  # which its own assertion and the /var/lib/dms-greeter tmpfiles rule both read.
+  #
+  # No --cmd equivalent is needed: the greeter reads wayland-sessions desktop files, and the
+  # "Hyprland" entry already execs `start-hyprland` — the wrapper that exports session env to
+  # systemd/dbus (portals, screenshare, Electron). programs.hyprland.enable also ships a
+  # "Hyprland (uwsm-managed)" entry; the greeter remembers the last pick, so choose once.
+  programs.dms-greeter = {
     enable = true;
-    settings.default_session = {
-      command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd start-hyprland";
-      user = "greeter";
-    };
+    compositor.name = "hyprland";
+
+    # Same quickshell as the shell itself, so login screen and session can't drift apart on
+    # a Qt/quickshell bump (both default to pkgs.quickshell today; this makes it a guarantee).
+    quickshell.package = config.programs.dank-material-shell.quickshell.package;
+
+    # Copies settings.json + session.json + dms-colors.json into the greeter's cache dir.
+    # greetd's preStart does the copy as root, so none of the upstream README's setfacl/chgrp
+    # dance applies here. It runs at service START, so a re-theme reaches the greeter on the
+    # NEXT boot, not immediately.
+    configHome = "/home/${username}";
   };
 
   security.polkit.enable = true;
 
   # Wayland userland the chezmoi-managed ~/.config/hypr + waybar dotfiles expect.
   environment.systemPackages = with pkgs; [
-    hypr-cheatsheet  # searchable rofi overlay of all live keybinds (let-binding above); bind in hyprland.conf
+    hypr-cheatsheet  # searchable rofi overlay of all live keybinds (let-binding above); bound in hyprland.lua
     waybar
     rofi          # launcher; wayland support is merged into rofi (rofi-wayland removed)
     wl-clipboard
@@ -180,7 +200,7 @@ in
     swappy
     satty         # ShareX-style annotation editor; pipe `grim -g "$(slurp)" - | satty -f -`
     grimblast     # screenshot helper (clipboard + file)
-    flameshot     # primary screenshot GUI; bound to PrintScreen (`flameshot gui`) in chezmoi hyprland.conf,
+    flameshot     # primary screenshot GUI; bound to PrintScreen (`flameshot gui`) in chezmoi hyprland.lua,
                   # tray daemon autostarted in desktop-apps.nix. Wayland grabs go via the grim portal above.
     wf-recorder   # screen recording (GIF/mp4) — the piece grim/satty don't cover
     hyprlock
@@ -188,7 +208,6 @@ in
     brightnessctl
     playerctl
     pavucontrol
-    hyprsome     # per-monitor workspaces (IPC binary); chezmoi binds call `hyprsome workspace|move N`
     pyprland     # pypr daemon — scratchpads = Wayland tdrop (quake terminal); config in chezmoi pyprland.toml
     inputs.hyprswitch.packages.${pkgs.stdenv.hostPlatform.system}.default # GUI Alt+Tab switcher (flake input; not in nixpkgs)
   ];

@@ -6,10 +6,10 @@
   services.xserver.videoDrivers = [ "amdgpu" ];
   # No proprietary driver needed. GPU compute (ROCm) would go here — not for gaming.
 
-  # Hyprland GPU env (flake-owned fragment the chezmoi hyprland.conf sources).
+  # Hyprland GPU env (flake-owned Lua fragment the chezmoi hyprland.lua requires as nix.gpu).
   # amdgpu does hardware cursors fine, so no override needed.
-  home-manager.users.${username}.xdg.configFile."hypr/gpu.conf".text = ''
-    # AMD — written by the flake (modules/amd.nix). Do not edit by hand.
-    env = LIBVA_DRIVER_NAME,radeonsi
+  home-manager.users.${username}.xdg.configFile."hypr/nix/gpu.lua".text = ''
+    -- AMD — written by the flake (modules/amd.nix). Do not edit by hand.
+    hl.env("LIBVA_DRIVER_NAME", "radeonsi")
   '';
 }

@@ -24,15 +24,13 @@
   # the legacy `virtualisation.docker.enableNvidia` runtime wrapper is deprecated.
   hardware.nvidia-container-toolkit.enable = true;
 
-  # Hyprland + NVIDIA env (GBM/GLX/VAAPI). Written as a flake-owned fragment the
-  # chezmoi hyprland.conf sources, so GPU truth stays here and prefs stay in chezmoi.
-  home-manager.users.${username}.xdg.configFile."hypr/gpu.conf".text = ''
-    # NVIDIA — written by the flake (modules/nvidia.nix). Do not edit by hand.
-    env = LIBVA_DRIVER_NAME,nvidia
-    env = GBM_BACKEND,nvidia-drm
-    env = __GLX_VENDOR_LIBRARY_NAME,nvidia
-    cursor {
-      no_hardware_cursors = false
-    }
+  # Hyprland + NVIDIA env (GBM/GLX/VAAPI). Written as a flake-owned Lua fragment the
+  # chezmoi hyprland.lua requires (nix.gpu), so GPU truth stays here and prefs stay in chezmoi.
+  home-manager.users.${username}.xdg.configFile."hypr/nix/gpu.lua".text = ''
+    -- NVIDIA — written by the flake (modules/nvidia.nix). Do not edit by hand.
+    hl.env("LIBVA_DRIVER_NAME", "nvidia")
+    hl.env("GBM_BACKEND", "nvidia-drm")
+    hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
+    hl.config({ cursor = { no_hardware_cursors = false } })
   '';
 }

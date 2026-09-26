@@ -43,7 +43,7 @@ in
                 # prebuilt binaries took the old name with it, so plain `dbeaver` no longer
                 # evaluates. Apache-2.0 despite the -bin, so no unfree gate. Its state lives in
                 # ~/.local/share/DBeaverData, nowhere near chezmoi. CLIs are in home/common.nix.
-    # ── KDE file stack ── Dolphin is $fileManager in hyprland.conf. Dolphin is a KIO client,
+    # ── KDE file stack ── Dolphin is fileManager in hyprland.lua. Dolphin is a KIO client,
     # not a self-contained binary, so the companions below are load-bearing, not nice-to-haves.
     kdePackages.dolphin
     kdePackages.kio-extras        # Trash, network (smb/sftp/mtp), "Remote" places. WITHOUT this
@@ -111,7 +111,7 @@ in
 
   # NOTE: deliberately NO `gtk = { ... }` here. home-manager's gtk module writes
   # ~/.config/gtk-{3,4}.0/settings.ini, which CHEZMOI owns (the boundary) — HM refuses to
-  # clobber chezmoi's file and the WHOLE activation aborts (taking monitors.conf etc. with
+  # clobber chezmoi's file and the WHOLE activation aborts (taking nix/monitors.lua etc. with
   # it). The GTK3 dark-theme hint (gtk-application-prefer-dark-theme=1) lives in chezmoi's
   # settings.ini instead; GTK4/libadwaita follow color-scheme via the dconf block above.
 
@@ -130,7 +130,7 @@ in
   # No widgetStyle key is set in kdeglobals: style.name exports QT_STYLE_OVERRIDE=breeze, and
   # the env var outranks kdeglobals, so writing it there too would be dead config.
   #
-  # The same precedence bites the other way: hyprland.conf `env =` lines are exported to the
+  # The same precedence bites the other way: hyprland.lua `hl.env()` calls (formerly `env =`) are exported to the
   # systemd/D-Bus activation environment AFTER hm-session-vars and win. A leftover
   # `env = QT_QPA_PLATFORMTHEME,qt5ct` there (from the pre-Dolphin era) made this whole block
   # dead config for months — qt5ct ships no Qt6 plugin, Qt fell back to its generic theme and a
