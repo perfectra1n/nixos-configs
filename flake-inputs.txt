@@ -33,5 +33,5 @@ nixpkgs = "eaad089433ca2bb662274377d33df3d0e51ef28b"
 sops-nix = "13616fff713a9f94055c66f15687ebdc17a335df"
 
 # renovate: datasource=git-refs depName=trilium packageName=https://github.com/TriliumNext/Trilium branch=main
-trilium = "12120ff865b033547740ea4ed1e4038882bdb428"
+trilium = "7af4e8ed645a1e748854ca73ad5e9eb8a612d40d"
 
