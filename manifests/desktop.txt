@@ -3212,6 +3212,8 @@ kaem.M1-1.9.1
 kaem.hex2-1.9.1
 kafka.md
 kan-extensions-5.2.8
+kanbot
+kanbot-fetch.env
 karchive-5.116.0
 karchive-6.30.0
 kauth-5.116.0
