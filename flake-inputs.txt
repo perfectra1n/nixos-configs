@@ -9,7 +9,7 @@ blender-bin = "32a73188c4026cea3f8ed97078ace45bf9f7f578"
 chaotic = "5215e4ba5d3b531ca0344fe8670b63c44ff19c1a"
 
 # renovate: datasource=git-refs depName=cleanroom packageName=https://github.com/perfectra1n/cleanroom branch=main
-cleanroom = "9d24ce961927a7d8fcdec9f7dcd33885ab54ba80"
+cleanroom = "3649b3acfe851599b84123179bb6a1bf5f4b6a54"
 
 # renovate: datasource=git-refs depName=dank-greeter packageName=https://github.com/AvengeMedia/dank-greeter branch=master
 dank-greeter = "1cd1193e1d423d21130ea8338d4c357093326b34"
