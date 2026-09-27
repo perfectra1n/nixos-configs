@@ -205,3 +205,7 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 `kubectl`, `talosctl` (static Go binaries via `mkBin`), `ksops`, `sofka` (prebuilt Rust binary,
 autoPatchelf'd), `cargo-clean-all` (built from source — the one pin using nvfetcher's `cargo_lock`,
 which ships upstream's `Cargo.lock` in `_sources/` so bumps need no `cargoHash`), `libratbag` (fork pin).
+
+`kanbot` is pinned in `pkgs/kanbot.nix` instead (version + release sha256), not here: its Gitea requires
+sign-in, and the sops credential only exists after activation, so the launcher fetches and verifies the
+pinned release on first run rather than at build time.
