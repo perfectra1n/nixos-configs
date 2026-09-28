@@ -18,8 +18,8 @@
 # Bump (keep it in step with the cluster's chart — `kanbot runner` refuses a server of an
 # incompatible version): set `version`, and `sha256` from that release's SHA256SUMS asset.
 let
-  version = "0.1.7";
-  sha256 = "f7f774a701397720b90981af0fca48e809d6d5d68fe1bbc17ff35ace5d3a3d46";
+  version = "0.1.8";
+  sha256 = "d66530d3e492a0dd76aadf86b7dda7d933161fb4e495d18fd61eba83c3a74eb9";
   asset = "kanbot-${version}-x86_64-unknown-linux-gnu";
 
   interpreter = pkgs.stdenv.cc.bintools.dynamicLinker;
