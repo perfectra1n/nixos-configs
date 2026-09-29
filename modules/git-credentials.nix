@@ -45,6 +45,9 @@ lib.mkIf declareSecret {
     "git/duck_forgejo_host" = { };
   };
 
+  # ORDER MATTERS: git's store helper answers with the FIRST line whose host matches. The Duck
+  # Gitea and Duck Forgejo Bitwarden items can name the same host (both did after a refresh), and
+  # the Gitea token is refused there — so the Forgejo line comes first and the Gitea line last.
   sops.templates."git-credentials" = {
     owner = username;
     mode = "0400"; # read-only: we provide creds declaratively, git never needs to write them back
@@ -52,10 +55,10 @@ lib.mkIf declareSecret {
     content = ''
       https://perfectra1n:${ph "git/github_token"}@github.com
       https://perf3ct:${ph "git/main_gitea_token"}@${ph "git/main_gitea_host"}
-      https://perf3ct:${ph "git/duck_gitea_token"}@${ph "git/duck_gitea_host"}
       https://perfectra1n:${ph "git/forgejo_token"}@${ph "git/forgejo_host"}
       https://perfectra1n:${ph "git/forgejo_token"}@${ph "git/forgejo_alt_host"}
       https://perfectra1n:${ph "git/duck_forgejo_token"}@${ph "git/duck_forgejo_host"}
+      https://perf3ct:${ph "git/duck_gitea_token"}@${ph "git/duck_gitea_host"}
     '';
   };
 }
