@@ -51,11 +51,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787601089,
-        "narHash": "sha256-9KJqzZ9p1cfbeZeDxFsl7amodPQof6NlBY/v8e58ZIQ=",
+        "lastModified": 1787684663,
+        "narHash": "sha256-GHab053h2p+17BMx/4b2t9hUBwfUhSK2v5a8YfAU2ew=",
         "owner": "perfectra1n",
         "repo": "cleanroom",
-        "rev": "9d24ce961927a7d8fcdec9f7dcd33885ab54ba80",
+        "rev": "3649b3acfe851599b84123179bb6a1bf5f4b6a54",
         "type": "github"
       },
       "original": {
