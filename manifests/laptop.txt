@@ -2039,13 +2039,13 @@ dms-greeter-1.6.2
 dms-greeter-1.6.2-go-modules
 dms-greeter-session
 dms-idle-inhibit-watchdog
-dms-plugin-hyprlandSubmapIndicator-1.0.0
-dms-plugin-linuxWallpaperEngine-1.1.2
-dms-plugins-851e06c
+dms-plugin-hyprlandSubmapIndicator-1.0.1
+dms-plugin-linuxWallpaperEngine-1.2.0
+dms-plugins-568fd76
 dms-shell-1.6.2+date=2026-09-17_2db7646
 dms-shell-1.6.2+date=2026-09-17_2db7646-go-modules
 dms-shell-1.6.2+date=2026-09-17_2db7646_fish-completions
-dms-wallpaperengine-3c63881
+dms-wallpaperengine-e96718f
 dns-root-data-2025-04-14
 dnsmasq-2.93
 dnsmasq.md
