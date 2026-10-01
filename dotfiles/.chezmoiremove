@@ -10,6 +10,17 @@
 .config/hypr/stack-push.sh
 .config/hypr/hdr-toggle.sh
 .config/hypr/copyq-cursor.sh
+# DMS-generated hyprlang fragments from before the Lua switch. DMS now writes dms/colors.lua, and
+# hyprland.lua only requires dms.{binds,binds-user,colors} — cursor env, gaps and window rules are
+# inlined there — so these are never read. Not chezmoi-managed, but every DMS machine has them.
+.config/hypr/dms/colors.conf
+.config/hypr/dms/cursor.conf
+.config/hypr/dms/layout.conf
+.config/hypr/dms/windowrules.conf
+# hyprpaper isn't installed (DMS owns the wallpaper) and hypridle is deliberately not run (DMS owns
+# idle/lock — see nix/autostart.lua). hyprlock.conf stays: hyprlock is still hyprlang-only.
+.config/hypr/hyprpaper.conf
+.config/hypr/hypridle.conf
 
 # Retired: screenshots now go straight through `flameshot gui` (PrintScreen) with the wrapped grim
 # portal + render:keep_unmodified_copy=0 for HDR. Drop the old SDR-flip wrapper from any machine.
