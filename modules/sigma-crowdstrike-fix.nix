@@ -6,8 +6,8 @@
 # the GitHub repo/tag but kept `pname = "pysigma-pipeline-crowdstrike"`, so the wheel installs as
 # pysigma_backend_crowdstrike-3.0.0.dist-info while pythonMetadataCheckPhase looks up the OLD name
 # via importlib.metadata.version("$pname") — PackageNotFoundError, build dies AFTER a green
-# pythonImportsCheck. Nothing to do with the python 3.14 switch, despite the timing next to
-# modules/snowflake-py314-fix.nix; the giveaway is that it's a NAME lookup failing, not an import.
+# pythonImportsCheck. Nothing to do with the python 3.14 switch despite the timing; the giveaway
+# is that it's a NAME lookup failing, not an import.
 #
 # Fixing pname (rather than setting dontCheckPythonMetadata) keeps the hook's actual job — catching
 # version drift between pyproject.toml and the derivation — alive, and it's what an upstream PR

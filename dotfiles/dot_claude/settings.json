@@ -73,5 +73,6 @@
   "theme": "dark",
   "autoCompactEnabled": true,
   "fileCheckpointingEnabled": true,
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "switchModelsOnFlag": true
 }

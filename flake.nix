@@ -143,7 +143,7 @@
             ./modules/system-diff.nix
             ./modules/node-exporter.nix # node + smartctl exporters, every host (metrics land in the homelab's vmetrics)
             ./modules/nix-cache.nix # LAN attic binary cache: sops-rendered substituter + watch-store push (inert until secrets land)
-            ./modules/snowflake-py314-fix.nix # snowflake-connector-python 4.4.0 bump until nixpkgs#511615 lands (snow is on every host via home/common.nix)
+            ./modules/regclient-fix.nix # stdenv array refactor vs regclient unsetting outputBin (regctl is on every host via home/common.nix)
             ./hosts/${hostName}
             inputs.sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager
@@ -167,6 +167,7 @@
         ./modules/gaming.nix
         ./modules/pentest.nix
         ./modules/sigma-crowdstrike-fix.nix # stale nixpkgs pname breaks sigma-cli's build (pentest.nix); drop when nixpkgs renames it
+        ./modules/rustdesk-retag-fix.nix # upstream moved the 1.5.0 tag after nixpkgs hashed it (desktop-apps.nix)
         ./modules/desktop-apps.nix
         ./modules/snapx.nix # SnapX (ShareX fork) — on trial next to flameshot; FHS-sandboxed .NET app
         ./modules/cleanroom.nix # webcam blur + DeepFilterNet mic denoise (v4l2loopback + PipeWire client); replaced nvbroadcast + virtual-camera + noise-suppression

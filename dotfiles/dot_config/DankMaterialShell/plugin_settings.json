@@ -12,7 +12,8 @@
       "DP-2": "897016354",
       "DP-4": "897016354",
       "DP-5": "897016354",
-      "DP-6": "897016354"
+      "DP-6": "897016354",
+      "DP-3": "897016354"
     },
     "sceneSettings": {
       "897016354": {
@@ -22,7 +23,10 @@
       }
     },
     "playlistIntervalMinutes": 10,
-    "generateStaticWallpaper": true
+    "generateStaticWallpaper": true,
+    "namedPlaylists": {
+      "Default": []
+    }
   },
   "dankKDEConnect": {
     "enabled": true

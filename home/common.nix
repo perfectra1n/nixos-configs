@@ -154,7 +154,6 @@ in
     gh                   # GitHub CLI
     awscli2
     saml2aws             # fetch temporary AWS STS creds via a SAML IdP (Okta/ADFS/etc.) for `aws`
-    snowflake-cli        # Snowflake data-warehouse CLI; the binary is `snow`, not `snowflake-cli`
     claude-code          # nixpkgs lags releases; swap for the flake if you want latest
     codex                # OpenAI's Codex CLI (claude-code's sibling agent); config/auth live in
                          # ~/.codex (config.toml) — chezmoi-owned once captured, nothing here writes it
