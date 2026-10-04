@@ -1,6 +1,6 @@
 { config, lib, username, secrets, ... }:
 
-# Renders ~/.git-credentials' content from sops so `git push/pull` to GitHub, the two Gitea
+# Renders ~/.git-credentials' content from sops so `git push/pull` to GitHub, the three Gitea
 # instances and the two Forgejo instances works non-interactively, without a plaintext token
 # ever living in a dotfile.
 #
@@ -36,6 +36,8 @@ lib.mkIf declareSecret {
     "git/github_token" = { };
     "git/main_gitea_token" = { };
     "git/main_gitea_host" = { owner = username; };
+    "git/atvik_gitea_token" = { };
+    "git/atvik_gitea_host" = { };
     "git/duck_gitea_token" = { };
     "git/duck_gitea_host" = { };
     "git/forgejo_token" = { };
@@ -55,6 +57,7 @@ lib.mkIf declareSecret {
     content = ''
       https://perfectra1n:${ph "git/github_token"}@github.com
       https://perf3ct:${ph "git/main_gitea_token"}@${ph "git/main_gitea_host"}
+      https://perfectra1n:${ph "git/atvik_gitea_token"}@${ph "git/atvik_gitea_host"}
       https://perfectra1n:${ph "git/forgejo_token"}@${ph "git/forgejo_host"}
       https://perfectra1n:${ph "git/forgejo_token"}@${ph "git/forgejo_alt_host"}
       https://perfectra1n:${ph "git/duck_forgejo_token"}@${ph "git/duck_forgejo_host"}

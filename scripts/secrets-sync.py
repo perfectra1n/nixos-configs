@@ -58,6 +58,8 @@ SOPS_MANIFEST = [
     ("git/github_token",       "Github",                      "field",     "Updated Super Token (API key)"),
     ("git/main_gitea_token",   "Main Gitea",                  "field",     "Personal Access Token 1"),
     ("git/main_gitea_host",    "Main Gitea",                  "host",      ""),
+    ("git/atvik_gitea_token",  "Main Atvik Gitea",            "field",     "main-token"),
+    ("git/atvik_gitea_host",   "Main Atvik Gitea",            "host",      ""),
     ("git/duck_gitea_token",   "Duck Gitea",                  "field",     "API Key (Main)"),
     ("git/duck_gitea_host",    "Duck Gitea",                  "host",      ""),
     ("git/forgejo_token",      "Main Forgejo",                "field",     "main-forgejo-token"),
