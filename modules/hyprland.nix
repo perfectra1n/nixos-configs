@@ -214,6 +214,16 @@ in
 
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ]; # file pickers, etc.
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk # settings/color-scheme, everything not routed below
+      pkgs.kdePackages.xdg-desktop-portal-kde # KIO file dialog — matches Dolphin
+    ];
+    # Hyprland's portal has no FileChooser, so Open/Save dialogs (Chrome, Electron, Firefox)
+    # fell through to the GTK picker — a Nautilus-lookalike, not Dolphin. Route just that
+    # interface to KDE; this file (/etc/xdg) outranks the hyprland-portals.conf Hyprland ships.
+    config.hyprland = {
+      default = [ "hyprland" "gtk" ];
+      "org.freedesktop.impl.portal.FileChooser" = [ "kde" ];
+    };
   };
 }
