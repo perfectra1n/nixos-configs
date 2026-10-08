@@ -306,6 +306,7 @@ audiofile-0.3.6
 audit-4.2.1
 auditable-cargo-1.98.1
 auditable-cargo-bootstrap-1.98.1
+aurorae-6.7.5
 auto-add-driver-runpath-hook
 auto-common-1.2.2.jar
 auto-common-1.2.2.pom
@@ -2148,6 +2149,7 @@ ebook-tools-0.2.2
 ecg.dat
 ed-1.22.6
 editline-1.17.1-unstable-2025-05-24
+editorconfig-core-c-0.12.11
 educe-0.4.23
 efibootmgr-18
 efivar-39
@@ -2659,6 +2661,7 @@ gnupatch-2.5.9-builder
 gnupatch-static-2.8
 gnupatch-static-get-version-2.8
 gnupg-2.4.9
+gnuplot-6.0.5
 gnused-4.10
 gnused-4.10-binlore
 gnused-4.10_fish-completions
@@ -3284,6 +3287,7 @@ kdeconnect-kde-26.08.1
 kdeconnect-kde-26.08.1_fish-completions
 kdecoration-6.7.5
 kded-5.116.0
+kded-6.30.0
 kdeglobals-breeze-dark
 kdegraphics-mobipocket-26.08.1
 kdegraphics-thumbnailers-26.08.1
@@ -3304,10 +3308,12 @@ kf6-move-outputs-hook
 kfilemetadata-6.30.0
 kglobalaccel-5.116.0
 kglobalaccel-6.30.0
+kglobalacceld-6.7.5
 kguiaddons-5.116.0
 kguiaddons-6.30.0
 khal-0.14.1
 khal-0.14.1_fish-completions
+kholidays-6.30.0
 khronos-egl-6.0.0
 khronos_api-3.1.0
 ki18n-5.116.0
@@ -3338,6 +3344,7 @@ kmod-blacklist-31+20240202-2ubuntu8
 kmod-debian-aliases.conf-30+20230601-2
 knewstuff-5.116.0
 knewstuff-6.30.0
+knighttime-6.7.5
 knotifications-5.116.0
 knotifications-6.30.0
 kopia-0.23.1
@@ -3357,11 +3364,15 @@ kpackage-5.116.0
 kpackage-6.30.0
 kparts-6.30.0
 kpeople-6.30.0
+kpipewire-6.7.5
 kpsewhich
 kpty-6.30.0
+kquickcharts-6.30.0
 krb5-1.22.2
 krew-0.5.0
 krew-0.5.0-go-modules
+krunner-6.30.0
+kscreenlocker-6.7.5
 kservice-5.116.0
 kservice-6.30.0
 ksni-0.3.6
@@ -3369,6 +3380,8 @@ ksops-4.5.1
 ksops-4.5.1_fish-completions
 kstatusnotifieritem-6.30.0
 kstring-2.0.2
+ksvg-6.30.0
+ktexteditor-6.30.0
 ktextwidgets-5.116.0
 ktextwidgets-6.30.0
 kubectl
@@ -3379,6 +3392,7 @@ kubectl-krew_fish-completions
 kubernetes-client-bom-5.12.2.pom
 kubernetes-helm-4.3.0
 kubernetes-helm-4.3.0-go-modules
+kunitconversion-6.30.0
 kurbo-0.13.1
 kuserfeedback-6.30.0
 kustomize-5.8.1
@@ -3387,8 +3401,10 @@ kvazaar-2.3.2
 kwallet-5.116.0
 kwallet-6.30.0
 kwayland-5.116.0
+kwayland-6.7.5
 kwidgetsaddons-5.116.0
 kwidgetsaddons-6.30.0
+kwin-6.7.5
 kwindowsystem-5.116.0
 kwindowsystem-6.30.0
 kxmlgui-5.116.0
@@ -3397,6 +3413,7 @@ ladspa-header-1.17
 lame-4.0
 language-subtag-registry
 lapack-3
+layer-shell-qt-6.7.5
 lazy_static-1.5.0
 lazycell-1.3.0
 lazydocker-0.25.2
@@ -3483,6 +3500,7 @@ libcddb-1.3.2
 libcdio-2.3.0
 libcdio-paranoia-2.0.2
 libcdr-0.1.9
+libcerf-3.8
 libcmis-0.6.3
 libconfig-1.8.2
 libcpuid-0.8.1
@@ -3582,6 +3600,8 @@ libkate-0.4.3
 libkdcraw-26.08.1
 libkexiv2-26.08.1
 libksba-1.8.0
+libkscreen-6.7.5
+libksysguard-6.7.5
 liblangtag-0.6.8
 liblapack-3.12.1
 liblc3-1.1.3
@@ -3641,6 +3661,7 @@ libphonenumber-9.0.40
 libpipeline-1.5.8
 libplacebo-5.264.1
 libplacebo-7.360.1
+libplasma-6.7.5
 libplist-2.7.0
 libpng-1.2.59
 libpng-1.6.58
@@ -3655,6 +3676,8 @@ libpst-0.6.76
 libpthread-stubs-0.5
 libpulseaudio-17.0
 libpwquality-1.4.5
+libqaccessibilityclient-0.6.0
+libqalculate-5.12.0
 libqmi-1.38.0
 libqrtr-glib-1.4.0
 libraqm-0.11.0
@@ -4025,6 +4048,7 @@ mbrola-voices-0-unstable-2020-03-30
 mc-4.8.33
 mcfgthread-i686-w64-mingw32-2.4.2
 mcfgthread-x86_64-w64-mingw32-2.4.2
+mcpp-2.7.2.3
 md4c-0.5.3
 mdadm
 mdadm-4.6
@@ -4097,6 +4121,7 @@ microlens-aeson-2.5.2
 microlens-th-0.4.3.17
 microlens-th-0.4.3.17-r1.cabal
 microsoft-gsl-4.2.2
+milou-6.7.5
 mimalloc-3.5.3
 mime-types-0.1.2.2
 mimeapps.list
@@ -4226,6 +4251,7 @@ network-uri-2.6.4.2
 network-uri-2.6.4.2-r1.cabal
 networkmanager-1.58.1
 networkmanager-1.58.1_fish-completions
+networkmanager-qt-6.30.0
 new_debug_unreachable-1.0.6
 newt-0.52.24
 nextcloud-spreed-signaling.md
@@ -4955,7 +4981,10 @@ plain-0.2.3
 plasma-activities-6.7.5
 plasma-activities-stats-6.7.5
 plasma-integration-6.7.5
+plasma-nano-6.7.5
 plasma-wayland-protocols-1.21.0
+plasma-workspace-6.7.5
+plasma5support-6.7.5
 plausible.md
 playerctl-2.4.1
 playerctl-2.4.1_fish-completions
@@ -6054,6 +6083,7 @@ qmk-udev-rules-0.27.13
 qmllint-validate-hook
 qoi-0.4.1
 qpdf-12.3.2
+qqc2-breeze-style-6.7.5
 qqc2-desktop-style-6.30.0
 qrcodegencpp-1.8.0
 qrencode-4.1.1
@@ -6106,6 +6136,7 @@ qttools-6.11.2
 qttranslations-388e4f3
 qttranslations-5.15.19
 qttranslations-6.11.2
+qtvirtualkeyboard-6.11.2
 qtwayland-5.15.19
 qtwayland-6.11.2
 qtwayland-605b8bc
@@ -6923,6 +6954,7 @@ thiserror-impl-2.0.18
 thiserror-impl-2.0.19
 thread_local-1.1.10
 thread_local-1.1.9
+threadweaver-6.30.0
 ticktick-8.0.11
 ticktick-8.0.11-amd64.deb
 tiff-0.11.3
@@ -7524,6 +7556,7 @@ wrap-python-hook
 wrap-qt5-apps-hook
 wrap-qt6-apps-hook
 wrapGNUstepAppsHook
+wrapWithXFileSearchPathHook
 wrapfish.aliases.fish
 wrapfish.local.fish
 writable-tmpdir-as-home-hook
@@ -7555,6 +7588,7 @@ xattr-1.6.1
 xauth-1.1.5
 xavs-55
 xavs2-1.4
+xbitmaps-1.1.3
 xcb-imdkit-1.0.9
 xcb-proto-1.17.0
 xcb-util-xrm-1.3
@@ -7567,6 +7601,8 @@ xdg-desktop-portal-gtk-1.15.3
 xdg-desktop-portal-gtk-1.15.3_fish-completions
 xdg-desktop-portal-hyprland-1.4.1
 xdg-desktop-portal-hyprland-1.4.1_fish-completions
+xdg-desktop-portal-kde-6.7.5
+xdg-desktop-portal-kde-6.7.5_fish-completions
 xdg-mime-prologue
 xdg-screensaver-prologue
 xdg-user-dirs-0.20
@@ -7587,6 +7623,7 @@ xkbcommon-dl-0.4.2
 xkbcomp-1.5.0
 xkeyboard-config-2.48
 xkeysym-0.2.1
+xmessage-1.0.7
 xml-1.3.14
 xml-1.3.14-r2.cabal
 xml-conduit-1.10.1.0
@@ -7600,6 +7637,7 @@ xorg-locale
 xorgproto-2025.1
 xprop-1.2.8
 xrandr-1.5.4
+xrdb-1.2.3
 xsimd-14.3.0
 xterm-411
 xtrans-1.6.0

@@ -93,6 +93,13 @@
     nssmdns4 = true;
     openFirewall = true;
   };
+  # A dead avahi-daemon leaves /run/avahi-daemon/pid behind, and its own stale-pid cleanup runs
+  # after dropping to the avahi user and silently fails — so every restart dies on "Failed to
+  # create PID file: File exists" until start-limit-hit, and print jobs hang on "Unable to locate
+  # printer *.local" (seen 2026-10-08). Clearing it as root before each start makes it self-heal.
+  systemd.services.avahi-daemon.serviceConfig.ExecStartPre = [
+    "-${pkgs.coreutils}/bin/rm -f /run/avahi-daemon/pid"
+  ];
 
   # ── Scanning ───────────────────────────────────────────────────────────────────────────────
   # Separate subsystem from printing: a multifunction device needs both, and neither implies the
