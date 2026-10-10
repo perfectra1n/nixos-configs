@@ -329,7 +329,6 @@ autoconf-2.69
 autoconf-2.73
 autoconf-archive-2024.10.16
 autogen-5.18.16
-automake-1.16.5
 automake-1.18.1
 autoreconf-hook
 av-scenechange-0.14.1
@@ -488,7 +487,6 @@ bootstrap-coreutils-5.0
 bootstrap-coreutils-5.0-builder
 bootstrap-coreutils-musl-9.11
 bootstrap-coreutils-musl-get-version-9.11
-bootstrap-stage-xgcc-gcc-wrapper-15.3.0
 bootstrap-stage-xgcc-gcc-wrapper-16.2.0
 bootstrap-stage-xgcc-stdenv-linux
 bootstrap-stage-xgcc-stdenv-linux-no-cc
@@ -497,19 +495,15 @@ bootstrap-stage0-glibc-iconv-minimal-bootstrap
 bootstrap-stage0-glibc-minimal-bootstrap
 bootstrap-stage0-stdenv-linux
 bootstrap-stage0-stdenv-linux-no-cc
-bootstrap-stage1-gcc-wrapper-15.3.0
 bootstrap-stage1-gcc-wrapper-16.2.0
 bootstrap-stage1-stdenv-linux
 bootstrap-stage1-stdenv-linux-no-cc
-bootstrap-stage2-gcc-wrapper-15.3.0
 bootstrap-stage2-gcc-wrapper-16.2.0
 bootstrap-stage2-stdenv-linux
 bootstrap-stage2-stdenv-linux-no-cc
-bootstrap-stage3-gcc-wrapper-15.3.0
 bootstrap-stage3-gcc-wrapper-16.2.0
 bootstrap-stage3-stdenv-linux
 bootstrap-stage3-stdenv-linux-no-cc
-bootstrap-stage4-gcc-wrapper-15.3.0
 bootstrap-stage4-gcc-wrapper-16.2.0
 bootstrap-stage4-stdenv-linux
 bootstrap-stage4-stdenv-linux-no-cc
@@ -1766,10 +1760,8 @@ closure-info
 clru-0.6.3
 clucene-core-2.3.3.4
 cmake-0.1.58
-cmake-4.4.2
 cmake-4.4.3
 cmake-4.4.3_fish-completions
-cmake-minimal-4.4.2
 cmake-minimal-4.4.3
 cmark-0.31.2
 cmark-gfm-0.29.0.gfm.13
@@ -2261,7 +2253,6 @@ exempi-2.6.6
 exfat-1.4.0
 exiv2-0.28.9
 expand-response-params
-expat-2.8.4
 expat-2.8.5
 expect-5.45.4
 exporters.md
@@ -2486,16 +2477,13 @@ gbenchmark-1.9.5
 gbm-0.18.0
 gbm-sys-0.4.0
 gcc-10.4.0
-gcc-15.3.0
 gcc-16.2.0
 gcc-4.6.4
 gcc-cxx-4.6.4
 gcc-cxx-simple-program-4.6.4
 gcc-get-version-4.6.4
 gcc-simple-program-10.4.0
-gcc-simple-program-15.3.0
 gcc-simple-program-16.2.0
-gcc-wrapper-15.3.0
 gcc-wrapper-16.2.0
 gcd-2.3.0
 gclient
@@ -2586,21 +2574,15 @@ glib-2.88.3-binlore
 glib-2.88.3_fish-completions
 glib-networking-2.80.1
 glib-testing-0.2.0
-glibc-2.42
-glibc-2.42-84
 glibc-2.44
 glibc-2.44-25
 glibc-2.44-25-source-unsecvars
 glibc-2.44-25_fish-completions
-glibc-headers-2.42
 glibc-headers-2.44
-glibc-iconv-2.42
 glibc-iconv-2.44
-glibc-locales-2.42-84
 glibc-locales-2.44-25
 glibc-locales-2.44-25_fish-completions
 glibc-multi-2.44-25
-glibc-simple-program-2.42
 glibc-simple-program-2.44
 glibmm-2.66.8
 glibmm-2.88.1
@@ -3060,7 +3042,7 @@ initrd-bin-env
 initrd-fstab
 initrd-group
 initrd-hostname
-initrd-linux-7.2.8
+initrd-linux-7.2.9
 initrd-passwd
 initrd-release
 initrd-shadow
@@ -3492,7 +3474,6 @@ libcamera-0.7.2
 libcanberra-0.30
 libcap-2.78
 libcap-2.78_fish-completions
-libcap-ng-0.9.5
 libcap-ng-0.9.6
 libcap-text-verifier-0-unstable
 libcbor-0.14.0
@@ -3557,7 +3538,6 @@ libfreeaptx-0.2.2
 libfreehand-0.1.3
 libfuzzer-sys-0.4.13
 libfyaml-0.9.6
-libgcrypt-1.12.2
 libgcrypt-1.12.4
 libgetopt.a
 libgetopt.a-builder
@@ -3620,7 +3600,6 @@ libmd-1.2.0
 libmemcached-1.1.4
 libmicrodns-0.2.0
 libmicrohttpd-1.0.10
-libmicrohttpd-1.0.6
 libmikmod-3.3.13
 libmng-2.0.3
 libmnl-1.0.5
@@ -3845,9 +3824,9 @@ linenoise.pc.in
 link
 linked-hash-map-0.5.6
 linked_hash_set-0.1.6
-linux-7.2.8
-linux-7.2.8-modules
-linux-7.2.8-modules-shrunk
+linux-7.2.9
+linux-7.2.9-modules
+linux-7.2.9-modules-shrunk
 linux-cachyos-config
 linux-firmware-20260916
 linux-firmware-20260916-zstd
@@ -4112,7 +4091,6 @@ mescc-tools-extra-cp-1.9.1
 mescc-tools-extra-mkdir-1.9.1
 mescc-tools-extra-replace-1.9.1
 meshoptimizer-1.2
-meson-1.10.2
 meson-1.12.1
 meson.build
 metis-5.2.1
@@ -4258,7 +4236,6 @@ nextcloud-spreed-signaling.md
 nextcloud.md
 nftables-1.1.7
 nghttp2-1.70.0
-nghttp3-1.16.0
 nghttp3-1.17.0
 ngtcp2-1.23.0
 ngtcp2-1.25.0
@@ -4529,7 +4506,6 @@ opensp-1.5.2
 openssh-10.5p1
 openssh-10.5p1_fish-completions
 openssl-3.5.8
-openssl-3.6.4
 openssl-probe-0.1.6
 openssl-sys-0.9.111
 opensubdiv-3.7.0
@@ -4591,7 +4567,7 @@ p11-kit-0.26.2
 p7zip-17.06
 packagekit-1.4.0
 packagekit-qt-1.1.4
-pahole-1.31
+pahole-1.32
 paisa.md
 pam.d
 pam_u2f-1.4.0
@@ -7134,7 +7110,6 @@ typescript-7.0.2
 typescript-7.0.2-go-modules
 typst-0.8.0.2
 typst-symbols-0.1.8.1
-tzdata-2026c
 tzdata-2026d
 uavs3d-1.2
 ucd-trie-0.1.7
@@ -7158,7 +7133,6 @@ umu-launcher-1.4.4-init
 umurmur.md
 uname
 unar-1.10.8
-unbound-1.26.0
 unbound-1.26.1
 unibilium-2.1.2
 unicase-2.9.0
@@ -7616,7 +7590,6 @@ xen.md
 xevd-0.7.0
 xeve-0.7.0
 xfsprogs-7.1.1
-xgcc-15.3.0
 xgcc-16.2.0
 xkbcommon-0.9.0
 xkbcommon-dl-0.4.2
