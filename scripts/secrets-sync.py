@@ -108,6 +108,10 @@ FISHENV_MANIFEST = [
     # (the public route 404s /mcp), so there is no bearer row. The URL is vault-backed
     # anyway because it carries the internal hostname, which stays out of this public repo.
     ("KONFLATE_MCP_URL",             "Konflate MCP",         "field", "mcp_url"),
+    # nextcloud-mcp is unauthenticated at the MCP layer (it holds a Nextcloud app login server-side)
+    # and reachable only via envoy-internal — same shape as konflate: URL-only, vault-backed for the
+    # internal hostname.
+    ("NEXTCLOUD_MCP_URL",            "Nextcloud MCP",        "field", "mcp_url"),
     # memini is PLUGIN-ONLY (no manual server in mcp.json): the memini@memini plugin bundles its own
     # MCP server + hooks + skills, all reading config from the SHELL ENV. It wants the base URL WITHOUT
     # /mcp (it re-appends /mcp itself) + MEMINI_API_KEY. Both derive from the one "Memini MCP" item —
