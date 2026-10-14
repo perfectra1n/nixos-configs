@@ -26,6 +26,7 @@
       "cursorHideTimeout": 0
     }
   },
+  "soundNewNotification": false,
   "acMonitorTimeout": 180,
   "lockBeforeSuspend": true,
   "osdPowerProfileEnabled": true,

@@ -8,7 +8,7 @@
     "pr": "",
     "sessionUrl": false
   },
-  "model": "opus[1m]",
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "node \"$HOME/.claude/lupina/statusline.ts\""
@@ -72,7 +72,7 @@
   "skipWorkflowUsageWarning": true,
   "theme": "dark",
   "autoCompactEnabled": true,
+  "switchModelsOnFlag": true,
   "fileCheckpointingEnabled": true,
-  "agentPushNotifEnabled": true,
-  "switchModelsOnFlag": true
+  "agentPushNotifEnabled": true
 }

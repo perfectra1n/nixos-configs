@@ -136,3 +136,12 @@ repositories:
   password: ""
   url: https://cloudnative-pg.github.io/charts
   username: ""
+- caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: valkey
+  pass_credentials_all: false
+  password: ""
+  url: https://valkey.io/valkey-helm
+  username: ""
