@@ -148,11 +148,13 @@
     # 3840x2160 mode up as 2160 wide × 3840 tall, which scale 1.5 renders as a 1440 × 2560
     # LOGICAL footprint — so a negative x of -1440 abuts the Alienware's left edge with no
     # gap/overlap. If the KTC comes out upside-down, swap transform 1 → 3.
-    # Its y=-560 vertically CENTERS the two. NOTE the Alienware's scale 1.5 makes its
+    # Its y mirrors the PHYSICAL desk, so the cursor crosses straight across instead of jumping.
+    # Baseline: y=-560 vertically CENTERS the two. NOTE the Alienware's scale 1.5 makes its
     # EFFECTIVE height 1440 (2160/1.5), not 2160 — so its midpoint is y=720, not 1080. The KTC
     # portrait is 2560 LOGICAL tall, so to put its midpoint at 720: y = 720 - 2560/2 = -560.
-    # It overhangs ~560px above and below the Alienware. Cursor crosses straight across instead
-    # of jumping. Nudge -560 up/down to taste (more negative = KTC moves UP).
+    # 2026-10: the Alienware was raised ~2" on the desk, i.e. the KTC now sits ~2" LOWER
+    # relative to it. 31.5" 16:9 = 15.4" tall over 1440 logical px ≈ 93 px/in, so 2" ≈ 190px:
+    # y = -560 + 190 = -370. Nudge to taste (more negative = KTC moves UP).
     #
     # MATCH BY `desc:`, NEVER BY PORT NAME. This box has TWO DRM cards — the RTX 5090 (nvidia)
     # and the Ryzen's Raphael iGPU (amdgpu) — sharing one DP-x name pool, and the split is not
@@ -211,7 +213,7 @@
         { output = "desc:Dell Inc. AW3225QF 5K46YZ3", mode = "3840x2160@240", position = "0x0", scale = 1.5,
           bitdepth = 10, cm = "hdr", sdrbrightness = 12.5, sdrsaturation = 1.2 },
         { output = "desc:Shenzhen KTC Technology Group U27T6 0000000000001", mode = "3840x2160@160",
-          position = "-1440x-560", scale = 1.5, transform = 1 },
+          position = "-1440x-370", scale = 1.5, transform = 1 },
       }
       for _, m in ipairs(monitors) do hl.monitor(m) end
 
