@@ -214,9 +214,9 @@
       # trufflehog) that home/common.nix ALSO installs, and mise's install dir SHADOWS
       # ~/.nix-profile/bin on PATH — so mise's copy is what the git hooks actually execute. If the
       # two ever disagreed, manifests/ would advertise one gitleaks while a different one gated
-      # every commit, and Renovate WILL try: its built-in mise manager bumps mise.toml on its own
-      # schedule, while nixpkgs moves via flake-inputs.txt. This turns that silent divergence into
-      # a red CI run. Same eval-time `throw` as lib-secrets above, and for the same reason: it has
+      # every commit. Renovate's mise manager is off and flake-input PRs run sync-mise-pins, so
+      # this should never fire from a bot — it catches a hand edit, and the `flake checks` CI job
+      # makes it a red run rather than a local-only failure. Same eval-time `throw` as lib-secrets above, and for the same reason: it has
       # to fire during evaluation, not in a builder, or a caller that only evaluates would skip it.
       checks.x86_64-linux.mise-nixpkgs-versions =
         let
@@ -314,6 +314,13 @@
             name = "suspects";
             runtimeInputs = with pkgs; [ nix gnused gnugrep coreutils ];
             text = builtins.readFile ./scripts/suspects.sh;
+          };
+          # Keeps mise.toml's [tools] pins equal to the locked nixpkgs (the mise-nixpkgs-versions
+          # check's invariant). Renovate runs it on every flake-input PR — see the script header.
+          sync-mise-pins = pkgs.writeShellApplication {
+            name = "sync-mise-pins";
+            runtimeInputs = with pkgs; [ nix gnused gawk ];
+            text = builtins.readFile ./scripts/sync-mise-pins.sh;
           };
           # The commit/push tail four mise tasks used to repeat verbatim. Here rather than as a
           # loose script so it gets the same shellcheck gate as the others.

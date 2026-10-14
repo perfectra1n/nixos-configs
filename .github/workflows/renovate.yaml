@@ -60,7 +60,7 @@ jobs:
           RENOVATE_REPOSITORIES: '["perfectra1n/nixos-configs"]'
           # global-only option: permits the two postUpgradeTasks in renovate.json to run —
           # `nvfetcher` (nvfetcher.toml) and the per-input flake.lock re-lock `nix flake update <input>`.
-          RENOVATE_ALLOWED_COMMANDS: '["^nvfetcher$", "^nix flake update [a-z0-9-]+$", "^nix run \\.#gen-manifests$"]'
+          RENOVATE_ALLOWED_COMMANDS: '["^nvfetcher$", "^nix flake update [a-z0-9-]+$", "^nix run \\.#gen-manifests$", "^nix run \\.#sync-mise-pins$"]'
           LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
         # nix shell puts BOTH renovate and nvfetcher on PATH for the run; renovate then
         # finds `nvfetcher` when it executes the postUpgradeTask.

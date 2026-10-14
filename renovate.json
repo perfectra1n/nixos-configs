@@ -6,6 +6,7 @@
   ],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
+  "mise": { "enabled": false },
   "branchConcurrentLimit": 0,
   "customManagers": [
     {
@@ -36,8 +37,8 @@
       "matchFileNames": ["flake-inputs.txt"],
       "commitMessageTopic": "flake input {{depName}}",
       "postUpgradeTasks": {
-        "commands": ["nix flake update {{{depName}}}", "nix run .#gen-manifests"],
-        "fileFilters": ["flake.lock", "flake-inputs.txt", "manifests/**"],
+        "commands": ["nix flake update {{{depName}}}", "nix run .#sync-mise-pins", "nix run .#gen-manifests"],
+        "fileFilters": ["flake.lock", "flake-inputs.txt", "mise.toml", "manifests/**"],
         "executionMode": "update"
       }
     },

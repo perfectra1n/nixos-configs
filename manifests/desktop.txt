@@ -2597,8 +2597,10 @@ gmp-6.3.0
 gmp-with-cxx-6.3.0
 gn-0-unstable-2026-04-01
 gn-0-unstable-2026-05-27
+gn-0-unstable-2026-07-23
 gn-0-unstable-2026-08-14
 gn-3357c4f
+gn-641ace9
 gn-6e8dcde
 gn-e8a8e09
 gnome-common-3.18.0

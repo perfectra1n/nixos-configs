@@ -54,6 +54,32 @@ jobs:
             echo "created comment"
           fi
 
+  # Realizes every checks.x86_64-linux.* — the eval-time guards (mise-nixpkgs-versions, lib-secrets)
+  # and the stdlib unit tests. The host jobs below only plan `toplevel`, which never touches `checks`,
+  # so before this job a Renovate PR could break a guard and still merge green (lefthook 2.2.2, #71).
+  # Deliberately not `nix flake check`: that re-evaluates every host (IFD and all), which the host
+  # matrix already does in parallel. Enumerated, not hardcoded, so a new check is gated for free.
+  # Add `flake checks` to the branch-protection required list.
+  flake-checks:
+    name: flake checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            experimental-features = nix-command flakes
+
+      - name: Build checks
+        run: |
+          set -o pipefail
+          nix eval --json .#checks.x86_64-linux --apply builtins.attrNames \
+            | jq -r '.[] | ".#checks.x86_64-linux.\(.)"' \
+            | xargs nix build --no-link -L
+
   # The host list comes from hosts/ — the same directory flake.nix now derives nixosConfigurations
   # from (readDir) — so adding a host needs no CI edit. Deliberately NOT `nix eval`: evaluating a
   # flake output first fetches every locked input (~307 MB: nixpkgs, dms, hyprswitch, …) plus a Nix
