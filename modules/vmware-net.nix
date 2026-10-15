@@ -20,7 +20,8 @@
 # subnets are one-shot mutable state that a reinstall regenerates at random, i.e. this bug
 # comes back silently. Owning the files makes the choice reproducible, and the Condition
 # means the generator simply never runs. Trade-off: vmware-netcfg can no longer edit these
-# (they become read-only store symlinks) — edit `hostOnly`/`nat` below instead.
+# (Nix-owned: store symlinks, plus one activation-rewritten copy — see `networking` below)
+# — edit `hostOnly`/`nat` below instead.
 #
 # The installer's *_DHCP_CFG_HASH lines are deliberately omitted. They exist so
 # vmware-netcfg can tell whether a human hand-edited the DO-NOT-MODIFY block; nothing
@@ -57,8 +58,9 @@
 # Whatever you pick, keep it clear of the two ranges named above — the LAN's /16 and
 # Docker's /12 — or you have simply moved the collision rather than fixed it.
 #
-# Do not reach for vmware-netcfg. The four files it edits are read-only store symlinks; it
-# will either fail outright or write something the next switch silently reverts.
+# Do not reach for vmware-netcfg. Three of the four files it edits are read-only store
+# symlinks and the fourth (`networking`) is re-copied on every switch; it will either fail
+# outright or write something the next switch silently reverts.
 
 let
   # Third octet base for each vmnet. .1 is always the host adapter; on vmnet8 .2 is
@@ -122,6 +124,14 @@ in
 {
   environment.etc = {
     # Read by `vmware-networks --start`. VNET_1 = host-only, VNET_8 = NAT.
+    #
+    # `mode` makes this a COPY, not a store symlink — load-bearing. vnetlib opens this file
+    # O_RDWR even for --start, and at boot /nix/store is mounted read-only, so as a symlink
+    # the open fails with EROFS and vmware-networks.service dies with a bare "Failed to
+    # initialize": no vmnet adapters, no guest networking, on every single boot. The real
+    # error is only in /var/log/vnetlib. Activation rewrites the copy each switch, so the
+    # flake stays authoritative. The other three files are opened O_RDONLY and stay links.
+    "vmware/networking".mode = "0644";
     "vmware/networking".text = ''
       VERSION=1,0
       answer VNET_1_DHCP yes
