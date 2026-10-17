@@ -3046,7 +3046,7 @@ initrd-bin-env
 initrd-fstab
 initrd-group
 initrd-hostname
-initrd-linux-7.2.9
+initrd-linux-7.2.11
 initrd-passwd
 initrd-release
 initrd-shadow
@@ -3827,9 +3827,9 @@ linenoise.pc.in
 link
 linked-hash-map-0.5.6
 linked_hash_set-0.1.6
-linux-7.2.9
-linux-7.2.9-modules
-linux-7.2.9-modules-shrunk
+linux-7.2.11
+linux-7.2.11-modules
+linux-7.2.11-modules-shrunk
 linux-cachyos-config
 linux-firmware-20260916
 linux-firmware-20260916-zstd
