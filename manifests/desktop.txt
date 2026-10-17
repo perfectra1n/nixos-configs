@@ -39,7 +39,7 @@ M2-0.M1-1.9.1
 M2-0.c-1.9.1
 M2-0.hex2-1.9.1
 M2-1.9.1
-NVIDIA-Linux-x86_64-615.71.09.run
+NVIDIA-Linux-x86_64-615.78.08.run
 OneTuple-0.4.2.1
 Only-0.1
 Only-0.1-r2.cabal
@@ -3036,7 +3036,7 @@ initrd-bin-env
 initrd-fstab
 initrd-group
 initrd-hostname
-initrd-linux-7.2.9
+initrd-linux-7.2.11
 initrd-passwd
 initrd-release
 initrd-shadow
@@ -3821,9 +3821,9 @@ linenoise.pc.in
 link
 linked-hash-map-0.5.6
 linked_hash_set-0.1.6
-linux-7.2.9
-linux-7.2.9-modules
-linux-7.2.9-modules-shrunk
+linux-7.2.11
+linux-7.2.11-modules
+linux-7.2.11-modules-shrunk
 linux-cachyos-config
 linux-firmware-20260916
 linux-firmware-20260916-zstd
@@ -4403,12 +4403,12 @@ nvidia-cdi-generator
 nvidia-container-toolkit-1.20.1
 nvidia-egl-external-platforms
 nvidia-egl-external-platforms-x32
-nvidia-open-615.71.09-7.2.9
-nvidia-settings-615.71.09
-nvidia-settings-615.71.09_fish-completions
+nvidia-open-615.78.08-7.2.11
+nvidia-settings-615.78.08
+nvidia-settings-615.78.08_fish-completions
 nvidia-vaapi-driver-0.0.18
-nvidia-x11-615.71.09
-nvidia-x11-615.71.09_fish-completions
+nvidia-x11-615.78.08
+nvidia-x11-615.78.08_fish-completions
 nyacc-1.09.1
 nyacc-1.09.1-builder
 obex-data-server-0.4.6
@@ -7216,7 +7216,7 @@ vlc-3.0.24
 vmware-bootstrap
 vmware-config
 vmware-modconfig
-vmware-modules-workstation-25h2-20251015-7.2.9
+vmware-modules-workstation-25h2-20251015-7.2.11
 vmware-unpack-env-25H2u1
 vmware-unpack-env-25H2u1-bwrap
 vmware-unpack-env-25H2u1-fhsenv-profile
