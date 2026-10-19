@@ -167,6 +167,7 @@
         ./modules/gaming.nix
         ./modules/oomd.nix # PSI-based systemd-oomd on user slices — kill a runaway build, not the session
         ./modules/pentest.nix
+        ./modules/rust-build-cache.nix # every repo's cargo shares one sccache compile cache; weekly clean-all of stale target/
         ./modules/sigma-crowdstrike-fix.nix # stale nixpkgs pname breaks sigma-cli's build (pentest.nix); drop when nixpkgs renames it
         ./modules/rustdesk-retag-fix.nix # upstream moved the 1.5.0 tag after nixpkgs hashed it (desktop-apps.nix)
         ./modules/desktop-apps.nix

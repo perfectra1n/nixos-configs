@@ -81,7 +81,16 @@
   systemd.tmpfiles.rules = [
     "d /fast-u2/repos 0755 ${username} users -"
     "d /data/steam 0755 ${username} users -"
+    "d /fast-u2/cache/sccache 0755 ${username} users -"
   ];
+
+  # The shared Rust compile cache (modules/rust-build-cache.nix) goes on the U.2 next to the
+  # repos it serves: off the 73%-full root disk, and onto the part rated for write churn. It's
+  # only a cache, so a nofail-degraded boot that recreates this dir on / is harmless.
+  environment.sessionVariables = {
+    SCCACHE_DIR = "/fast-u2/cache/sccache";
+    SCCACHE_CACHE_SIZE = "100G";
+  };
 
   # Docker's data-root is on /fast-u2, and never the root NVMe: container volumes (tyrfing's
   # postgres in particular) burst-write hard enough to stall the root disk that also backs
