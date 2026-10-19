@@ -75,16 +75,23 @@
     "vm.max_map_count" = 2147483642;
   };
 
-  # zram — compressed in-RAM swap. With swappiness=10 the kernel rarely swaps, but when
-  # memory pressure does hit (big open-world streaming, alt-tabbed browser), paging to a
-  # zstd-compressed RAM block avoids the disk-IO latency spike that wrecks frame pacing —
-  # far better than swapping to an SSD/NVMe. Sized to half of RAM (zstd ~3-4x, so this
-  # backs more than its footprint). See docs/gaming.md for the full tuning rationale.
+  # zram — compressed in-RAM swap. When memory pressure hits (big open-world streaming,
+  # alt-tabbed browser), paging to a zstd-compressed RAM block avoids the disk-IO latency
+  # spike that wrecks frame pacing — far better than swapping to an SSD/NVMe. Sized to half
+  # of RAM (zstd ~3-4x, so this backs more than its footprint). See docs/gaming.md for the
+  # full tuning rationale.
   zramSwap = {
     enable = true;
     algorithm = "zstd";
     memoryPercent = 50;
   };
+
+  # zswap OFF — the CachyOS kernel defaults it on, and stacked on zram it's a deadlock: zswap's
+  # shrinker writes back INTO zram, whose compress needs a GFP_ATOMIC alloc that fails exactly
+  # when RAM is gone. Every swap-out then errors ("Write-error on swap-device (252:0:…)"), swap
+  # still looks ~70% free so neither the OOM killer nor oomd's swap trigger fires, and the box
+  # livelocks (desktop, 2026-10-19, during a rust-lld link). One compressed-swap layer only.
+  boot.kernelParams = [ "zswap.enabled=0" ];
 
   environment.systemPackages = with pkgs; [
     mangohud     # in-game perf overlay (FPS, frametimes, temps)

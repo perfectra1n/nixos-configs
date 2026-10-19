@@ -7114,6 +7114,7 @@ unit-script-sshd-keygen-start
 unit-script-suid-sgid-wrappers-start
 unit-script-vmware-wrappers-start
 unit-script-wpa_supplicant-start
+unit-slice
 unit-sockets.target
 unit-speech-dispatcher.socket
 unit-sshd-vsock.socket
