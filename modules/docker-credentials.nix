@@ -1,8 +1,8 @@
 { config, lib, username, secrets, ... }:
 
-# Renders ~/.docker/config.json's content from sops so `docker pull/push` to the two Gitea
-# instances, the duck Forgejo + ghcr.io works non-interactively, without a plaintext token
-# ever living on disk.
+# Renders ~/.docker/config.json's content from sops so `docker pull/push` to the three Gitea
+# instances (main, Atvik, duck), the duck Forgejo + ghcr.io works non-interactively, without a
+# plaintext token ever living on disk.
 # The home-manager side (the ~/.docker/config.json symlink) lives in home/docker.nix.
 #
 # WHY a pre-base64'd secret (not interpolate user+token like git-credentials does): Docker's
@@ -33,6 +33,7 @@ lib.mkIf declareSecret {
   # owner=user so the user's docker CLI can read the rendered file.
   sops.secrets = {
     "docker/main_gitea_auth" = { };
+    "docker/atvik_gitea_auth" = { };
     "docker/duck_gitea_auth" = { };
     "docker/duck_forgejo_auth" = { };
     "docker/ghcr_auth" = { };
@@ -47,6 +48,7 @@ lib.mkIf declareSecret {
       {
         "auths": {
           "${ph "git/main_gitea_host"}": { "auth": "${ph "docker/main_gitea_auth"}" },
+          "${ph "git/atvik_gitea_host"}": { "auth": "${ph "docker/atvik_gitea_auth"}" },
           "${ph "git/duck_gitea_host"}": { "auth": "${ph "docker/duck_gitea_auth"}" },
           "${ph "git/duck_forgejo_host"}": { "auth": "${ph "docker/duck_forgejo_auth"}" },
           "ghcr.io": { "auth": "${ph "docker/ghcr_auth"}" },

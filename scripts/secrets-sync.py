@@ -68,6 +68,7 @@ SOPS_MANIFEST = [
     ("git/duck_forgejo_token", "Duck Forgejo",                "field",     "API Key"),
     ("git/duck_forgejo_host",  "Duck Forgejo",                "host",      ""),
     ("docker/main_gitea_auth", "Main Gitea",                  "basicauth", "perf3ct:Personal Access Token 1"),
+    ("docker/atvik_gitea_auth", "Main Atvik Gitea",            "basicauth", "perfectra1n:main-token"),
     ("docker/duck_gitea_auth", "Duck Gitea",                  "basicauth", "perf3ct:API Key (Main)"),
     ("docker/duck_forgejo_auth", "Duck Forgejo",              "basicauth", "perfectra1n:API Key"),
     ("docker/ghcr_auth",       "Github",                      "basicauth", "perfectra1n:Updated Super Token (API key)"),
