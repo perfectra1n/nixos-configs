@@ -5099,6 +5099,7 @@ proton-ge-bin-GE-Proton11-7
 protontricks-1.15.0
 protontricks-1.15.0_fish-completions
 prune-libtool-files
+prune-scratch-targets
 ps-procps-4.0.7
 psmisc-23.7
 psmisc-23.7_fish-completions
