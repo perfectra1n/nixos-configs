@@ -20,8 +20,8 @@
     # iOS device backups run here because this is the box the phones USB-pair with, and
     # Apple only allows Wi-Fi backups from a trusted machine on the same LAN.
     ../../modules/ios-backup.nix
-    # The kanbot runner: this is the workstation that hosts kanbot's Claude Code sessions (the
-    # daemon itself runs in the cluster). One runner per daemon is the intent, so not `graphical`.
+    # A kanbot runner: this workstation hosts kanbot's Claude Code sessions (the daemon itself
+    # runs in the cluster), alongside the headless kanbot-1. Per-host opt-in, so not `graphical`.
     ../../modules/kanbot-runner.nix
   ];
   homeModules = [ ../../home/gui.nix ../../home/docker.nix ];

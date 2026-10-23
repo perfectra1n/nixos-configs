@@ -1,0 +1,9 @@
+{{- /* Each runner registers its OWN token (`kanbot runner register`), so the token is per-host:
+       the ciphertext lives at .kanbot-runner-tokens/<hostname>.token.age (a dot-dir, so chezmoi
+       never deploys it), and this picks the one for this machine. No token for this host →
+       empty output → chezmoi writes NO file, so modules/kanbot-runner.nix's
+       ConditionPathExists keeps the runner skipped instead of crash-looping on a wrong token. */ -}}
+{{- $token := joinPath .chezmoi.sourceDir ".kanbot-runner-tokens" (printf "%s.token.age" .chezmoi.hostname) -}}
+{{- if stat $token -}}
+{{-   include $token | decrypt -}}
+{{- end -}}

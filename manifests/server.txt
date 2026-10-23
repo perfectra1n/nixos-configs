@@ -1991,6 +1991,7 @@ penlight-1.15.0-1.rockspec
 penlight-luarocks-config.lua
 percent-encoding-2.3.2
 perf-linux-7.2.9
+perf3ct-authorized_keys
 perl-5.42.3
 perl-5.42.3-binlore
 perl-5.42.3-env

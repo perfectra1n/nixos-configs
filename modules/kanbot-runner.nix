@@ -47,8 +47,17 @@ lib.mkIf declareSecret {
     '';
   };
 
-  # On PATH too: `kanbot doctor --runner`, and `kanbot open`-style one-offs.
-  users.users.${username}.packages = [ kanbot ];
+  # One ${username} binding: Nix can't merge a dynamic key across two bindings in one attrset.
+  users.users.${username} = {
+    # On PATH too: `kanbot doctor --runner`, and `kanbot open`-style one-offs.
+    packages = [ kanbot ];
+
+    # The runner is a USER unit, so it only exists while the user's systemd manager does. The
+    # desktop got that for free from greetd autologin; a headless runner (kanbot-1) has nobody
+    # logging in, so without lingering the runner would sit dead until the first SSH session —
+    # and die again at logout. Lingering starts the manager at boot and keeps it, sessions with it.
+    linger = true;
+  };
 
   systemd.user.services.kanbot-runner = {
     description = "kanbot runner: hosts Claude Code sessions for the cluster's kanbot";

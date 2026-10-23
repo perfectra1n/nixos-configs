@@ -4,25 +4,32 @@ Which modules each host opts into (defined in `flake.nix`'s `mkHost` calls). `co
 `facter`, `system-diff`, `nix-cache`, `hosts/<name>`, sops-nix, home-manager, and
 `home/common.nix` are implicit on **every** host and omitted from the table.
 
-| Module / home import | desktop | laptop | server |
-|----------------------|:-------:|:------:|:------:|
-| `modules/desktop-base.nix` | ✅ | ✅ | — |
-| `modules/hyprland.nix` | ✅ | ✅ | — |
-| `modules/gaming.nix` | ✅ | ✅ | — |
-| `modules/nvidia.nix` | ✅ | — | — |
-| `modules/amd.nix` | — | ✅ | — |
-| `modules/laptop.nix` | — | ✅ | — |
-| `modules/pentest.nix` | ✅ | ✅ | — |
-| `modules/desktop-apps.nix` | ✅ | ✅ | — |
-| `modules/cleanroom.nix` | ✅ | ✅ | — |
-| `modules/peripherals.nix` | ✅ | ✅ | — |
-| `modules/printing.nix` | ✅ | ✅ | — |
-| `modules/rclone-mounts.nix` | ✅ | ✅ | — |
-| `modules/ios-backup.nix` | ✅ | — | — |
-| `modules/kanbot-runner.nix` | ✅ | — | — |
-| `inputs.chaotic.nixosModules.default` | ✅ | — | — |
-| `modules/server.nix` | — | — | ✅ |
-| `home/gui.nix` (homeModules) | ✅ | ✅ | — |
+| Module / home import | desktop | laptop | server | kanbot-1 |
+|----------------------|:-------:|:------:|:------:|:--------:|
+| `modules/desktop-base.nix` | ✅ | ✅ | — | — |
+| `modules/hyprland.nix` | ✅ | ✅ | — | — |
+| `modules/gaming.nix` | ✅ | ✅ | — | — |
+| `modules/nvidia.nix` | ✅ | — | — | — |
+| `modules/amd.nix` | — | ✅ | — | — |
+| `modules/laptop.nix` | — | ✅ | — | — |
+| `modules/pentest.nix` | ✅ | ✅ | — | — |
+| `modules/desktop-apps.nix` | ✅ | ✅ | — | — |
+| `modules/cleanroom.nix` | ✅ | ✅ | — | — |
+| `modules/peripherals.nix` | ✅ | ✅ | — | — |
+| `modules/printing.nix` | ✅ | ✅ | — | — |
+| `modules/rclone-mounts.nix` | ✅ | ✅ | — | — |
+| `modules/ios-backup.nix` | ✅ | — | — | — |
+| `modules/kanbot-runner.nix` | ✅ | — | — | ✅ |
+| `inputs.chaotic.nixosModules.default` | ✅ | — | — | — |
+| `modules/server.nix` | — | — | ✅ | ✅ |
+| `modules/dotfiles.nix` | ✅ | ✅ | — | ✅ |
+| `modules/git-credentials.nix` | ✅ | ✅ | — | ✅ |
+| `modules/docker-credentials.nix` | ✅ | ✅ | — | ✅ |
+| `modules/rust-build-cache.nix` | ✅ | ✅ | — | ✅ |
+| `modules/oomd.nix` | ✅ | ✅ | — | ✅ |
+| `modules/smb-mounts.nix` | ✅ | ✅ | — | ✅ |
+| `home/gui.nix` (homeModules) | ✅ | ✅ | — | — |
+| `home/docker.nix` (homeModules) | ✅ | ✅ | — | ✅ |
 
 Transitively, `modules/hyprland.nix` imports `modules/chromium-cm-fix.nix` and the DMS
 modules, so those reach desktop + laptop too.
@@ -53,8 +60,8 @@ need mDNS, and desktop has no miracast.nix to inherit it from.
   the machine the phones USB-pair with; the timer only exists once the `ios/backup_devices`
   sops secret is present (see the module header for the per-device runbook).
 - The kanbot runner (`modules/kanbot-runner.nix`): a user service that hosts the Claude Code
-  sessions of the kanbot daemon running in the cluster. One runner per daemon, so desktop-only;
-  inert (skipped, not failed) until chezmoi lands `~/.config/kanbot/runner.token`.
+  sessions of the kanbot daemon running in the cluster — one of two runners, with `kanbot-1`.
+  Inert (skipped, not failed) until chezmoi lands `~/.config/kanbot/runner.token`.
 
 ### laptop — bare-metal, AMD
 - Same desktop stack as `desktop`, with `modules/amd.nix` + `modules/laptop.nix` (power
@@ -65,6 +72,17 @@ need mDNS, and desktop has no miracast.nix to inherit it from.
 ### server — headless
 - `modules/server.nix` only: SSH key-only, sleep disabled, journald capped, ops CLI.
 - No desktop, no `home/gui.nix`. Supports BIOS GRUB too (see the host file).
+
+### kanbot-1 — headless kanbot runner, one PM9A3
+- `modules/server.nix` + `modules/kanbot-runner.nix` + the dev stack cherry-picked from
+  `graphical` (chezmoi, git/docker credentials, sccache, oomd, the SMB mount that holds kanbot's
+  `evidence_root`) — but not `graphical` itself, so no Hyprland/Steam/Electron/CachyOS kernel.
+- A second runner alongside the desktop's, with its **own** registered token: chezmoi's
+  `runner.token` template picks `dotfiles/.kanbot-runner-tokens/<hostname>.token.age`, and renders
+  nothing (runner stays skipped) for a host without one.
+- Lingering is on (from the runner module), so the user unit starts at boot with nobody logged in.
+- Everything — root, `/nix`, `$HOME`, Docker's data-root — on the single PM9A3. Bring-up runbook
+  in `hosts/kanbot-1/default.nix`.
 
 ## Adding a host
 
