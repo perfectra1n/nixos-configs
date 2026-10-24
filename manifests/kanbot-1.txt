@@ -87,6 +87,7 @@ alsa-firmware-1.2.4-zstd
 alsa-lib-1.2.16.1
 alsa-topology-conf-1.2.5.1
 alsa-ucm-conf-1.2.16.1
+amd-ucode-20260916
 amf-headers-1.5.2
 amuled.md
 anchor-use.js
