@@ -8,16 +8,16 @@
 {
   cargo-clean-all = {
     pname = "cargo-clean-all";
-    version = "v0.6.5";
+    version = "v0.6.6";
     src = fetchFromGitHub {
       owner = "dnlmlr";
       repo = "cargo-clean-all";
-      rev = "v0.6.5";
+      rev = "v0.6.6";
       fetchSubmodules = false;
-      sha256 = "sha256-CJzjw/g0Ap7TKC2m+bVlH+/iCUOQITmE6HGvrNzWQ3o=";
+      sha256 = "sha256-RPDxeoUoAXNFh2ZabHigmwlztyRG9l9zez1UulrtNyo=";
     };
     cargoLock."Cargo.lock" = {
-      lockFile = ./. + "/sha256-CJzjw_g0Ap7TKC2m+bVlH+_iCUOQITmE6HGvrNzWQ3o=/Cargo.lock";
+      lockFile = ./. + "/sha256-RPDxeoUoAXNFh2ZabHigmwlztyRG9l9zez1UulrtNyo=/Cargo.lock";
       outputHashes = {
         
       };

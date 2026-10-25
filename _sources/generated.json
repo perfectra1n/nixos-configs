@@ -2,7 +2,7 @@
     "cargo-clean-all": {
         "cargoLock": {
             "Cargo.lock": [
-                "sha256-CJzjw_g0Ap7TKC2m+bVlH+_iCUOQITmE6HGvrNzWQ3o=/Cargo.lock",
+                "sha256-RPDxeoUoAXNFh2ZabHigmwlztyRG9l9zez1UulrtNyo=/Cargo.lock",
                 {}
             ]
         },
@@ -18,12 +18,12 @@
             "name": null,
             "owner": "dnlmlr",
             "repo": "cargo-clean-all",
-            "rev": "v0.6.5",
-            "sha256": "sha256-CJzjw/g0Ap7TKC2m+bVlH+/iCUOQITmE6HGvrNzWQ3o=",
+            "rev": "v0.6.6",
+            "sha256": "sha256-RPDxeoUoAXNFh2ZabHigmwlztyRG9l9zez1UulrtNyo=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "v0.6.5"
+        "version": "v0.6.6"
     },
     "ksops": {
         "cargoLock": null,
