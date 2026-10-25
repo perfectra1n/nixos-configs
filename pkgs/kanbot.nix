@@ -40,7 +40,9 @@ pkgs.writeShellApplication {
       fi
       # Read the two values without exporting them: the exec'd kanbot (and every session it
       # starts) must not inherit the Gitea credential.
-      local host auth tmp
+      # tmp stays global: the EXIT trap fires after this function returns, where a `local`
+      # would already be gone and `set -u` would mask the real failure with "unbound variable".
+      local host auth
       host=$(sed -n 's/^KANBOT_FETCH_HOST=//p' ${fetchEnv})
       auth=$(sed -n 's/^KANBOT_FETCH_AUTH=//p' ${fetchEnv})
       tmp=$(mktemp -d "$cache/.install.XXXXXX")
