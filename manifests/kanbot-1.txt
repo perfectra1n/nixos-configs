@@ -87,6 +87,7 @@ alsa-firmware-1.2.4-zstd
 alsa-lib-1.2.16.1
 alsa-topology-conf-1.2.5.1
 alsa-ucm-conf-1.2.16.1
+amd-ucode-20260916
 amf-headers-1.5.2
 amuled.md
 anchor-use.js
@@ -3221,8 +3222,8 @@ tagsoup-0.14.8
 talhelper-3.1.17
 talhelper-3.1.17-go-modules
 talloc-2.5.0
-talosctl-1.14.2
-talosctl-1.14.2_fish-completions
+talosctl-1.14.5
+talosctl-1.14.5_fish-completions
 talosctl-linux-amd64
 tandoor-recipes.md
 tasty-1.5.4
