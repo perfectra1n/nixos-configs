@@ -2153,8 +2153,8 @@ either-5.0.3
 either-5.0.3-r2.cabal
 electron-42.11.10
 electron-43.7.7
-electron-44.4.5
 electron-44.5.1
+electron-45.0.0
 electron-unwrapped-42.11.10
 electron-unwrapped-43.7.7
 electron-unwrapped-44.5.1
@@ -6983,8 +6983,8 @@ trifecta-2.1.4
 trifecta-2.1.4-r2.cabal
 trilium-atvik
 trilium-atvik_fish-completions
-trilium-desktop-0.106.0-627da3b
-trilium-desktop-0.106.0-627da3b-dependency-list
+trilium-desktop-0.106.1-5285da2
+trilium-desktop-0.106.1-5285da2-dependency-list
 trilium-desktop-cmfix
 trilium-desktop-cmfix-wmclass
 trilium-desktop-cmfix-wmclass_fish-completions
