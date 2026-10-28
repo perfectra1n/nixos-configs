@@ -1250,7 +1250,8 @@ ksops-4.5.1
 ksops-4.5.1_fish-completions
 kubectl
 kubectl-1.37.1
-kubectl-1.37.1_fish-completions
+kubectl-1.37.2
+kubectl-1.37.2_fish-completions
 kubectl-krew
 kubectl-krew_fish-completions
 kubernetes-helm-4.3.0
