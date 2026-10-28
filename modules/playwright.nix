@@ -28,6 +28,15 @@ in
     PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
   };
 
+  # @playwright/mcp (the Claude Code plugin) defaults to the `chrome` channel, which ignores
+  # PLAYWRIGHT_BROWSERS_PATH and hardcodes Chrome's FHS path /opt/google/chrome/chrome. Same shim
+  # as modules/desktop-apps.nix, but onto Chromium — this box carries no Google Chrome.
+  systemd.tmpfiles.rules = [
+    "d /opt/google 0755 root root - -"
+    "d /opt/google/chrome 0755 root root - -"
+    "L+ /opt/google/chrome/chrome - - - - ${pkgs.chromium}/bin/chromium"
+  ];
+
   # A headless install has no fonts, so every page renders and screenshots as tofu boxes.
   fonts.enableDefaultPackages = true;
 }
