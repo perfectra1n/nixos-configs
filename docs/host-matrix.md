@@ -28,6 +28,7 @@ Which modules each host opts into (defined in `flake.nix`'s `mkHost` calls). `co
 | `modules/rust-build-cache.nix` | ✅ | ✅ | — | ✅ |
 | `modules/oomd.nix` | ✅ | ✅ | — | ✅ |
 | `modules/smb-mounts.nix` | ✅ | ✅ | — | ✅ |
+| `modules/playwright.nix` | — | — | — | ✅ |
 | `home/gui.nix` (homeModules) | ✅ | ✅ | — | — |
 | `home/docker.nix` (homeModules) | ✅ | ✅ | — | ✅ |
 
@@ -81,6 +82,8 @@ need mDNS, and desktop has no miracast.nix to inherit it from.
   `runner.token` template picks `dotfiles/.kanbot-runner-tokens/<hostname>.token.age`, and renders
   nothing (runner stays skipped) for a host without one.
 - Lingering is on (from the runner module), so the user unit starts at boot with nobody logged in.
+- Playwright + Chromium (`modules/playwright.nix`), the headless subset of what the desktop gets
+  from `modules/desktop-apps.nix`: nix-built browsers via `PLAYWRIGHT_BROWSERS_PATH`, plus fonts.
 - Everything — root, `/nix`, `$HOME`, Docker's data-root — on the single PM9A3. Bring-up runbook
   in `hosts/kanbot-1/default.nix`.
 

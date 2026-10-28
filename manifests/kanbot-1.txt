@@ -87,6 +87,7 @@ alsa-firmware-1.2.4-zstd
 alsa-lib-1.2.16.1
 alsa-topology-conf-1.2.5.1
 alsa-ucm-conf-1.2.16.1
+amd-ucode-20260916
 amf-headers-1.5.2
 amuled.md
 anchor-use.js
@@ -104,6 +105,7 @@ anstyle-parse-0.2.7
 anstyle-parse-1.0.0
 anstyle-query-1.1.5
 anstyle-wincon-3.0.11
+antlr-runtime-cpp-4.13.2
 anubis.md
 anyhow-1.0.100
 anyhow-1.0.101
@@ -231,6 +233,9 @@ bcache-tools-1.1_fish-completions
 bcachefs-tools-1.39.6
 bcrypt-5.0.0-vendor
 bcrypt-5.0.0-vendor-staging
+bdf2psf-1.249
+bdf2psf_1.249_all.deb
+bdftopcf-1.1.2
 beads-1.3.1
 beads-1.3.1-go-modules
 bifunctors-5.6.3
@@ -410,6 +415,9 @@ chezmoi-2.73.0
 chezmoi-2.73.0-go-modules
 chmod.yazi-0-unstable-2026-09-01
 chromaprint-1.6.1
+chromium-155.0.8059.39
+chromium-155.0.8059.39_fish-completions
+chromium-unwrapped-155.0.8059.39
 chrono-0.4.45
 cifs-utils-7.5
 cifs-utils-7.5_fish-completions
@@ -418,6 +426,7 @@ citeproc-0.9.0.1
 cjson-1.7.19
 clang-21.1.8
 clang-src-21.1.8
+clang-tools-21.1.8
 clang-wrapper-21.1.8
 clap-4.5.58
 clap-4.6.6
@@ -501,6 +510,9 @@ crossbeam-utils-0.8.21
 crossbeam-utils-0.8.22
 crt
 crt-builder
+crubit-0-unstable-2026-09-11
+crubit-0-unstable-2026-09-11-vendor
+crubit-0-unstable-2026-09-11-vendor-staging
 crunchy-0.2.4
 crypto-api-0.13.3
 crypto-api-0.13.3-r1.cabal
@@ -561,6 +573,7 @@ dec-0.0.6-r1.cabal
 default-vimrc
 default.md
 dejagnu-1.6.3
+dejavu-fonts-2.37
 dejavu-fonts-full-2.37
 dejavu-fonts-minimal-2.37
 delta-0.20.1
@@ -629,7 +642,10 @@ dolt-2.4.2
 dolt-2.4.2-go-modules
 dosfstools-4.2
 dosfstools-4.2_fish-completions
+dotconf-1.4.1
 doxygen-1.17.0
+dpkg
+dpkg-1.23.7
 draupnir.md
 dri-pkgconfig-stub
 dry-activate
@@ -660,6 +676,7 @@ emacs.md
 emojis-0.1.4.1
 empty-directory
 empty-inhibitors
+enchant-2.6.9
 encode_unicode-1.0.0
 ensure-all-wrappers-paths-exist
 ensure-newer-sources-hook
@@ -679,6 +696,8 @@ errno-0.3.13
 errno-0.3.14
 esbuild-0.27.2
 esbuild-0.27.2-go-modules
+esbuild-0.28.2
+esbuild-0.28.2-go-modules
 etc
 etc-bash_logout
 etc-bashrc
@@ -844,6 +863,7 @@ gcc-simple-program-10.4.0
 gcc-simple-program-16.2.0
 gcc-wrapper-16.2.0
 gclient-unpack-hook
+gclient_args.gni
 gd-2.3.3
 gdb-17.2
 gdbm-1.26
@@ -904,6 +924,7 @@ gitleaks-8.30.1-go-modules
 glance.md
 glib-2.88.3
 glib-2.88.3-binlore
+glib-networking-2.80.1
 glibc-2.44
 glibc-2.44-25
 glibc-2.44-25-source-unsecvars
@@ -917,11 +938,17 @@ glibmm-2.66.8
 glob-0.3.3
 glog-0.7.1
 glslang-16.4.0
+glu-9.0.3
 gmp-6.3.0
 gmp-with-cxx-6.3.0
 gn-0-unstable-2026-08-14
+gn-0-unstable-2026-09-11
+gn-cfcd774
 gn-e8a8e09
 gnome.md
+gnrt-0-unstable
+gnrt-0-unstable-vendor
+gnrt-0-unstable-vendor-staging
 gns3-server.md
 gnu-config-2024-01-01
 gnugrep-2.4
@@ -1008,6 +1035,7 @@ gumbo-0.14.1
 gupnp-1.6.10
 gupnp-igd-1.6.0
 gusb-0.4.9
+gyre-fonts-2.501
 gzip-1.14
 gzip-1.14_fish-completions
 gzip-1.2.4
@@ -1022,6 +1050,7 @@ half-0.3.3-r2.cabal
 happy-2.1.7
 happy-lib-2.1.7
 harfbuzz-13.2.1
+harfbuzz-icu-13.2.1
 hashable-1.5.1.0
 hashbrown-0.14.5
 hashbrown-0.17.1
@@ -1053,9 +1082,11 @@ hex2_linker-2-footer.M1-1.9.1
 hex2_linker-2.M1-1.9.1
 hex2_linker-2.hex2-1.9.1
 hexdump-util-linux-minimal-2.42.3
+hfst-ospell-0.5.4
 hg-archive
 hicolor-icon-theme-0.18
 hicolor-icon-theme-0.18_fish-completions
+hidapi-0.15.0
 hm-modules-messages
 hm-setup-env
 hm_homeperf3ct.cache.keep
@@ -1105,6 +1136,7 @@ hspec-expectations-0.8.4
 hspec-expectations-0.8.4-r2.cabal
 hspec-meta-2.11.17
 hspec-wai-0.11.1
+hspell-1.4
 htop-3.5.3
 htop-3.5.3_fish-completions
 http-0.2.12
@@ -1121,9 +1153,11 @@ http2-5.3.10
 http2-5.3.10-r1.cabal
 hugo-0.167.0
 hugo-0.167.0-go-modules
+hunspell-1.7.3
 hwdata-0.411
 hwdb.bin
 hwloc-2.14.0
+hyphen-2.8.9
 hypothesis-6.156.1-vendor
 hypothesis-6.156.1-vendor-staging
 iana-etc-20251215
@@ -1131,6 +1165,7 @@ iana-time-zone-0.1.65
 iana-time-zone-haiku-0.1.2
 ibus-1.5.34
 icmake-9.03.01
+icu4c-74.2
 icu4c-78.3
 icu_collections-2.1.1
 icu_locale_core-2.1.1
@@ -1170,6 +1205,7 @@ inputrc
 inspect-3.1.3-0.rockspec
 inspect-luarocks-config.lua
 inspection-testing-0.6.3
+install-fonts-hook
 install-shell-files
 installkernel
 instant-0.1.13
@@ -1308,6 +1344,7 @@ libass-0.17.4
 libassuan-3.0.2
 libavc1394-0.5.4
 libavif-1.4.2
+libbacktrace-0-unstable-2026-05-03
 libbfd-plugin-api-header
 libblake3-1.8.7
 libbluray-1.4.1
@@ -1348,7 +1385,9 @@ libebur128-1.2.6
 libedit-20260508-3.1
 libelf-0.8.13
 libepoxy-1.5.10
+liberation-fonts-2.1.5
 libev-4.33
+libevdev-1.13.6
 libevent-2.1.13
 libexif-0.6.26
 libffi-3.8.0
@@ -1378,12 +1417,14 @@ libipt-2.2
 libjack2-1.9.22
 libjpeg-turbo-3.1.4.1
 libjxl-0.12.0
+libjxl-0.8.2
 libksba-1.8.0
 liblapack-3.12.1
 liblc3-1.1.3
 liblqr-1-0.4.3
 libluv-1.52.1-0
 libmad-0.15.1b
+libmanette-0.2.13
 libmaxminddb-1.13.3
 libmbim-1.34.0
 libmd-1.2.0
@@ -1411,6 +1452,7 @@ libpipeline-1.5.8
 libpng-apng-1.6.58
 libpq-18.6
 libpq.sgml
+libproxy-0.5.12
 libpsl-0.21.5
 libpthread-stubs-0.5
 libpulseaudio-17.0
@@ -1471,9 +1513,12 @@ libva-2.24.1
 libva-minimal-2.24.1
 libvdpau-1.5
 libvmaf-3.0.0
+libvoikko-4.3.3
 libvorbis-1.3.7
+libvpx-1.12.0
 libvpx-1.17.0
 libwebp-1.6.0
+libwpe-1.16.3
 libx11-1.8.13
 libxau-1.0.12
 libxaw-1.0.16
@@ -1499,6 +1544,7 @@ libxkbcommon-1.13.2
 libxkbfile-1.2.0
 libxml++-3.2.5
 libxml2+py-2.15.4
+libxml2-2.13.9
 libxml2-2.15.4
 libxmlb-0.3.27
 libxmu-1.3.1
@@ -1552,6 +1598,7 @@ llvm-binutils-wrapper-21.1.8
 llvm-src-21.1.8
 llvm-tblgen-21.1.8
 llvm-tblgen-src-21.1.8
+llvmCcAndBintools
 lm-sensors-3.6.2
 lmdb-0.9.36
 ln-boot-unstable-2023-05-22
@@ -1716,6 +1763,7 @@ minimal-bootstrap-static-tools-test-builder
 minimal-bootstrap-test
 minimal-bootstrap-test-builder
 miniz_oxide-0.8.9
+minizip-1.3.2
 mirrors-list
 mise-2026.10.3
 mise-2026.10.3-vendor
@@ -1888,8 +1936,12 @@ normpath-1.5.1
 nothunks-0.3.1
 nothunks-0.3.1-r2.cabal
 noto-fonts-cjk-sans-2.004
+noto-fonts-cjk-serif-2.003
+noto-fonts-color-emoji-2.051
+nototools-0.4.1
 npm-build-hook
 npm-config-hook
+npm-deps
 npm-install-hook
 npm-lockfile-fix-0.1.1
 npth-1.8
@@ -1907,6 +1959,7 @@ num-traits-0.2.19
 num_cpus-1.17.0
 num_threads-0.1.7
 numactl-2.0.18
+nuspell-5.1.8
 nv-codec-headers
 nv-codec-headers-12.1.14.0
 nvd-0.2.4
@@ -1941,6 +1994,7 @@ opencv-4.13.0
 openexr-3.5.0
 openfec-1.4.2.12
 openh264-2.6.0
+openjdk-headless-17.0.20.1+1
 openjpeg-2.5.4
 openldap-2.6.13
 openresolv-3.17.4
@@ -1994,6 +2048,7 @@ patch-2.8_fish-completions
 patch-Makefile.in
 patch-configure
 patchelf-0.15.2
+patchelf-0.18.0-unstable-2025-08-13
 patchelf-static-0.15.2
 patchelf-static-get-version-0.15.2
 patchutils-0.3.3
@@ -2043,6 +2098,7 @@ perl5.42.3-ExtUtils-CChecker-0.11
 perl5.42.3-ExtUtils-Config-0.010
 perl5.42.3-ExtUtils-Helpers-0.028
 perl5.42.3-ExtUtils-InstallPaths-0.012
+perl5.42.3-ExtUtils-PkgConfig-1.16
 perl5.42.3-FCGI-0.82
 perl5.42.3-FCGI-Client-0.09
 perl5.42.3-FCGI-ProcManager-0.28
@@ -2056,6 +2112,7 @@ perl5.42.3-File-Slurp-9999.32
 perl5.42.3-File-Slurper-0.014
 perl5.42.3-File-Which-1.27
 perl5.42.3-Font-TTF-1.06
+perl5.42.3-GD-2.86
 perl5.42.3-Getopt-Long-2.58
 perl5.42.3-HTML-Parser-3.85
 perl5.42.3-HTML-TagCloud-0.38
@@ -2110,6 +2167,7 @@ perl5.42.3-Term-Table-0.017
 perl5.42.3-TermReadKey-2.38
 perl5.42.3-Test-Deep-1.204
 perl5.42.3-Test-Fatal-0.017
+perl5.42.3-Test-Fork-0.02
 perl5.42.3-Test-Memory-Cycle-1.06
 perl5.42.3-Test-MockModule-0.177.0
 perl5.42.3-Test-Needs-0.002010
@@ -2170,6 +2228,15 @@ pkgs-config-setup-hook
 pkgs-lib
 plain-0.2.3
 plausible.md
+playwright-1.63.0
+playwright-1.63.0-npm-deps
+playwright-browsers
+playwright-chromium
+playwright-chromium-headless-shell
+playwright-firefox
+playwright-test-1.63.0
+playwright-test-1.63.0_fish-completions
+playwright-webkit
 pleroma.md
 plotinus.md
 plymouth-tpm2-totp.md
@@ -2276,6 +2343,7 @@ python3-3.14.7-env
 python3-minimal-3.14.7
 python3.14-a2wsgi-1.10.10
 python3.14-accessible-pygments-0.0.5
+python3.14-afdko-5.0.1
 python3.14-aiodns-4.0.4
 python3.14-aiohappyeyeballs-2.7.1
 python3.14-aiohttp-3.14.3
@@ -2294,6 +2362,7 @@ python3.14-arabic-reshaper-3.0.1
 python3.14-argcomplete-3.6.3
 python3.14-argon2-cffi-25.1.0
 python3.14-argon2-cffi-bindings-25.1.0
+python3.14-arrow-1.4.0
 python3.14-asgi-lifespan-2.1.0
 python3.14-asgiref-3.11.1
 python3.14-asn1crypto-1.5.1-unstable-2023-11-03
@@ -2316,6 +2385,7 @@ python3.14-beniget-0.5.0
 python3.14-black-26.5.1
 python3.14-blinker-1.9.0
 python3.14-blockbuster-1.5.26
+python3.14-booleanoperations-0.10.0
 python3.14-bootstrap-build-1.5.1
 python3.14-bootstrap-flit-core-3.12.0
 python3.14-bootstrap-installer-1.0.1
@@ -2325,6 +2395,7 @@ python3.14-bootstrap-tomli-2.4.1
 python3.14-bottle-0.13.4
 python3.14-brotli-1.2.0
 python3.14-brotlicffi-1.2.0.0
+python3.14-brotlipy-0.7.0
 python3.14-build-1.5.1
 python3.14-buildcatrust-0.5.1
 python3.14-cached-property-2.0.1
@@ -2348,6 +2419,7 @@ python3.14-colorama-0.4.6
 python3.14-commentjson-0.9.0
 python3.14-configobj-5.0.9
 python3.14-configparser-7.2.0
+python3.14-construct-2.10.70
 python3.14-contourpy-1.3.3
 python3.14-cppy-1.3.1
 python3.14-cron-converter-1.3.1
@@ -2363,6 +2435,7 @@ python3.14-dbus-python-1.4.0
 python3.14-ddt-1.7.2
 python3.14-decorator-5.3.1
 python3.14-deepdiff-8.6.2
+python3.14-defcon-0.12.2
 python3.14-defusedxml-0.8.0rc2
 python3.14-deprecated-1.3.1
 python3.14-deprecation-2.1.0
@@ -2406,6 +2479,9 @@ python3.14-flexcache-0.3
 python3.14-flexparser-0.4
 python3.14-flit-core-3.12.0
 python3.14-flit-scm-1.7.0
+python3.14-fontmath-0.9.4
+python3.14-fontparts-1.0.0
+python3.14-fontpens-0.4.0
 python3.14-fonttools-4.63.0
 python3.14-forbiddenfruit-0.1.4
 python3.14-fpdf2-2.8.5
@@ -2494,6 +2570,7 @@ python3.14-litestar-htmx-0.5.0
 python3.14-littleutils-0.2.4
 python3.14-lockfile-0.12.2
 python3.14-lxml-6.1.1
+python3.14-lz4-4.4.5
 python3.14-mako-1.3.12
 python3.14-markdown-3.10.2
 python3.14-markdown-it-py-4.2.0
@@ -2517,6 +2594,7 @@ python3.14-msgspec-0.21.1
 python3.14-multidict-6.7.1
 python3.14-multipart-2.0.0
 python3.14-mutagen-1.48.1
+python3.14-mutatormath-3.0.1
 python3.14-mypy-2.1.0
 python3.14-mypy-extensions-1.1.0
 python3.14-myst-parser-5.1.0-unstable-2026-07-12
@@ -2578,6 +2656,7 @@ python3.14-prompt-toolkit-3.0.51
 python3.14-prompt-toolkit-3.0.52
 python3.14-propcache-0.5.2
 python3.14-proxy-py-2.4.10
+python3.14-psautohint-2.4.0
 python3.14-psutil-7.2.2
 python3.14-psycopg-3.3.5
 python3.14-psycopg-c-3.3.5
@@ -2591,6 +2670,7 @@ python3.14-pyasn1-modules-0.4.2
 python3.14-pybind11-3.0.4
 python3.14-pycairo-1.29.0
 python3.14-pycares-5.0.1
+python3.14-pyclipper-1.4.0
 python3.14-pycodestyle-2.14.0
 python3.14-pycountry-26.2.16
 python3.14-pycparser-3.00
@@ -2671,6 +2751,7 @@ python3.14-python-xmp-toolkit-2.0.2
 python3.14-pythran-0.18.1
 python3.14-pytokens-0.4.1
 python3.14-pytz-2026.2
+python3.14-pyxdg-0.28
 python3.14-pyyaml-6.0.3
 python3.14-qrcode-8.2
 python3.14-re-assert-1.1.0
@@ -2693,6 +2774,7 @@ python3.14-safe-pysha3-1.0.5
 python3.14-schema-0.7.8
 python3.14-scikit-build-core-1.0.2
 python3.14-scipy-1.18.1
+python3.14-scour-0.38.2
 python3.14-scp-0.15.0
 python3.14-secretstorage-3.5.0
 python3.14-semantic-version-2.10.0
@@ -2760,6 +2842,7 @@ python3.14-tomlkit-0.15.0
 python3.14-toposort-1.10
 python3.14-tornado-6.5.7
 python3.14-tox-4.34.1
+python3.14-tqdm-4.68.4
 python3.14-traitlets-5.15.1
 python3.14-trio-0.33.0
 python3.14-trove-classifiers-2026.6.1.19
@@ -2770,6 +2853,7 @@ python3.14-ttp-templates-0.6.14
 python3.14-typeguard-4.5.2
 python3.14-typer-0.25.1
 python3.14-types-psutil-7.2.1.20260116
+python3.14-types-python-dateutil-2.9.0.20251115
 python3.14-types-setuptools-80.9.0.20251223
 python3.14-typing-extensions-4.16.0
 python3.14-typing-inspect-0.9.0-unstable-2025-10-20
@@ -2779,10 +2863,13 @@ python3.14-tzdata-2026.3
 python3.14-tzlocal-5.4.4
 python3.14-u-msgpack-python-2.8.0
 python3.14-uc-micro-py-1.0.3
+python3.14-ufonormalizer-0.6.2
+python3.14-ufoprocessor-1.14.1
 python3.14-uharfbuzz-0.53.2
 python3.14-ujson-5.13.0
 python3.14-ukpostcodeparser-1.1.2
 python3.14-uncertainties-3.2.4
+python3.14-unicodedata2-17.0.1
 python3.14-urllib3-2.7.0
 python3.14-uuid6-2025.0.1
 python3.14-uv-build-0.11.28
@@ -2967,6 +3054,9 @@ rust-bindgen-unwrapped-0.72.1-vendor
 rust-bindgen-unwrapped-0.72.1-vendor-staging
 rust-ini-0.21.3
 rust-lib-src
+rust-src
+rust-vendor-src
+rustTools
 rustc-1.98.1
 rustc-bootstrap-1.98.1
 rustc-bootstrap-wrapper-1.98.1
@@ -3057,6 +3147,7 @@ servant-server-0.20.3.0
 servant-server-0.20.3.0-r3.cabal
 server.md
 set-environment
+set-java-classpath-hook
 setenv-0.1.1.3
 setenv-0.1.1.3-r1.cabal
 setup-debug-info-dirs-hook
@@ -3105,6 +3196,7 @@ smart-enter.yazi-0-unstable-2026-09-01
 smartctl_exporter-0.15.0
 smartctl_exporter-0.15.0-go-modules
 smartmontools-7.5
+snappy-1.2.2
 snyk-1.1308.0
 snyk-1.1308.0-npm-deps
 socat-1.8.1.3
@@ -3132,6 +3224,7 @@ sox-14.4.2-unstable-2021-05-09
 soxr-0.1.3
 spandsp-0.0.6
 spdlog-1.17.0
+speech-dispatcher-0.12.1
 speex-1.2.1
 speexdsp-1.2.1
 sphinxygen-1.0.12
@@ -3256,6 +3349,7 @@ tempfile-3.20.0
 tempfile-3.23.0
 tempfile-3.27.0
 temporary-1.3
+temurin-bin-17.0.20
 terminal-size-0.3.4
 terminal-size-0.3.4-r1.cabal
 terraform-1.16.5
@@ -3396,6 +3490,8 @@ trufflehog-3.99.2-go-modules
 twolame-2017-09-27
 typed-process-0.2.13.0
 typenum-1.19.0
+typescript-7.0.2
+typescript-7.0.2-go-modules
 typst-0.8.0.2
 typst-symbols-0.1.8.1
 tzdata-2026d
@@ -3420,6 +3516,7 @@ unicode-ident-1.0.24
 unicode-transforms-0.4.0.1
 unicode-transforms-0.4.0.1-r9.cabal
 unicode-width-0.2.2
+unifont-18.0.01
 uniplate-1.6.13
 uniplate-1.6.13-r1.cabal
 unit--.slice
@@ -3472,6 +3569,7 @@ unit-systemd-journald-audit.socket
 unit-systemd-tmpfiles-clean.timer
 unit-user.slice
 unittest-check-hook
+unittest-cpp-2.0.0
 unix-compat-0.7.4.1
 unix-time-0.4.17
 unliftio-0.2.25.1
@@ -3633,12 +3731,14 @@ wl-pprint-annotated-0.1.0.1
 wl-pprint-annotated-0.1.0.1-r4.cabal
 woff2-1.0.2
 word8-0.1.3
+wpebackend-fdo-1.16.1
 wrap-gapps-hook
 wrap-lua-hook
 wrap-python-hook
 wrapGNUstepAppsHook
 wrapfish.aliases.fish
 wrapfish.local.fish
+wrapper
 writable-tmpdir-as-home-hook
 write-text-file.kaem
 writeable-0.6.2

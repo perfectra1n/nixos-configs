@@ -20,6 +20,9 @@
     # kanbot's evidence_root (config.toml) is on /mnt/main_smb — without the mount, sessions write
     # evidence into an empty local dir that nothing else ever sees.
     ../../modules/smb-mounts.nix
+    # Sessions run browser tests and screenshots; the desktop's Playwright lives in the GUI-only
+    # desktop-apps.nix, so this box takes the headless subset.
+    ../../modules/playwright.nix
   ];
   homeModules = [ ../../home/docker.nix ];
 }
