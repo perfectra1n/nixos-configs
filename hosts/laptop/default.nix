@@ -30,6 +30,16 @@
   # at a time at the systemd-boot menu (press `e`): 0x10 (PSR), 0x200 (PSR-SU), 0x400 (Replay).
   boot.kernelParams = [ "amdgpu.dcdebugmask=0x610" ];
 
+  # 2TB Sabrent Rocket Q4 (second NVMe): bulk data. Declared here rather than in
+  # hardware-configuration.nix because the generator missed it (it wasn't mounted at
+  # generate time), so it was never mounted at all and /data was a bare root-owned dir on
+  # the root fs. nofail: a dead DATA drive must not drop boot to emergency mode.
+  fileSystems."/data" = {
+    device = "/dev/disk/by-uuid/4ee3a453-b36d-4ce8-b0b6-8b549340b57f";
+    fsType = "ext4";
+    options = [ "nofail" ];
+  };
+
   # UEFI boot — virtually all modern laptops.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

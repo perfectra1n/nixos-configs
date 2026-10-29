@@ -106,10 +106,6 @@
   virtualisation.docker.daemon.settings."data-root" = "/fast-u2/docker";
   systemd.services.docker.unitConfig.RequiresMountsFor = [ "/fast-u2/docker" ];
 
-  # VMware Workstation host (builds vmmon/vmnet kernel modules against the running kernel —
-  # here the CachyOS one). unfree. Provides `vmware` + the networking/USB-arbitrator services.
-  virtualisation.vmware.host.enable = true;
-
   # Bluetooth radio + GUI manager (no settings app on a WM-only desktop).
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;

@@ -20,15 +20,20 @@
 # subnets are one-shot mutable state that a reinstall regenerates at random, i.e. this bug
 # comes back silently. Owning the files makes the choice reproducible, and the Condition
 # means the generator simply never runs. Trade-off: vmware-netcfg can no longer edit these
-# (Nix-owned: store symlinks, plus one activation-rewritten copy — see `networking` below)
-# — edit `hostOnly`/`nat` below instead.
+# (dhcpd/nat confs become read-only store symlinks; `networking` a copy rewritten on every
+# switch) — edit `hostOnly`/`nat` below instead.
 #
 # The installer's *_DHCP_CFG_HASH lines are deliberately omitted. They exist so
 # vmware-netcfg can tell whether a human hand-edited the DO-NOT-MODIFY block; nothing
 # consumes them at runtime, and that editor is out of the loop now anyway.
 #
 # dhcpd.leases lives in the same directory and stays a real writable file — NixOS only
-# symlinks the leaves it manages, so vmnet-dhcpd can still write its lease database.
+# symlinks the leaves it manages, so vmnet-dhcpd can still write its lease database. But
+# nothing CREATES it any more: that was the generator's job, and the Condition above means
+# it never runs. ISC dhcpd 2.0 refuses to start without an existing lease file ("Can't open
+# lease database"), which fails vmware-networks.service and with it every `switch`. A box
+# that ran VMware before this module (desktop) still has the old file and never noticed;
+# a fresh one (laptop, or any reinstall) does. The tmpfiles rules below seed it.
 #
 # ── Working with VMs on these nets ───────────────────────────────────────────────────
 #
@@ -129,8 +134,10 @@ in
     # O_RDWR even for --start, and at boot /nix/store is mounted read-only, so as a symlink
     # the open fails with EROFS and vmware-networks.service dies with a bare "Failed to
     # initialize": no vmnet adapters, no guest networking, on every single boot. The real
-    # error is only in /var/log/vnetlib. Activation rewrites the copy each switch, so the
-    # flake stays authoritative. The other three files are opened O_RDONLY and stay links.
+    # error is only in /var/log/vnetlib. Starting it by hand later appears to work only
+    # because the store has been remounted rw by then. Activation rewrites the copy each
+    # switch, so the flake stays authoritative. The other three files are opened O_RDONLY
+    # and stay links.
     "vmware/networking".mode = "0644";
     "vmware/networking".text = ''
       VERSION=1,0
@@ -202,6 +209,13 @@ in
       [incomingudp]
     '';
   };
+
+  # `f` creates the lease file only if missing and never truncates it, so existing leases
+  # survive every boot/switch. See the header for why nothing else creates it.
+  systemd.tmpfiles.rules = [
+    "f /etc/vmware/vmnet1/dhcpd/dhcpd.leases 0644 root root -"
+    "f /etc/vmware/vmnet8/dhcpd/dhcpd.leases 0644 root root -"
+  ];
 
   # environment.etc changes alone are INERT here. vmware-networks.service is Type=forking
   # and reads /etc/vmware/networking exactly once, at ExecStart; its unit definition names

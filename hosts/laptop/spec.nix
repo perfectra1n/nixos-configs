@@ -11,6 +11,10 @@
     ../../modules/laptop.nix
     ../../modules/miracast.nix # cast the screen to Miracast TVs — needs Wi-Fi for the P2P leg, so laptop-only
     ../../modules/airplay.nix # cast the screen to AirPlay 2 sinks (Apple TV, Samsung) — the protocol Miracast/Cast can't reach
+    # VMware + its pinned vmnets, as on desktop. vmware-net matters just as much here: the
+    # laptop joins the same /16 home LAN, and a roaming box can't know its next uplink's prefix.
+    ../../modules/vmware.nix
+    ../../modules/vmware-net.nix
   ];
   homeModules = [ ../../home/gui.nix ../../home/docker.nix ];
 }

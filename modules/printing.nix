@@ -118,5 +118,7 @@
     system-config-printer # GTK app to add/manage queues. Earns its place because Hyprland has no
     # settings shell to host a printer panel; the alternative is localhost:631.
     simple-scan # GTK scanning frontend. Not skanlite — that one is KDE-only in nixpkgs.
+    naps2 # For the feeder scanners (Canon R40): duplex batches, profiles, blank-page skip, OCR→PDF —
+    # all things simple-scan lacks. Links the system sane-backends, so canon_dr is the same one scanimage uses.
   ];
 }

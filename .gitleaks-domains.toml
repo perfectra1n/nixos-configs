@@ -78,4 +78,11 @@ tags = ["domain", "private-infra"]
 
   [rules.allowlist]
   regexTarget = "match"
-  regexes = ['''(?i)([a-z0-9-]+\.)*example\.(internal|com|org|net)''']
+  regexes = [
+    '''(?i)([a-z0-9-]+\.)*example\.(internal|com|org|net)''',
+    # .NET assembly / NuGet namespaces, not hosts: `Microsoft.AspNetCore.App.Internal.Assets`,
+    # `System.Private.Uri`. They reach manifests/ as build inputs of any buildDotnetModule
+    # package (naps2). Anchored on the two BCL roots rather than exempting manifests/ by path,
+    # so a private host that rode in on a derivation name would still be caught there.
+    '''^(Microsoft|System)\.([A-Za-z0-9]+\.)*(Internal|Private)$''',
+  ]

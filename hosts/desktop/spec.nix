@@ -11,9 +11,10 @@
 {
   extraModules = graphical ++ [
     ../../modules/nvidia.nix
-    # Desktop-only because it is the only host with virtualisation.vmware.host.enable.
-    # Not optional: this LAN hands out a /16, so VMware's randomly-chosen 192.168.x.0/24
-    # vmnets land INSIDE the LAN prefix and black-hole real hosts. See the module header.
+    # VMware Workstation host + its pinned vmnet subnets — always the pair. vmware-net is not
+    # optional: this LAN hands out a /16, so VMware's randomly-chosen 192.168.x.0/24 vmnets
+    # land INSIDE the LAN prefix and black-hole real hosts. See that module's header.
+    ../../modules/vmware.nix
     ../../modules/vmware-net.nix
     # The CyberPower CP1500PFCLCDa is plugged into this box's USB.
     ../../modules/ups.nix
