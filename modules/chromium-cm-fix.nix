@@ -98,6 +98,7 @@
         trilium-desktop = setWmClass "electron" (addCmFlag
           inputs.trilium.packages.${prev.stdenv.hostPlatform.system}.desktop [ "trilium" ]);
         slack           = addCmFlag prev.slack           [ "slack" ];
+        bitwarden-desktop = addCmFlag prev.bitwarden-desktop [ "bitwarden" ];
       })
   ];
 }

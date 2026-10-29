@@ -610,6 +610,7 @@ bitwarden-desktop-2026.9.1
 bitwarden-desktop-2026.9.1-npm-deps
 bitwarden-desktop-2026.9.1-vendor
 bitwarden-desktop-2026.9.1-vendor-staging
+bitwarden-desktop-cmfix
 blackfire.md
 blas-3
 blaze-builder-0.4.4.1
@@ -7567,7 +7568,7 @@ vlc-3.0.24
 vmware-bootstrap
 vmware-config
 vmware-modconfig
-vmware-modules-workstation-25h2-20251015-7.2.8
+vmware-modules-workstation-25h2-20251015-7.2.9
 vmware-unpack-env-25H2u1
 vmware-unpack-env-25H2u1-bwrap
 vmware-unpack-env-25H2u1-fhsenv-profile

@@ -611,6 +611,7 @@ bitwarden-desktop-2026.9.1
 bitwarden-desktop-2026.9.1-npm-deps
 bitwarden-desktop-2026.9.1-vendor
 bitwarden-desktop-2026.9.1-vendor-staging
+bitwarden-desktop-cmfix
 blackfire.md
 blas-3
 blaze-builder-0.4.4.1
