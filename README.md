@@ -61,7 +61,11 @@ The heavy flake build happens *after* reboot on the real disk.
    subshell (exit it and you'd have to unlock again). `nix-shell` drops you into
    bash, so the `export` syntax works even though the login shell is fish.
     ```sh
-    nix-shell -p jq mise git bitwarden-cli
+    nix-shell -p jq mise git bitwarden-cli python3
+
+    # A fresh install has flakes off, and modules/common.nix only turns them on AFTER the
+    # first switch — but `apply` needs them for that switch (nixos-rebuild --flake, nix run).
+    export NIX_CONFIG="experimental-features = nix-command flakes"
 
     # Unlock once and capture the session, so every later `bw` (and mise's tasks) inherit it.
     # --raw prints only the session key (prompts go to the tty); `|| bw unlock --raw` covers
