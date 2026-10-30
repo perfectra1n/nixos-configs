@@ -157,7 +157,7 @@ NLog.5.5.0.nupkg
 NLog.5.5.1.nupkg
 NLog.Extensions.Logging-5.5.0
 NLog.Extensions.Logging.5.5.0.nupkg
-NVIDIA-Linux-x86_64-615.71.09.run
+NVIDIA-Linux-x86_64-615.78.08.run
 Newtonsoft.Json-13.0.4
 Newtonsoft.Json.13.0.4.nupkg
 OneTuple-0.4.2.1
@@ -465,7 +465,9 @@ attr-2.6.0_fish-completions
 audiofile-0.3.6
 audit-4.2.1
 auditable-cargo-1.98.1
+auditable-cargo-1.99.0
 auditable-cargo-bootstrap-1.98.1
+auditable-cargo-bootstrap-1.99.0
 aurorae-6.7.5
 auto-add-driver-runpath-hook
 auto-common-1.2.2.jar
@@ -529,6 +531,7 @@ bash-2.05b
 bash-2.05b-builder
 bash-5.3
 bash-5.3p15
+bash-5.3p20
 bash-completion-2.18.0
 bash-get-version-2.05b
 bash-get-version-2.05b-builder
@@ -536,6 +539,7 @@ bash-get-version-5.3
 bash-interactive-5.3p15
 bash-interactive-5.3p15-binlore
 bash-interactive-5.3p15_fish-completions
+bash-interactive-5.3p20
 bash-static-5.3
 bash-static-get-version-5.3
 bash53-001
@@ -553,6 +557,11 @@ bash53-012
 bash53-013
 bash53-014
 bash53-015
+bash53-016
+bash53-017
+bash53-018
+bash53-019
+bash53-020
 bash_autocomplete
 bat-0.26.1
 bat-0.26.1-vendor
@@ -761,13 +770,21 @@ calloop-wayland-source-0.3.0
 calloop-wayland-source-0.4.1
 camino-1.2.2
 cargo-1.98.1
+cargo-1.99.0
 cargo-auditable-0.7.5
 cargo-auditable-0.7.5-vendor
 cargo-auditable-0.7.5-vendor-staging
+cargo-auditable-0.7.6
+cargo-auditable-0.7.6-vendor
+cargo-auditable-0.7.6-vendor-staging
 cargo-auditable-bootstrap-0.7.5
 cargo-auditable-bootstrap-0.7.5-vendor
 cargo-auditable-bootstrap-0.7.5-vendor-staging
+cargo-auditable-bootstrap-0.7.6
+cargo-auditable-bootstrap-0.7.6-vendor
+cargo-auditable-bootstrap-0.7.6-vendor-staging
 cargo-bootstrap-1.98.1
+cargo-bootstrap-1.99.0
 cargo-c-0.10.22
 cargo-c-0.10.22-vendor
 cargo-c-0.10.22-vendor-staging
@@ -1924,7 +1941,9 @@ clucene-core-2.3.3.4
 cmake-0.1.58
 cmake-4.4.3
 cmake-4.4.3_fish-completions
+cmake-4.4.4
 cmake-minimal-4.4.3
+cmake-minimal-4.4.4
 cmark-0.31.2
 cmark-gfm-0.29.0.gfm.13
 cmdargs-0.10.22
@@ -2021,6 +2040,7 @@ core_maths-0.1.1
 coreutils-9.11
 coreutils-9.11-binlore
 coreutils-9.11-lore-override
+coreutils-9.12
 coreutils-full-9.11
 coreutils-full-9.11_fish-completions
 coreutils-static-9.11
@@ -2434,6 +2454,7 @@ exfat-1.4.0
 exiv2-0.28.9
 expand-response-params
 expat-2.8.5
+expat-2.9.0
 expect-5.45.4
 expected_long_output
 expected_short_output
@@ -2603,6 +2624,7 @@ freepats-20060219
 freetype-2.14.3
 frei0r-plugins-3.5.0
 fribidi-1.0.16
+fribidi-1.0.17
 frozen-containers-1.2.0-unstable-2026-09-23
 fs_at-0.2.1
 fs_extra-1.3.0
@@ -2657,13 +2679,17 @@ gbm-0.18.0
 gbm-sys-0.4.0
 gcc-10.4.0
 gcc-16.2.0
+gcc-16.2.0-src
 gcc-4.6.4
 gcc-cxx-4.6.4
 gcc-cxx-simple-program-4.6.4
 gcc-get-version-4.6.4
 gcc-simple-program-10.4.0
 gcc-simple-program-16.2.0
+gcc-wrapper-10.4.0
 gcc-wrapper-16.2.0
+gcc-wrapper-simple-program-10.4.0
+gcc-wrapper-simple-program-16.2.0
 gcd-2.3.0
 gclient
 gclient-unpack-hook
@@ -2731,6 +2757,7 @@ git-credentials
 git-lfs-3.8.0
 git-lfs-3.8.0-go-modules
 git-minimal-2.55.0
+git-minimal-2.56.0
 git.yazi-0-unstable-2026-09-18
 gitSetupHook
 githash-0.1.7.0
@@ -2755,10 +2782,12 @@ glibc-2.44
 glibc-2.44-25
 glibc-2.44-25-source-unsecvars
 glibc-2.44-25_fish-completions
+glibc-2.44-57
 glibc-headers-2.44
 glibc-iconv-2.44
 glibc-locales-2.44-25
 glibc-locales-2.44-25_fish-completions
+glibc-locales-2.44-57
 glibc-multi-2.44-25
 glibc-simple-program-2.44
 glibmm-2.66.8
@@ -2896,6 +2925,7 @@ grimblast-0.1-unstable-2026-08-21
 grimblast-0.1-unstable-2026-08-21_fish-completions
 grocy.md
 groff-1.24.1
+groff-1.24.2
 groovy-bom-3.0.14.pom
 groups-0.5.3
 gsettings-desktop-schemas-50.1
@@ -2949,6 +2979,7 @@ gwenview-26.08.2
 gyre-fonts-2.501
 gzip-1.14
 gzip-1.14_fish-completions
+gzip-1.15
 gzip-1.2.4
 gzip-get-version-1.2.4
 gzip-static-1.14
@@ -2967,6 +2998,7 @@ handbrake-1.11.2
 happy-2.1.7
 happy-lib-2.1.7
 harfbuzz-13.2.1
+harfbuzz-14.5.1
 harfbuzz-icu-13.2.1
 harfrust-0.8.4
 haruna-1.8.1
@@ -3025,7 +3057,7 @@ hex2_linker-0.hex2-1.9.1
 hex2_linker-2-footer.M1-1.9.1
 hex2_linker-2.M1-1.9.1
 hex2_linker-2.hex2-1.9.1
-hexdump-util-linux-minimal-2.42.3
+hexdump-util-linux-minimal-2.42.4
 hexf-parse-0.2.1
 hfst-ospell-0.5.4
 hg-archive
@@ -3111,6 +3143,7 @@ hugo-0.167.0
 hugo-0.167.0-go-modules
 hunspell-1.7.3
 hwdata-0.411
+hwdata-0.412
 hwdb.bin
 hwloc-2.14.0
 hyphen-2.8.9
@@ -3219,7 +3252,7 @@ initrd-bin-env
 initrd-fstab
 initrd-group
 initrd-hostname
-initrd-linux-7.2.9
+initrd-linux-7.3.0
 initrd-passwd
 initrd-release
 initrd-shadow
@@ -3313,6 +3346,7 @@ jdependency-2.8.0.pom
 jdom2-2.0.6.1.jar
 jdom2-2.0.6.1.pom
 jemalloc-5.3.1
+jemalloc-5.4.0
 jetty-bom-9.4.50.v20221201.pom
 jiff-0.2.16
 jiff-static-0.2.16
@@ -3503,6 +3537,9 @@ kmod-31
 kmod-31_fish-completions
 kmod-blacklist-31+20240202-2ubuntu8
 kmod-debian-aliases.conf-30+20230601-2
+kmodigest-0.1.0
+kmodigest-0.1.0-vendor
+kmodigest-0.1.0-vendor-staging
 knewstuff-5.116.0
 knewstuff-6.30.0
 knighttime-6.7.5
@@ -3611,6 +3648,7 @@ libaio-0.3.113
 libajantv2-17.5.0
 libao-1.2.2
 libaom-3.15.0
+libaom-3.15.1
 libapparmor-5.0.2
 libappimage-1.0.4-5
 libappindicator-fe25e53
@@ -3629,12 +3667,14 @@ libayatana-appindicator-0.5.92
 libayatana-indicator-0.9.4
 libb2-0.98.1
 libbacktrace-0-unstable-2026-05-03
+libbacktrace-16.2.0
 libbdplus-0.2.0
 libbfd-plugin-api-header
 libblake3-1.8.7
 libblockdev-3.5.0
 libbluray-1.4.1
 libbpf-1.7.0
+libbpf-1.8.0
 libbs2b-3.1.0
 libbsd-0.12.2
 libbytesize-2.12
@@ -3680,6 +3720,7 @@ libdc1394-2.2.7
 libde265-1.1.2
 libdecor-0.2.5
 libdeflate-1.25
+libdeflate-1.26
 libdisplay-info-0.4.0
 libdmtx-0.7.8
 libdovi-3.3.1
@@ -3717,6 +3758,7 @@ libfreeaptx-0.2.2
 libfreehand-0.1.3
 libfuzzer-sys-0.4.13
 libfyaml-0.9.6
+libgcc-16.2.0
 libgcrypt-1.12.4
 libgeneral-90
 libgetopt.a
@@ -3754,6 +3796,7 @@ libiscsi-1.20.3
 libixion-0.20.0
 libjack2-1.9.22
 libjpeg-turbo-3.1.4.1
+libjpeg-turbo-3.2.0
 libjxl-0.12.0
 libjxl-0.8.2
 libkate-0.4.3
@@ -3817,6 +3860,7 @@ libpaper-2.2.8
 libpcap-1.10.7
 libpciaccess-0.19
 libpfm-4.13.0
+libpfm-4.14.1
 libphonenumber-9.0.41
 libpipeline-1.5.8
 libplacebo-5.264.1
@@ -3827,6 +3871,7 @@ libplist-2.7.0_fish-completions
 libpng-1.2.59
 libpng-1.6.58
 libpng-apng-1.6.58
+libpng-apng-1.6.59
 libppd-2.1.1
 libpq-18.6
 libpq.sgml
@@ -3869,6 +3914,7 @@ libsciter-gtk.so
 libseccomp-2.6.1
 libsecret-0.21.7
 libselinux-3.10
+libselinux-3.11
 libsepol-3.11
 libshout-2.4.6
 libsigc++-2.12.1
@@ -3882,7 +3928,9 @@ libsm-1.2.6
 libsmi-0.5.0
 libsndfile-1.2.2
 libsodium-1.0.22-unstable-2026-08-13
+libsodium-1.0.22-unstable-2026-09-28
 libsoup-3.6.6
+libsoup-3.8.0
 libspa-0.10.0
 libspa-sys-0.10.0
 libspatialaudio-0.3.0
@@ -3891,6 +3939,7 @@ libsrtp-2.8.1
 libssh-0.12.2
 libssh2-1.11.1
 libstartup-notification-0.12
+libstdcxx-16.2.0
 libstemmer-3.1.1
 libsysprof-capture-50.0
 libsystemd-0.7.2
@@ -3922,6 +3971,7 @@ libusb-compat-0.1.8
 libusbmuxd-2.1.1
 libutempter-1.2.3
 libuv-1.52.1
+libuv-1.53.0
 libva-2.24.1
 libva-minimal-2.24.1
 libvdpau-1.5
@@ -3940,6 +3990,7 @@ libwpe-1.16.3
 libwpg-0.3.4
 libwps-0.4.14
 libx11-1.8.13
+libx11-1.8.14
 libx86-1.1
 libxau-1.0.12
 libxaw-1.0.16
@@ -3962,6 +4013,7 @@ libxfixes-6.0.2
 libxfont_2-2.0.9
 libxft-2.3.9
 libxi-1.8.3
+libxi-1.8.4
 libxinerama-1.1.6
 libxkbcommon-1.13.2
 libxkbfile-1.2.0
@@ -3973,9 +4025,11 @@ libxmlb-0.3.27
 libxmp-4.7.3
 libxmu-1.3.1
 libxpm-3.5.19
+libxpm-3.5.20
 libxpresent-1.0.2
 libxrandr-1.5.5
 libxrender-0.9.12
+libxrender-0.9.13
 libxres-1.2.3
 libxscrnsaver-1.2.5
 libxshmfence-1.3.3
@@ -4004,9 +4058,9 @@ linenoise.pc.in
 link
 linked-hash-map-0.5.6
 linked_hash_set-0.1.6
-linux-7.2.9
-linux-7.2.9-modules
-linux-7.2.9-modules-shrunk
+linux-7.3.0
+linux-7.3.0-modules
+linux-7.3.0-modules-shrunk
 linux-cachyos-config
 linux-firmware-20260916
 linux-firmware-20260916-zstd
@@ -4422,6 +4476,7 @@ nextcloud.md
 nftables-1.1.7
 nghttp2-1.70.0
 nghttp3-1.17.0
+nghttp3-1.18.0
 ngtcp2-1.23.0
 ngtcp2-1.25.0
 nikto-2.6.1
@@ -4561,6 +4616,7 @@ nspr-4.40
 nss-3.112.5
 nss-3.130
 nss-cacert-3.126
+nss-cacert-3.131.1
 nss-mdns-0.15.1
 ntfs3g-2026.9.28
 ntfs3g-2026.9.28_fish-completions
@@ -4594,12 +4650,12 @@ nvidia-cdi-generator
 nvidia-container-toolkit-1.20.1
 nvidia-egl-external-platforms
 nvidia-egl-external-platforms-x32
-nvidia-open-615.71.09-7.2.9
-nvidia-settings-615.71.09
-nvidia-settings-615.71.09_fish-completions
+nvidia-open-615.78.08-7.3.0
+nvidia-settings-615.78.08
+nvidia-settings-615.78.08_fish-completions
 nvidia-vaapi-driver-0.0.18
-nvidia-x11-615.71.09
-nvidia-x11-615.71.09_fish-completions
+nvidia-x11-615.78.08
+nvidia-x11-615.78.08_fish-completions
 nyacc-1.09.1
 nyacc-1.09.1-builder
 obex-data-server-0.4.6
@@ -4700,6 +4756,7 @@ opensp-1.5.2
 openssh-10.5p1
 openssh-10.5p1_fish-completions
 openssl-3.5.8
+openssl-3.5.9
 openssl-probe-0.1.6
 openssl-sys-0.9.111
 opentest4j-1.3.0.jar
@@ -4755,6 +4812,7 @@ owncloud-client-6.0.3
 owned_ttf_parser-0.25.1
 oxygen-icons-6.30.0
 p11-kit-0.26.2
+p11-kit-0.26.5
 p7zip-17.06
 packagekit-1.4.0
 packagekit-qt-1.1.4
@@ -4804,6 +4862,7 @@ patch-restored-packages.proj
 patch?download-raw
 patchelf-0.15.2
 patchelf-0.18.0-unstable-2025-08-13
+patchelf-0.19.2
 patchelf-static-0.15.2
 patchelf-static-get-version-0.15.2
 patchutils-0.3.3
@@ -4821,6 +4880,7 @@ pcollections-4.0.1.jar
 pcollections-4.0.1.module
 pcollections-4.0.1.pom
 pcre2-10.48
+pcre2-10.49
 pcsclite-2.4.1
 pdfium-8066
 peeking_take_while-0.1.2
@@ -5449,7 +5509,10 @@ python2.7-wheel-0.37.1
 python3-3.13.15
 python3-3.14.7
 python3-3.14.7-env
+python3-3.14.8
+python3-3.14.8-env
 python3-minimal-3.14.7
+python3-minimal-3.14.8
 python3.14-a2wsgi-1.10.10
 python3.14-absl-py-2.5.0
 python3.14-accessible-pygments-0.0.5
@@ -5509,6 +5572,7 @@ python3.14-bootstrap-build-1.5.1
 python3.14-bootstrap-flit-core-3.12.0
 python3.14-bootstrap-installer-1.0.1
 python3.14-bootstrap-packaging-26.2
+python3.14-bootstrap-packaging-26.3
 python3.14-bootstrap-pyproject-hooks-1.2.0
 python3.14-bootstrap-tomli-2.4.1
 python3.14-bottle-0.13.4
@@ -5526,13 +5590,17 @@ python3.14-cattrs-26.1.0
 python3.14-cbor2-6.1.3
 python3.14-cerberus-1.3.8
 python3.14-certifi-2026.06.17
+python3.14-certifi-2026.07.22
 python3.14-cffi-2.1.0
+python3.14-cffi-2.1.1
 python3.14-chameleon-4.6.0
 python3.14-changelog-chug-0.0.3
 python3.14-chardet-6.0.0.post1
 python3.14-charset-normalizer-3.4.9
+python3.14-charset-normalizer-3.5.1
 python3.14-cli-helpers-2.14.0
 python3.14-click-8.3.3
+python3.14-click-8.4.2
 python3.14-click-log-0.4.0
 python3.14-cloudpickle-3.1.2
 python3.14-cmake-4.4.3
@@ -5553,6 +5621,7 @@ python3.14-curio-1.6-unstable-2024-04-11
 python3.14-curl-cffi-0.16.3
 python3.14-cycler-0.12.1
 python3.14-cython-3.2.5
+python3.14-cython-3.3.0
 python3.14-cython-test-exception-raiser-1.0.2
 python3.14-dataclasses-json-0.6.7
 python3.14-dbus-deviation-0.6.1
@@ -5601,6 +5670,7 @@ python3.14-faust-cchardet-2.1.20
 python3.14-feedgen-1.0.0
 python3.14-fido2-2.2.1
 python3.14-filelock-3.29.7
+python3.14-filelock-3.32.4
 python3.14-filetype-1.2.0
 python3.14-fixtures-4.3.2
 python3.14-flake8-7.3.0
@@ -5626,6 +5696,7 @@ python3.14-furo-2025.12.19
 python3.14-gast-0.7.0
 python3.14-geoip2-5.2.0
 python3.14-gevent-26.5.0
+python3.14-gevent-26.8.0
 python3.14-geventhttpclient-2.5.1
 python3.14-git-filter-repo-2.47.0
 python3.14-gitdb-4.0.12
@@ -5634,6 +5705,7 @@ python3.14-glad2-2.0.8
 python3.14-google-re2-1.1.20251105
 python3.14-gpg-2.0.0
 python3.14-greenlet-3.5.3
+python3.14-greenlet-3.5.5
 python3.14-gssapi-1.11.1
 python3.14-gunicorn-26.0.0
 python3.14-gyp-unstable-2024-02-07
@@ -5664,6 +5736,7 @@ python3.14-icecream-2.2.0
 python3.14-idna-3.18
 python3.14-ifaddr-0.2.0
 python3.14-imagesize-2.0.0
+python3.14-imagesize-2.0.1
 python3.14-img2pdf-0.6.3
 python3.14-immutables-0.21
 python3.14-importlib-metadata-9.0.0
@@ -5707,6 +5780,7 @@ python3.14-libnacl-2.1.0
 python3.14-libpass-1.9.3
 python3.14-librt-0.13.0
 python3.14-lingua-4.15.0
+python3.14-lingua-4.16.2
 python3.14-linkify-it-py-2.0.3
 python3.14-lit-18.1.8
 python3.14-litestar-2.21.1
@@ -5714,12 +5788,16 @@ python3.14-litestar-htmx-0.5.0
 python3.14-littleutils-0.2.4
 python3.14-lockfile-0.12.2
 python3.14-lxml-6.1.1
+python3.14-lxml-6.1.3
 python3.14-lz4-4.4.5
 python3.14-mako-1.3.12
+python3.14-mako-1.4.1
 python3.14-markdown-3.10.2
+python3.14-markdown-3.10.3
 python3.14-markdown-it-py-4.2.0
 python3.14-markdown2-2.5.5
 python3.14-markupsafe-3.0.3
+python3.14-markupsafe-3.0.4
 python3.14-marshmallow-4.3.0
 python3.14-matplotlib-3.11.1
 python3.14-matplotlib-inline-0.2.2
@@ -5768,6 +5846,7 @@ python3.14-orderly-set-5.5.0
 python3.14-orjson-3.11.9
 python3.14-outcome-1.3.0.post0
 python3.14-packaging-26.2
+python3.14-packaging-26.3
 python3.14-pandas-3.0.4
 python3.14-parameterized-0.9.0
 python3.14-paramiko-5.0.0
@@ -5792,6 +5871,7 @@ python3.14-pillow-heif-1.8.0
 python3.14-pint-0.25.3
 python3.14-pip-26.1.2
 python3.14-pkgconfig-1.5.5
+python3.14-pkgconfig-1.6.0
 python3.14-pkginfo-1.12.1.2
 python3.14-platformdirs-4.10.0
 python3.14-pluggy-1.6.0
@@ -5849,6 +5929,7 @@ python3.14-pyfakefs-6.2.0
 python3.14-pyflakes-3.4.0
 python3.14-pygit2-1.20.1
 python3.14-pygments-2.20.0
+python3.14-pygments-2.21.0
 python3.14-pygobject-3.56.3
 python3.14-pyhamcrest-2.1.0
 python3.14-pyjwt-2.14.0
@@ -5936,6 +6017,7 @@ python3.14-python-xmp-toolkit-2.0.2
 python3.14-pythran-0.18.1
 python3.14-pytokens-0.4.1
 python3.14-pytz-2026.2
+python3.14-pytz-2026.3.post1
 python3.14-pyudev-0.24.4
 python3.14-pyxdg-0.28
 python3.14-pyyaml-6.0.3
@@ -5980,6 +6062,7 @@ python3.14-setuptools-80.10.2
 python3.14-setuptools-83.0.0
 python3.14-setuptools-rust-1.13.0
 python3.14-setuptools-scm-10.0.5
+python3.14-setuptools-scm-10.2.1
 python3.14-sh-2.3.0
 python3.14-shapely-2.1.2
 python3.14-shellingham-1.5.4
@@ -6048,6 +6131,7 @@ python3.14-toml-0.10.2
 python3.14-tomli-2.4.1
 python3.14-tomli-w-1.2.0
 python3.14-tomlkit-0.15.0
+python3.14-tomlkit-0.15.1
 python3.14-toposort-1.10
 python3.14-tornado-6.5.7
 python3.14-tox-4.34.1
@@ -6057,6 +6141,7 @@ python3.14-trio-0.33.0
 python3.14-trio-typing-0.10.0
 python3.14-trio-websocket-0.12.2
 python3.14-trove-classifiers-2026.6.1.19
+python3.14-trove-classifiers-2026.9.21.13
 python3.14-trustme-1.2.1
 python3.14-truststore-0.10.4
 python3.14-ttp-0.10.1
@@ -6065,9 +6150,11 @@ python3.14-twisted-26.4.0
 python3.14-typeguard-4.5.2
 python3.14-typer-0.25.1
 python3.14-types-psutil-7.2.1.20260116
+python3.14-types-psutil-7.2.2.20260518
 python3.14-types-python-dateutil-2.9.0.20251115
 python3.14-types-pyyaml-6.0.12.20250915
 python3.14-types-setuptools-80.9.0.20251223
+python3.14-types-setuptools-84.0.0.20260812
 python3.14-typing-extensions-4.16.0
 python3.14-typing-inspect-0.9.0-unstable-2025-10-20
 python3.14-typing-inspection-0.4.3
@@ -6079,6 +6166,7 @@ python3.14-uc-micro-py-1.0.3
 python3.14-ufonormalizer-0.6.2
 python3.14-ufoprocessor-1.14.1
 python3.14-uharfbuzz-0.53.2
+python3.14-uharfbuzz-0.56.2
 python3.14-ujson-5.13.0
 python3.14-ukpostcodeparser-1.1.2
 python3.14-umu-launcher-unwrapped-1.4.4
@@ -6088,11 +6176,13 @@ python3.14-urllib3-2.7.0
 python3.14-urwid-3.0.5
 python3.14-uuid6-2025.0.1
 python3.14-uv-build-0.11.28
+python3.14-uv-build-0.12.5
 python3.14-uv-dynamic-versioning-0.13.0
 python3.14-uvicorn-0.51.0
 python3.14-uvloop-0.22.1
 python3.14-validators-0.35.0
 python3.14-vcs-versioning-1.1.1
+python3.14-vcs-versioning-2.3.1
 python3.14-vdf-3.4
 python3.14-vdirsyncer-0.20.0
 python3.14-versioneer-0.29
@@ -6122,6 +6212,7 @@ python3.14-zlib-ng-1.0.0
 python3.14-zope-event-6.2
 python3.14-zope-interface-8.2
 python3.14-zopfli-0.4.0
+python3.14-zopfli-0.4.3
 python3.14-zstandard-0.25.0
 python3.14-zstd-1.5.7.3
 pythonGen
@@ -6262,6 +6353,7 @@ rdfind-1.8.0
 rdma-core-65.0
 re2-2025-11-05
 re2c-4.5.1
+re2c-4.6
 read-edid-3.0.2
 read-fonts-0.39.2
 read-fonts-0.41.0
@@ -6474,11 +6566,15 @@ rust-ini-0.21.3
 rust-lib-src
 rustTools
 rustc-1.98.1
+rustc-1.99.0
 rustc-bootstrap-1.98.1
+rustc-bootstrap-1.99.0
 rustc-bootstrap-wrapper-1.98.1
+rustc-bootstrap-wrapper-1.99.0
 rustc-hash-1.1.0
 rustc-hash-2.1.3
 rustc-wrapper-1.98.1
+rustc-wrapper-1.99.0
 rustc_version-0.4.1
 rustdesk-1.5.0
 rustdesk-1.5.0-vendor
@@ -6486,6 +6582,7 @@ rustdesk-1.5.0-vendor-staging
 rustfft-6.4.1
 rustfmt-1.98.1
 rustfmt-nightly-1.98.1
+rustfmt-nightly-1.99.0
 rustix-0.38.41
 rustix-0.38.44
 rustix-1.1.2
@@ -6948,7 +7045,9 @@ systemd-boot
 systemd-default-tmpfiles
 systemd-lock-handler.md
 systemd-minimal-261.3
+systemd-minimal-262
 systemd-minimal-libs-261.3
+systemd-minimal-libs-262
 systemtap
 systemtap-5.5
 szurubooru.md
@@ -7230,6 +7329,7 @@ typescript-7.0.2-go-modules
 typst-0.8.0.2
 typst-symbols-0.1.8.1
 tzdata-2026d
+tzdata-2026e
 uavs3d-1.2
 ucd-trie-0.1.7
 uchardet-0.0.8
@@ -7399,12 +7499,15 @@ uthash-2.4.0
 util-linux-2.42.3
 util-linux-2.42.3_fish-completions
 util-linux-minimal-2.42.3
+util-linux-minimal-2.42.4
 util-macros-1.20.2
 uuid-1.20.0
 uuid-1.24.0
 uuid-types-1.0.6.1
 uv-build-0.11.28-vendor
 uv-build-0.11.28-vendor-staging
+uv-build-0.12.5-vendor
+uv-build-0.12.5-vendor-staging
 uvwasi-0.0.23
 uwsm-0.27.0
 v4l-0.14.0
@@ -7444,7 +7547,7 @@ vlc-3.0.24
 vmware-bootstrap
 vmware-config
 vmware-modconfig
-vmware-modules-workstation-25h2-20251015-7.2.9
+vmware-modules-workstation-25h2-20251015-7.3.0
 vmware-unpack-env-25H2u1
 vmware-unpack-env-25H2u1-bwrap
 vmware-unpack-env-25H2u1-fhsenv-profile
@@ -7463,6 +7566,7 @@ vscode-cmfix
 vtable-0.4.0
 vtable-macro-0.4.0
 vulkan-headers-1.4.357.0
+vulkan-headers-1.4.363.0
 vulkan-helper-0-unstable-2023-12-22
 vulkan-helper-0-unstable-2023-12-22-vendor
 vulkan-helper-0-unstable-2023-12-22-vendor-staging
