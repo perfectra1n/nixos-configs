@@ -2209,8 +2209,8 @@ dlpack-src
 dlv-list-0.3.0
 dlv-list-0.5.2
 dmenu-5.4
-dms-greeter-1.6.2
-dms-greeter-1.6.2-go-modules
+dms-greeter-2.0.0
+dms-greeter-2.0.0-go-modules
 dms-greeter-session
 dms-idle-inhibit-watchdog
 dms-plugin-hyprlandSubmapIndicator-1.0.1
