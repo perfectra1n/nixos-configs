@@ -2197,6 +2197,8 @@ display.md
 displaydoc-0.2.5
 displaydoc-0.2.6
 distributive-0.6.3
+djinn-forge-hosts
+djinn-server-url
 djot-0.1.4
 djvulibre-3.5.30
 dkjson-2.11-1.rockspec

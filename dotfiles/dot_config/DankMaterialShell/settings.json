@@ -92,6 +92,10 @@
           "enabled": true
         },
         {
+          "id": "djinn",
+          "enabled": true
+        },
+        {
           "id": "systemTray",
           "enabled": true
         },

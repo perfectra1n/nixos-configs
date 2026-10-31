@@ -8,6 +8,7 @@ Which modules each host opts into (defined in `flake.nix`'s `mkHost` calls). `co
 |----------------------|:-------:|:------:|:------:|:--------:|
 | `modules/desktop-base.nix` | ✅ | ✅ | — | — |
 | `modules/hyprland.nix` | ✅ | ✅ | — | — |
+| `modules/dms-djinn.nix` | ✅ | ✅ | — | — |
 | `modules/gaming.nix` | ✅ | ✅ | — | — |
 | `modules/nvidia.nix` | ✅ | — | — | — |
 | `modules/amd.nix` | — | ✅ | — | — |

@@ -1,3 +1,7 @@
+{{- /* A TEMPLATE only for djinn.serverUrl, a secret (the Djinn server's host) rendered by sops in
+       modules/dms-djinn.nix; everything else is the plain DMS snapshot. Capture with care: `chezmoi
+       re-add` SKIPS templates and `chezmoi add` offers to de-template (answer no), so after DMS
+       changes something, copy the change into this file by hand and keep the serverUrl line as is. */ -}}
 {
   "hyprlandSubmapIndicator": {
     "enabled": true,
@@ -56,5 +60,12 @@
     "enabled": true,
     "mainsBarStatistic": "load",
     "upsDevice": "cyberpower@localhost"
+  },
+  "djinn": {
+    "enabled": true,
+    "serverUrl": {{ $u := "/run/secrets/rendered/djinn-server-url" }}{{ if stat $u }}{{ include $u | trim | toJson }}{{ else }}""{{ end }},
+    "width": 960,
+    "slideDuration": 200,
+    "awayMinutes": 1
   }
 }

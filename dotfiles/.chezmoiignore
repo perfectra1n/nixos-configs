@@ -56,6 +56,8 @@ README.md
 # Ignore the whole dir EXCEPT settings.json + plugin_settings.json, which we snapshot via
 # chezmoi: DMS stays the live writer (0644), `chezmoi add` captures changes, `chezmoi apply`
 # reseeds a fresh box. NOT readonly_ — DMS must keep writing them.
+# plugin_settings.json is a .tmpl (one sops-sourced value, djinn.serverUrl): re-add skips it,
+# so carry DMS-side changes over by hand — see the header in that file.
 # Scoped to host=desktop ONLY: both files embed per-machine monitor names (barConfigs[].
 # screenPreferences, plugin monitorScenes keys, lockScreenActiveMonitor), so applying them to
 # another box would pin its bar/lock/wallpaper to displays it doesn't have. Other hosts keep

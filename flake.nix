@@ -164,6 +164,7 @@
       graphical = [
         ./modules/desktop-base.nix
         ./modules/hyprland.nix
+        ./modules/dms-djinn.nix # Djinn chat drawer DMS plugin — fetched at switch time (private repo), not a flake input
         ./modules/gaming.nix
         ./modules/oomd.nix # PSI-based systemd-oomd on user slices — kill a runaway build, not the session
         ./modules/pentest.nix
