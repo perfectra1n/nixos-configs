@@ -15,6 +15,7 @@
     ../../modules/dotfiles.nix # chezmoi: delivers ~/.config/kanbot/{config.toml,env,runner.token}, mcp.json, fish
     ../../modules/git-credentials.nix # sessions push to GitHub/Gitea/Forgejo non-interactively
     ../../modules/docker-credentials.nix # ...and pull/push the private registries
+    ../../modules/forge-cli.nix # ...and drive Gitea/Forgejo PRs + threads with gea/fjo
     ../../modules/rust-build-cache.nix # sccache + weekly target/ sweep — agent worktrees are the worst offenders
     ../../modules/oomd.nix # a runaway session build gets its scope killed instead of wedging the box
     # kanbot's evidence_root (config.toml) is on /mnt/main_smb — without the mount, sessions write

@@ -792,6 +792,7 @@ fix-cve-2026-58471
 fix-cve-2026-58472
 fix-insufficiently-quoted-regular-expressions-pr51
 fix-uuid-discovery-segfault
+fjo-hosts
 flac-1.5.0
 flate2-1.1.5
 flatpak.md
@@ -869,6 +870,7 @@ gdb-17.2
 gdbm-1.26
 gdk-pixbuf-2.44.8
 gdk-pixbuf-loader-loaders-wrapped
+gea-hosts
 gemfile-and-lockfile
 gen-bin-stubs
 generate-schema.ts

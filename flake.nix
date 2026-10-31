@@ -180,6 +180,7 @@
         ./modules/dotfiles.nix # chezmoi bootstrap: sops token + chezmoi.toml (orchestration in mise.toml — `mise run apply`)
         ./modules/git-credentials.nix # sops-rendered ~/.git-credentials for GitHub + both Gitea + Forgejo (helper line lives in chezmoi gitconfig)
         ./modules/docker-credentials.nix # sops-rendered ~/.docker/config.json for both Gitea + ghcr.io (symlink lives in home/docker.nix)
+        ./modules/forge-cli.nix # sops-rendered gea + fjo hosts.toml from the same git/* tokens (gea symlink in chezmoi; fjo seeded, then writable)
         inputs.chaotic.nixosModules.default # CachyOS kernel + chaotic cache (see boot.kernelPackages in hosts/<name>)
       ];
 

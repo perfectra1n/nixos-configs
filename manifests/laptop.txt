@@ -2549,6 +2549,7 @@ fix-uuid-discovery-segfault
 fixed_decimal-0.7.2
 fixup-yarn-lock-26.11
 fixup.js
+fjo-hosts
 flac-1.5.0
 flameshot-14.0.0
 flameshot-14.0.0_fish-completions
@@ -2683,6 +2684,7 @@ gdb-17.2
 gdbm-1.26
 gdk-pixbuf-2.44.8
 gdk-pixbuf-loader-loaders-wrapped
+gea-hosts
 gemfile-and-lockfile
 gen-bin-stubs
 generate-schema.ts

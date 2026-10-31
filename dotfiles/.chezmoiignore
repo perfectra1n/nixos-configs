@@ -111,3 +111,10 @@ README.md
 {{- if not (stat (joinPath .chezmoi.homeDir "repos/homelab-ops/.git")) }}
 repos/homelab-ops/kubeconfig
 {{- end }}
+
+# gea's hosts.toml is a link to the sops render (modules/forge-cli.nix). Skipped until that
+# render exists, so a host without the module keeps its own `gea auth login` file instead of
+# a dangling link. Re-evaluated every apply.
+{{- if not (stat "/run/secrets/rendered/gea-hosts.toml") }}
+.config/gea/hosts.toml
+{{- end }}

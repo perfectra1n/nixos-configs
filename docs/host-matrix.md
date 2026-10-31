@@ -25,6 +25,7 @@ Which modules each host opts into (defined in `flake.nix`'s `mkHost` calls). `co
 | `modules/dotfiles.nix` | ✅ | ✅ | — | ✅ |
 | `modules/git-credentials.nix` | ✅ | ✅ | — | ✅ |
 | `modules/docker-credentials.nix` | ✅ | ✅ | — | ✅ |
+| `modules/forge-cli.nix` | ✅ | ✅ | — | ✅ |
 | `modules/rust-build-cache.nix` | ✅ | ✅ | — | ✅ |
 | `modules/oomd.nix` | ✅ | ✅ | — | ✅ |
 | `modules/smb-mounts.nix` | ✅ | ✅ | — | ✅ |
