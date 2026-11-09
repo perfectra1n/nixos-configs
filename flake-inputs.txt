@@ -24,7 +24,7 @@ dms-plugin-registry = "f788f41bc5c7a6f5b8af1cc7456607661fc54007"
 home-manager = "c58f54c733a7894d84fa2fdff26cc12088c4b78c"
 
 # renovate: datasource=git-refs depName=hyprswitch packageName=https://github.com/h3rmt/hyprswitch branch=hyprshell-release
-hyprswitch = "61ddaa30563c1f091ca5fbe5d7203c19f42b519c"
+hyprswitch = "3a874a61cd0f8e9318c56496fe5c21b30ceff799"
 
 # renovate: datasource=git-refs depName=network-indicator packageName=https://github.com/perfectra1n/Network-Indicator branch=reliability-hardening
 network-indicator = "d197967a2cda718ff7a883083b486b20dcc562c4"

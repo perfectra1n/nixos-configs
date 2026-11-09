@@ -335,11 +335,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781132855,
-        "narHash": "sha256-GXegc0W2xiRuSCjMpVc5mmKP5YFCYn87M/POTalISCA=",
+        "lastModified": 1794186683,
+        "narHash": "sha256-L7Tq0D3mndJzoEQSauEmhH2QyrxBhacOpkoR6siAAAs=",
         "owner": "h3rmt",
         "repo": "hyprswitch",
-        "rev": "61ddaa30563c1f091ca5fbe5d7203c19f42b519c",
+        "rev": "3a874a61cd0f8e9318c56496fe5c21b30ceff799",
         "type": "github"
       },
       "original": {
