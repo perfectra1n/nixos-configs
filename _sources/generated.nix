@@ -92,10 +92,10 @@
   };
   talosctl = {
     pname = "talosctl";
-    version = "1.14.2";
+    version = "1.14.6";
     src = fetchurl {
-      url = "https://github.com/siderolabs/talos/releases/download/v1.14.2/talosctl-linux-amd64";
-      sha256 = "sha256-xslVKw5fdnNSxZX6HAr08Yb2l0iGRocpVQV9I5kKZsQ=";
+      url = "https://github.com/siderolabs/talos/releases/download/v1.14.6/talosctl-linux-amd64";
+      sha256 = "sha256-Eazef3V4/+nL5vuDSbNFlQZfWX3ghCYVmC41CzZd6Yc=";
     };
   };
 }
