@@ -19,8 +19,17 @@
     # SetThreadExecutionState keep-awake dead-ends at the XWayland dummy and never reaches DMS —
     # so before this fix it was only Steam's *leak* keeping the screen on 24/7, masking that games
     # weren't inhibiting at all.
+    #
+    # NIXOS_XDG_OPEN_USE_PORTAL: links clicked in Steam must open the browser on the HOST, via the
+    # portal's OpenURI. nixpkgs' Steam bwrap has privateTmp=true but shares $HOME, so a Chrome
+    # spawned by Steam's in-sandbox xdg-open sees the running Chrome's SingletonLock (in $HOME) but
+    # not its SingletonSocket (in /tmp) — it hijacks the lock and starts a SECOND browser on the
+    # same profile: "Something went wrong when opening your profile", every profile "sync paused"
+    # (token DB locked), and every later launch dupes again. Not privateTmp=false instead: a Chrome
+    # started cold from Steam would then live in the bwrap and die with Steam (--die-with-parent).
     package = pkgs.steam.override {
       extraEnv.SDL_VIDEO_ALLOW_SCREENSAVER = "1";
+      extraEnv.NIXOS_XDG_OPEN_USE_PORTAL = "1";
     };
 
     # Extra Steam compat tools (selectable per-game, NOT the default):

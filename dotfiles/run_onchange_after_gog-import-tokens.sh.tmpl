@@ -1,0 +1,43 @@
+{{- /* Import gog's (gogcli) Google refresh tokens into the LOCAL file keyring.
+
+       WHY a script instead of managed files: gog keeps tokens in $XDG_DATA_HOME/gogcli/keyring, one
+       file per account, each encrypted with GOG_KEYRING_PASSWORD and NAMED after the account email
+       (base64'd). Those names can't go in this public repo, and gog rewrites the files itself, so a
+       managed file would fight it. The tokens instead live age-encrypted in .gogcli-tokens/ (a
+       dot-dir, so chezmoi never deploys it) as `gog auth tokens export` JSON, and this script feeds
+       them to `gog auth tokens import`, which re-encrypts them under THIS box's keyring password.
+
+       Every *.json.age there is picked up, so adding an account is one exported file (export with
+       `gog auth tokens export <email> --out f.json`, then `chezmoi encrypt f.json`). The rendered
+       script embeds the decrypted tokens, so it re-runs only when one of them changes.
+
+       The tokens were exported from djinn (homelab-ops) on 2026-11-05, so djinn and every host
+       running this share refresh tokens. Revoking access for one account cuts off both.
+       Note: gog 0.43 (nixpkgs) can't read djinn's 0.47 keyring files directly, but its export
+       JSON imports fine. */ -}}
+#!/usr/bin/env bash
+# Hash of the decrypted secrets.fish, so this script ALSO re-runs when GOG_KEYRING_PASSWORD rotates
+# (otherwise the keyring would stay encrypted under the old password). It changes on any secret
+# rotation, which only means an extra import, and re-importing is safe to repeat.
+# secrets: {{ include "dot_config/fish/conf.d/encrypted_private_00-secrets.fish.age" | decrypt | sha256sum }}
+set -euo pipefail
+
+command -v gog >/dev/null || { echo "gog-import-tokens: gog not installed, skipping" >&2; exit 0; }
+
+# Read the password from secrets.fish (written earlier in this same apply), not the environment:
+# on a fresh box the shell running `chezmoi apply` started before that file existed, and an old
+# tmux-inherited value could be stale after a rotation.
+secrets="$HOME/.config/fish/conf.d/00-secrets.fish"
+GOG_KEYRING_PASSWORD=$(fish --no-config -c "source '$secrets'; printf %s \"\$GOG_KEYRING_PASSWORD\"" 2>/dev/null || true)
+if [ -z "$GOG_KEYRING_PASSWORD" ]; then
+  echo "gog-import-tokens: GOG_KEYRING_PASSWORD missing from $secrets, run 'mise run secrets:pull-env'" >&2
+  exit 0
+fi
+export GOG_KEYRING_PASSWORD
+
+{{ range glob (joinPath .chezmoi.sourceDir ".gogcli-tokens" "*.json.age") -}}
+gog auth tokens import - >/dev/null 2>&1 <<'GOG_TOKEN' || { echo "gog-import-tokens: import of {{ base . }} failed" >&2; exit 1; }
+{{ include . | decrypt | trim }}
+GOG_TOKEN
+{{ end -}}
+echo "gog-import-tokens: refresh tokens imported into the gog keyring"

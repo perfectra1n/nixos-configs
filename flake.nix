@@ -89,8 +89,10 @@
     # ~/.local/share/trilium-data one-way (dbVersion 238 → 239 as of this commit) and a NixOS
     # generation rollback does NOT un-migrate it. Sync version must also stay in step with the
     # Trilium server. Back up document.db before switching onto a bump.
+    # Pinned to the worker-processes branch (TriliumNext/Trilium#12282) to run it before it
+    # merges; point back at main once it lands.
     trilium = {
-      url = "github:TriliumNext/Trilium";
+      url = "github:TriliumNext/Trilium/worker-processes";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

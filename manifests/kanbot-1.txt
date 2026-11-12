@@ -1006,6 +1006,8 @@ go-md2man-2.0.7-go-modules
 gobject-introspection-1.86.0
 gobject-introspection-wrapped-1.86.0
 goblin-0.5.4
+gogcli-0.43.0
+gogcli-0.43.0-go-modules
 goss.md
 gotosocial.md
 gperf-3.3

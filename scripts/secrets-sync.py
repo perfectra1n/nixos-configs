@@ -131,6 +131,10 @@ FISHENV_MANIFEST = [
     ("AWS_BEARER_TOKEN_BEDROCK",     "AWS Bedrock Bearer Token", "field", "token"),
     ("CF_TURNSTILE_SECRET_KEY",      "Cloudflare Turnstile",     "field", "secret_key"),
     ("CIRCLE_TOKEN",                 "CircleCI",                 "field", "token"),
+    # gog (gogcli) — unlocks its file keyring (no Secret Service runs here, so `auto` would prompt).
+    # LOCAL hosts only; djinn's keyring has its own password in homelab-ops. Also read by
+    # dotfiles/run_onchange_after_gog-import-tokens.sh.tmpl when it imports the tokens.
+    ("GOG_KEYRING_PASSWORD",         "gogcli",                   "field", "keyring_password"),
     # CLIProxyAPI (CPA) gateways behind `claude --cpa <name>`. BOTH halves are secret: the base
     # URLs carry private hostnames, which never land in this public repo. The <PROFILE>_CPA_*
     # naming is load-bearing — the fish wrapper upper-cases whatever profile you typed to derive

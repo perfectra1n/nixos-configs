@@ -152,6 +152,7 @@ in
     tea                  # Gitea CLI
     forgejo-cli          # `fj` — Forgejo CLI (the binary is not `forgejo`); auth via `fj auth login`
     gh                   # GitHub CLI
+    gogcli               # `gog` — Google Workspace CLI (Gmail/Calendar/Drive/…); config + tokens via chezmoi
     awscli2
     saml2aws             # fetch temporary AWS STS creds via a SAML IdP (Okta/ADFS/etc.) for `aws`
     claude-code          # nixpkgs lags releases; swap for the flake if you want latest
