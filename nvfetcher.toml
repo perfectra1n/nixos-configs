@@ -85,7 +85,7 @@ fetch.url = "https://github.com/nklmilojevic/sofka/releases/download/v$ver/sofka
 # and precomputes any git-dependency hashes, so a bump never needs a hand-updated cargoHash.
 [cargo-clean-all]
 # renovate: datasource=github-releases depName=dnlmlr/cargo-clean-all extractVersion=^(?<version>v.+)$
-src.manual = "v0.6.5"
+src.manual = "v0.6.6"
 fetch.github = "dnlmlr/cargo-clean-all"
 cargo_lock = ["Cargo.lock"]
 
