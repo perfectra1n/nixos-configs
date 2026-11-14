@@ -3154,9 +3154,9 @@ hyprlang-0.6.8
 hyprlock-0.9.6
 hyprlock-0.9.6_fish-completions
 hyprpicker-0.4.7
-hyprshell-4.10.8
-hyprshell-4.10.8_fish-completions
-hyprshell-deps-4.10.8
+hyprshell-4.10.9
+hyprshell-4.10.9_fish-completions
+hyprshell-deps-4.10.9
 hyprutils-0.14.2
 hyprwayland-scanner-0.4.6
 hyprwire-0.3.1
