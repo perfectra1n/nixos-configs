@@ -62,6 +62,7 @@ SOPS_MANIFEST = [
     ("git/atvik_gitea_host",   "Main Atvik Gitea",            "host",      ""),
     ("git/duck_gitea_token",   "Duck Gitea",                  "field",     "API Key (Main)"),
     ("git/duck_gitea_host",    "Duck Gitea",                  "host",      ""),
+    ("git/duck_gitea_alt_host", "Duck Gitea",                 "field",     "alt-host"),  # same instance, second hostname
     ("git/forgejo_token",      "Main Forgejo",                "field",     "main-forgejo-token"),
     ("git/forgejo_host",       "Main Forgejo",                "host",      ""),
     ("git/forgejo_alt_host",   "Main Forgejo",                "field",     "alt-host"),  # same instance, second hostname
