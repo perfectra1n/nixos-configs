@@ -497,6 +497,7 @@ coxpcall-1.17.0-1.rockspec
 coxpcall-luarocks-config.lua
 cpio-2.15
 cpio-2.15_fish-completions
+cpputest-4.0
 cpufeatures-0.2.17
 crab-hole.md
 cracklib-2.10.3
@@ -1035,6 +1036,7 @@ gtk-doc-1.36.1
 gtk4-4.22.4
 gts-0.7.6
 guile-2.2.7
+guile-3.0.11
 gumbo-0.14.1
 gupnp-1.6.10
 gupnp-igd-1.6.0
@@ -1210,6 +1212,7 @@ inspect-3.1.3-0.rockspec
 inspect-luarocks-config.lua
 inspection-testing-0.6.3
 install-fonts-hook
+install-pear-nozlib.phar
 install-shell-files
 installkernel
 instant-0.1.13
@@ -1631,6 +1634,7 @@ lrzsz-0.12.20
 lsof-4.99.7
 lttng-ust-2.15.1
 lua-2.3.4
+lua-5.3.6
 lua-5.4.7
 lua-arbitrary-1.0.1.2
 lua-dso.make
@@ -2211,6 +2215,7 @@ perl5.42.3-po4a-0.74
 pg_config
 pg_config.env
 pg_config.env.mk
+php-8.4.26
 picocom-2024-07
 pict-rs.md
 pihole-ftl.md
@@ -3132,6 +3137,8 @@ semialign-1.3.1.1
 semigroupoids-6.0.2
 semigroupoids-6.0.2-r1.cabal
 semirings-0.7
+senpai-0.5.0
+senpai-0.5.0-go-modules
 serd-0.32.10
 serde-1.0.203
 serde-1.0.228
@@ -3663,6 +3670,12 @@ wayland-scanner-1.26.0
 web-time-1.1.0
 webrtc-audio-processing-1.3
 webrtc-audio-processing-2.1
+weechat
+weechat-4.10.1
+weechat-bin-env-4.10.1
+weechat-headless
+weechat-out-except-bin
+weechat-plugins
 weechat.md
 wget-1.25.0
 wget-1.25.0_fish-completions

@@ -184,6 +184,18 @@ in
     litecli              # pgcli's sibling for SQLite — same authors, same UX
     dolt                 # version-controlled SQL database, git-style CLI
 
+    # ── Chat ──
+    # TUIs, so they're here (every host, server included) rather than gui.nix.
+    # senpai is built for an IRCv3 bouncer (soju) — it leans on chathistory/read-marker
+    # for scrollback instead of keeping logs itself. Its config (~/.config/senpai/senpai.scfg)
+    # is chezmoi's; use `password-cmd` there so no secret lands in the dotfile.
+    senpai
+    # weechat is the standalone counterpart: direct connections, its own logs, scripts.
+    # It rewrites ~/.config/weechat/*.conf on /save, so if those go into chezmoi treat them
+    # as writable snapshots (re-add), and keep passwords in sec.conf (/secure), never
+    # irc.conf.
+    weechat
+
     # ── Media ──
     ffmpeg
     imagemagick
