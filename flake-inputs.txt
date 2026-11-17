@@ -35,6 +35,6 @@ nixpkgs = "d5cc6833999746cffdfe0598f7bc801a57b887a9"
 # renovate: datasource=git-refs depName=sops-nix packageName=https://github.com/Mic92/sops-nix branch=master
 sops-nix = "7c637afdccdf9bcf35c4a2d67b58a77c1fd843a4"
 
-# renovate: datasource=git-refs depName=trilium packageName=https://github.com/TriliumNext/Trilium branch=main
-trilium = "e5167fd228ee2b35a4b9e090c748dd52f8339a0b"
+# renovate: datasource=git-refs depName=trilium packageName=https://github.com/TriliumNext/Trilium branch=worker-processes
+trilium = "ceb43a9b21282decf12c2fdb5b883ad397848e80"
 

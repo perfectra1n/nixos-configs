@@ -35,7 +35,7 @@ Both are in `modules/gaming.nix`:
 
 ## ⚠ gamemode + scx overlap
 
-`gaming.nix` enables **both** `programs.gamemode` and `services.scx`. They overlap: scx
+`gaming.nix` enables **both** `programs.gamemode` and `services.scx-loader`. They overlap: scx
 already pins cpufreq to performance, which is gamemode's main job, and gamemode's renice can
 nudge against the scheduler. They coexist fine (gamemode still does GPU perf level, screensaver
 inhibit, ioprio), but if you want it clean, either:
@@ -50,10 +50,11 @@ Verify what's actually active with `gamemoded -s` while a game runs.
   Deadline) was built *specifically* for gaming — it tends to win on 1% lows / frame-time
   consistency, where bpfland targets general interactivity + throughput. Try it:
   ```nix
-  services.scx.scheduler = "scx_lavd";
+  services.scx-loader.config.default_sched = "scx_lavd";
   ```
-  A/B live without rebuilding: `sudo systemctl stop scx` (→ EEVDF), `start scx`. Keep whichever
-  feels smoother on your titles.
+  A/B live without rebuilding: `scxctl switch -s <name>` (names from `scxctl list`), `scxctl stop`
+  (→ EEVDF), `scxctl restore` (→ back to `default_sched`). Keep whichever feels smoother on your
+  titles.
 - **ntsync** (Proton). The mainline `ntsync` driver (kernel 6.14+) replaces esync/fsync and
   markedly improves heavily-threaded games. Confirm `/dev/ntsync` exists (`ls -l /dev/ntsync`);
   a recent kernel + Proton-GE/Proton 10 use it automatically. Force with `PROTON_USE_NTSYNC=1`

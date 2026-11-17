@@ -113,7 +113,7 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 
 - `programs.steam` (+ `proton-ge-bin`), `programs.gamemode`, `programs.gamescope`
   (`capSysNice`), `hardware.graphics.enable32Bit`.
-- `services.scx` (`scx_bpfland`) + sysctls `kernel.split_lock_mitigate=0`, `vm.swappiness=100`
+- `services.scx-loader` (default `scx_bpfland`) + sysctls `kernel.split_lock_mitigate=0`, `vm.swappiness=100`
   (paired with zram), `vm.max_map_count=2147483642`; `zramSwap` (zstd, 50% RAM). See
   [gaming.md](gaming.md).
 - Packages: `mangohud`, `heroic`, `protontricks`.
