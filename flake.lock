@@ -82,16 +82,17 @@
     "dank-greeter": {
       "inputs": {
         "dank-qml-common": "dank-qml-common",
+        "dux-qt-base": "dux-qt-base",
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1791910216,
-        "narHash": "sha256-eJNhHmVTK8FLzk+aD2XgCHo51JhkDIFVEE+WBDtv2j0=",
+        "lastModified": 1794758150,
+        "narHash": "sha256-jJ0AeRPu8ePm1kW6SawsbRswJCBvSTWa1/w+njabciA=",
         "owner": "AvengeMedia",
         "repo": "dank-greeter",
-        "rev": "b8eba76bb87aeb67896c9800b4f1848ee4b0ff79",
+        "rev": "bca3cb6524f1a030803b8c795de9587273b8c0db",
         "type": "github"
       },
       "original": {
@@ -103,16 +104,16 @@
     "dank-qml-common": {
       "flake": false,
       "locked": {
-        "lastModified": 1791861042,
-        "narHash": "sha256-Wop1FPbCObjcDAHjo2fWTVBJGKPihhcohN8YTM3Jw5Y=",
-        "owner": "AvengeMedia",
-        "repo": "dank-qml-common",
-        "rev": "5a0a6b1e6049bee316e5055d7fa6d9bb255e102e",
+        "lastModified": 1794676174,
+        "narHash": "sha256-yQe0Ac4HcatProEJWLKEnbVdhv6F05hD5gzkyZew6o0=",
+        "owner": "duxlabs-dev",
+        "repo": "dux-qml-common",
+        "rev": "de654475cc559fa976a8c205ff373d1882898d67",
         "type": "github"
       },
       "original": {
-        "owner": "AvengeMedia",
-        "repo": "dank-qml-common",
+        "owner": "duxlabs-dev",
+        "repo": "dux-qml-common",
         "type": "github"
       }
     },
@@ -173,6 +174,27 @@
       "original": {
         "owner": "AvengeMedia",
         "repo": "dms-plugin-registry",
+        "type": "github"
+      }
+    },
+    "dux-qt-base": {
+      "inputs": {
+        "nixpkgs": [
+          "dank-greeter",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1794757712,
+        "narHash": "sha256-b8vGujulk9JGQUxoBz0AmJgZEhHWNkIgxvKI80cXuoI=",
+        "owner": "duxlabs-dev",
+        "repo": "dux-qt-base",
+        "rev": "221c014601a5ce063d60d6e21dfebf7a08097417",
+        "type": "github"
+      },
+      "original": {
+        "owner": "duxlabs-dev",
+        "repo": "dux-qt-base",
         "type": "github"
       }
     },
