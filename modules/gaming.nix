@@ -65,9 +65,13 @@
   # kernel with sched_ext (≥6.12; nixos-unstable qualifies) — both the `desktop` and `laptop`
   # hosts run the CachyOS kernel via chaotic (hosts/{desktop,laptop}).
   # ⚠ On the laptop that performance-pin costs battery/idle power — fine plugged in. A/B live:
-  # `sudo systemctl stop scx` → EEVDF / `start scx`; set scheduler = "scx_lavd" to compare.
-  services.scx.enable = true;
-  services.scx.scheduler = "scx_bpfland";
+  # `scxctl stop` → EEVDF, `scxctl restore` → back to default_sched, `scxctl switch -s <name>`
+  # (names from `scxctl list`) to compare, e.g. lavd.
+  # scx-loader replaced nixpkgs' services.scx: a D-Bus daemon (scxctl) instead of one unit
+  # per scheduler, so switching no longer needs a rebuild. default_sched is validated
+  # against the installed schedulers at eval, so a renamed scheduler fails the build.
+  services.scx-loader.enable = true;
+  services.scx-loader.config.default_sched = "scx_bpfland";
 
   # Gaming kernel sysctls:
   #  split_lock_mitigate=0 → stop the kernel throttling games that do split-lock atomics

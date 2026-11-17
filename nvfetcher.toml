@@ -9,12 +9,12 @@
 
 [kubectl]
 # renovate: datasource=github-releases depName=kubernetes/kubernetes extractVersion=^v(?<version>.+)$
-src.manual = "1.37.1"
+src.manual = "1.37.2"
 fetch.url = "https://dl.k8s.io/release/v$ver/bin/linux/amd64/kubectl"
 
 [talosctl]
 # renovate: datasource=github-releases depName=siderolabs/talos extractVersion=^v(?<version>.+)$
-src.manual = "1.14.2"
+src.manual = "1.14.6"
 fetch.url = "https://github.com/siderolabs/talos/releases/download/v$ver/talosctl-linux-amd64"
 
 # ludus — badsectorlabs Ludus cyber-range CLIENT (talks to the Ludus server on media-pc over the
@@ -74,7 +74,7 @@ fetch.github = "perfectra1n/libratbag"
 # unpacks + autoPatchelf's it rather than compiling the kube-rs tree on every bump.
 [sofka]
 # renovate: datasource=github-releases depName=nklmilojevic/sofka extractVersion=^v(?<version>.+)$
-src.manual = "0.31.8"
+src.manual = "0.37.0"
 fetch.url = "https://github.com/nklmilojevic/sofka/releases/download/v$ver/sofka-v$ver-x86_64-unknown-linux-gnu.tar.gz"
 
 # cargo-clean-all — dnlmlr/cargo-clean-all: `cargo clean-all` recursively deletes target/ dirs.
@@ -85,7 +85,7 @@ fetch.url = "https://github.com/nklmilojevic/sofka/releases/download/v$ver/sofka
 # and precomputes any git-dependency hashes, so a bump never needs a hand-updated cargoHash.
 [cargo-clean-all]
 # renovate: datasource=github-releases depName=dnlmlr/cargo-clean-all extractVersion=^(?<version>v.+)$
-src.manual = "v0.6.5"
+src.manual = "v0.6.6"
 fetch.github = "dnlmlr/cargo-clean-all"
 cargo_lock = ["Cargo.lock"]
 
@@ -100,5 +100,5 @@ cargo_lock = ["Cargo.lock"]
 # modules/ios-backup.nix unpacks + autoPatchelf's it, exactly like sofka above.
 [netmuxd]
 # renovate: datasource=github-releases depName=jkcoxson/netmuxd extractVersion=^v(?<version>.+)$
-src.manual = "0.4.3"
+src.manual = "0.4.4"
 fetch.url = "https://github.com/jkcoxson/netmuxd/releases/download/v$ver/netmuxd-x86_64-unknown-linux-gnu.tar.gz"

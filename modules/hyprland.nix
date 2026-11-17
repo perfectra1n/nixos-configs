@@ -160,9 +160,9 @@ in
     enable = true;
     compositor.name = "hyprland";
 
-    # Same quickshell as the shell itself, so login screen and session can't drift apart on
-    # a Qt/quickshell bump (both default to pkgs.quickshell today; this makes it a guarantee).
-    quickshell.package = config.programs.dank-material-shell.quickshell.package;
+    # No runtime pin: the greeter stopped running pkgs.quickshell and now embeds its own
+    # Quickshell fork (dux-qt-base, dank-greeter's flake input), so the old "same quickshell as
+    # the shell" guarantee has nothing left to share. upstream removed quickshell.package for it.
 
     # Copies settings.json + session.json + dms-colors.json into the greeter's cache dir.
     # greetd's preStart does the copy as root, so none of the upstream README's setfacl/chgrp

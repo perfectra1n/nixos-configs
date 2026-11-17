@@ -6,35 +6,35 @@
 blender-bin = "32a73188c4026cea3f8ed97078ace45bf9f7f578"
 
 # renovate: datasource=git-refs depName=chaotic packageName=https://github.com/chaotic-cx/nyx branch=nyxpkgs-unstable
-chaotic = "dd630c59c28a1eb54b78917dae719d76a687586b"
+chaotic = "2bf033423314149dcc0912d4770adbb1d1a03921"
 
 # renovate: datasource=git-refs depName=cleanroom packageName=https://github.com/perfectra1n/cleanroom branch=main
 cleanroom = "3649b3acfe851599b84123179bb6a1bf5f4b6a54"
 
 # renovate: datasource=git-refs depName=dank-greeter packageName=https://github.com/AvengeMedia/dank-greeter branch=master
-dank-greeter = "b8eba76bb87aeb67896c9800b4f1848ee4b0ff79"
+dank-greeter = "bca3cb6524f1a030803b8c795de9587273b8c0db"
 
 # renovate: datasource=git-refs depName=dms packageName=https://github.com/AvengeMedia/DankMaterialShell branch=stable
-dms = "4a87e8227daf0840b3376fd5e7f891f5900165a6"
+dms = "43255a46ea01e9d0de1fe8ce9897c0d71566b2a8"
 
 # renovate: datasource=git-refs depName=dms-plugin-registry packageName=https://github.com/AvengeMedia/dms-plugin-registry branch=master
-dms-plugin-registry = "f788f41bc5c7a6f5b8af1cc7456607661fc54007"
+dms-plugin-registry = "e9b4bf341b770b2275ce7164ee56f509828a9475"
 
 # renovate: datasource=git-refs depName=home-manager packageName=https://github.com/nix-community/home-manager branch=master
-home-manager = "c58f54c733a7894d84fa2fdff26cc12088c4b78c"
+home-manager = "9d7ba6bef3904a018d38b92f83132eaf01eb8ef3"
 
 # renovate: datasource=git-refs depName=hyprswitch packageName=https://github.com/h3rmt/hyprswitch branch=hyprshell-release
-hyprswitch = "61ddaa30563c1f091ca5fbe5d7203c19f42b519c"
+hyprswitch = "3a874a61cd0f8e9318c56496fe5c21b30ceff799"
 
 # renovate: datasource=git-refs depName=network-indicator packageName=https://github.com/perfectra1n/Network-Indicator branch=reliability-hardening
 network-indicator = "d197967a2cda718ff7a883083b486b20dcc562c4"
 
 # renovate: datasource=git-refs depName=nixpkgs packageName=https://github.com/NixOS/nixpkgs branch=nixos-unstable
-nixpkgs = "7fd4004d0511991fff3a0524856a9be09e28c5f0"
+nixpkgs = "d5cc6833999746cffdfe0598f7bc801a57b887a9"
 
 # renovate: datasource=git-refs depName=sops-nix packageName=https://github.com/Mic92/sops-nix branch=master
-sops-nix = "ee48786c6f9160d2c1a084aac841f68195b8420c"
+sops-nix = "7c637afdccdf9bcf35c4a2d67b58a77c1fd843a4"
 
-# renovate: datasource=git-refs depName=trilium packageName=https://github.com/TriliumNext/Trilium branch=main
-trilium = "5285da233c1182539b70e43caee8c957b0e499cd"
+# renovate: datasource=git-refs depName=trilium packageName=https://github.com/TriliumNext/Trilium branch=worker-processes
+trilium = "ceb43a9b21282decf12c2fdb5b883ad397848e80"
 

@@ -2,7 +2,7 @@
     "cargo-clean-all": {
         "cargoLock": {
             "Cargo.lock": [
-                "sha256-CJzjw_g0Ap7TKC2m+bVlH+_iCUOQITmE6HGvrNzWQ3o=/Cargo.lock",
+                "sha256-RPDxeoUoAXNFh2ZabHigmwlztyRG9l9zez1UulrtNyo=/Cargo.lock",
                 {}
             ]
         },
@@ -18,12 +18,12 @@
             "name": null,
             "owner": "dnlmlr",
             "repo": "cargo-clean-all",
-            "rev": "v0.6.5",
-            "sha256": "sha256-CJzjw/g0Ap7TKC2m+bVlH+/iCUOQITmE6HGvrNzWQ3o=",
+            "rev": "v0.6.6",
+            "sha256": "sha256-RPDxeoUoAXNFh2ZabHigmwlztyRG9l9zez1UulrtNyo=",
             "sparseCheckout": [],
             "type": "github"
         },
-        "version": "v0.6.5"
+        "version": "v0.6.6"
     },
     "ksops": {
         "cargoLock": null,
@@ -49,11 +49,11 @@
         "pinned": false,
         "src": {
             "name": null,
-            "sha256": "sha256-ZWkf9362+kTJCLd6EILJ8JLDuXM7XO+r7A0RBIkOIag=",
+            "sha256": "sha256-wESHUj56p9FJP3gIF0yJnbk9epz1dTFCDNdrm9QV+PQ=",
             "type": "url",
-            "url": "https://dl.k8s.io/release/v1.37.1/bin/linux/amd64/kubectl"
+            "url": "https://dl.k8s.io/release/v1.37.2/bin/linux/amd64/kubectl"
         },
-        "version": "1.37.1"
+        "version": "1.37.2"
     },
     "libratbag": {
         "cargoLock": null,
@@ -100,11 +100,11 @@
         "pinned": false,
         "src": {
             "name": null,
-            "sha256": "sha256-hbZZgoT8Y58qKCWERh0F4gkLeb3z7JSdKl5dPcZV3eQ=",
+            "sha256": "sha256-HucsL6ObLZLQwGkXZb3b3IySaxXRKEAlqZIUqs/mnag=",
             "type": "url",
-            "url": "https://github.com/jkcoxson/netmuxd/releases/download/v0.4.3/netmuxd-x86_64-unknown-linux-gnu.tar.gz"
+            "url": "https://github.com/jkcoxson/netmuxd/releases/download/v0.4.4/netmuxd-x86_64-unknown-linux-gnu.tar.gz"
         },
-        "version": "0.4.3"
+        "version": "0.4.4"
     },
     "snapx-core": {
         "cargoLock": null,
@@ -145,11 +145,11 @@
         "pinned": false,
         "src": {
             "name": null,
-            "sha256": "sha256-cF1QJLCDOU1mwDb5kgWPMSJBfDi7u7/wg3yFsDHcBos=",
+            "sha256": "sha256-xG+BsOpHE6B89pCxo9gQeDFpcjNvxxQeav3eaCpHACk=",
             "type": "url",
-            "url": "https://github.com/nklmilojevic/sofka/releases/download/v0.31.8/sofka-v0.31.8-x86_64-unknown-linux-gnu.tar.gz"
+            "url": "https://github.com/nklmilojevic/sofka/releases/download/v0.37.0/sofka-v0.37.0-x86_64-unknown-linux-gnu.tar.gz"
         },
-        "version": "0.31.8"
+        "version": "0.37.0"
     },
     "talosctl": {
         "cargoLock": null,
@@ -160,10 +160,10 @@
         "pinned": false,
         "src": {
             "name": null,
-            "sha256": "sha256-xslVKw5fdnNSxZX6HAr08Yb2l0iGRocpVQV9I5kKZsQ=",
+            "sha256": "sha256-Eazef3V4/+nL5vuDSbNFlQZfWX3ghCYVmC41CzZd6Yc=",
             "type": "url",
-            "url": "https://github.com/siderolabs/talos/releases/download/v1.14.2/talosctl-linux-amd64"
+            "url": "https://github.com/siderolabs/talos/releases/download/v1.14.6/talosctl-linux-amd64"
         },
-        "version": "1.14.2"
+        "version": "1.14.6"
     }
 }

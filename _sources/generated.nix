@@ -8,16 +8,16 @@
 {
   cargo-clean-all = {
     pname = "cargo-clean-all";
-    version = "v0.6.5";
+    version = "v0.6.6";
     src = fetchFromGitHub {
       owner = "dnlmlr";
       repo = "cargo-clean-all";
-      rev = "v0.6.5";
+      rev = "v0.6.6";
       fetchSubmodules = false;
-      sha256 = "sha256-CJzjw/g0Ap7TKC2m+bVlH+/iCUOQITmE6HGvrNzWQ3o=";
+      sha256 = "sha256-RPDxeoUoAXNFh2ZabHigmwlztyRG9l9zez1UulrtNyo=";
     };
     cargoLock."Cargo.lock" = {
-      lockFile = ./. + "/sha256-CJzjw_g0Ap7TKC2m+bVlH+_iCUOQITmE6HGvrNzWQ3o=/Cargo.lock";
+      lockFile = ./. + "/sha256-RPDxeoUoAXNFh2ZabHigmwlztyRG9l9zez1UulrtNyo=/Cargo.lock";
       outputHashes = {
         
       };
@@ -33,10 +33,10 @@
   };
   kubectl = {
     pname = "kubectl";
-    version = "1.37.1";
+    version = "1.37.2";
     src = fetchurl {
-      url = "https://dl.k8s.io/release/v1.37.1/bin/linux/amd64/kubectl";
-      sha256 = "sha256-ZWkf9362+kTJCLd6EILJ8JLDuXM7XO+r7A0RBIkOIag=";
+      url = "https://dl.k8s.io/release/v1.37.2/bin/linux/amd64/kubectl";
+      sha256 = "sha256-wESHUj56p9FJP3gIF0yJnbk9epz1dTFCDNdrm9QV+PQ=";
     };
   };
   libratbag = {
@@ -60,10 +60,10 @@
   };
   netmuxd = {
     pname = "netmuxd";
-    version = "0.4.3";
+    version = "0.4.4";
     src = fetchurl {
-      url = "https://github.com/jkcoxson/netmuxd/releases/download/v0.4.3/netmuxd-x86_64-unknown-linux-gnu.tar.gz";
-      sha256 = "sha256-hbZZgoT8Y58qKCWERh0F4gkLeb3z7JSdKl5dPcZV3eQ=";
+      url = "https://github.com/jkcoxson/netmuxd/releases/download/v0.4.4/netmuxd-x86_64-unknown-linux-gnu.tar.gz";
+      sha256 = "sha256-HucsL6ObLZLQwGkXZb3b3IySaxXRKEAlqZIUqs/mnag=";
     };
   };
   snapx-core = {
@@ -84,18 +84,18 @@
   };
   sofka = {
     pname = "sofka";
-    version = "0.31.8";
+    version = "0.37.0";
     src = fetchurl {
-      url = "https://github.com/nklmilojevic/sofka/releases/download/v0.31.8/sofka-v0.31.8-x86_64-unknown-linux-gnu.tar.gz";
-      sha256 = "sha256-cF1QJLCDOU1mwDb5kgWPMSJBfDi7u7/wg3yFsDHcBos=";
+      url = "https://github.com/nklmilojevic/sofka/releases/download/v0.37.0/sofka-v0.37.0-x86_64-unknown-linux-gnu.tar.gz";
+      sha256 = "sha256-xG+BsOpHE6B89pCxo9gQeDFpcjNvxxQeav3eaCpHACk=";
     };
   };
   talosctl = {
     pname = "talosctl";
-    version = "1.14.2";
+    version = "1.14.6";
     src = fetchurl {
-      url = "https://github.com/siderolabs/talos/releases/download/v1.14.2/talosctl-linux-amd64";
-      sha256 = "sha256-xslVKw5fdnNSxZX6HAr08Yb2l0iGRocpVQV9I5kKZsQ=";
+      url = "https://github.com/siderolabs/talos/releases/download/v1.14.6/talosctl-linux-amd64";
+      sha256 = "sha256-Eazef3V4/+nL5vuDSbNFlQZfWX3ghCYVmC41CzZd6Yc=";
     };
   };
 }
