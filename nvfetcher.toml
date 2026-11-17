@@ -100,5 +100,5 @@ cargo_lock = ["Cargo.lock"]
 # modules/ios-backup.nix unpacks + autoPatchelf's it, exactly like sofka above.
 [netmuxd]
 # renovate: datasource=github-releases depName=jkcoxson/netmuxd extractVersion=^v(?<version>.+)$
-src.manual = "0.4.3"
+src.manual = "0.4.4"
 fetch.url = "https://github.com/jkcoxson/netmuxd/releases/download/v$ver/netmuxd-x86_64-unknown-linux-gnu.tar.gz"

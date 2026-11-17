@@ -4500,7 +4500,7 @@ netbird-relay.md
 netbird.md
 netcat-gnu-0.7.1
 nethogs-0.9.0
-netmuxd-0.4.3
+netmuxd-0.4.4
 netpbm-11.15.3
 netstat-net-tools-2.10
 nettle-3.10.2

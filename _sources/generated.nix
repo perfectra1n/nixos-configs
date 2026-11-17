@@ -60,10 +60,10 @@
   };
   netmuxd = {
     pname = "netmuxd";
-    version = "0.4.3";
+    version = "0.4.4";
     src = fetchurl {
-      url = "https://github.com/jkcoxson/netmuxd/releases/download/v0.4.3/netmuxd-x86_64-unknown-linux-gnu.tar.gz";
-      sha256 = "sha256-hbZZgoT8Y58qKCWERh0F4gkLeb3z7JSdKl5dPcZV3eQ=";
+      url = "https://github.com/jkcoxson/netmuxd/releases/download/v0.4.4/netmuxd-x86_64-unknown-linux-gnu.tar.gz";
+      sha256 = "sha256-HucsL6ObLZLQwGkXZb3b3IySaxXRKEAlqZIUqs/mnag=";
     };
   };
   snapx-core = {
