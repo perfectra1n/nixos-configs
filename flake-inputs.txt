@@ -12,7 +12,7 @@ chaotic = "2bf033423314149dcc0912d4770adbb1d1a03921"
 cleanroom = "3649b3acfe851599b84123179bb6a1bf5f4b6a54"
 
 # renovate: datasource=git-refs depName=dank-greeter packageName=https://github.com/AvengeMedia/dank-greeter branch=master
-dank-greeter = "bca3cb6524f1a030803b8c795de9587273b8c0db"
+dank-greeter = "3e4affaf85f91fd98fdb83a27651d2597963e8ae"
 
 # renovate: datasource=git-refs depName=dms packageName=https://github.com/AvengeMedia/DankMaterialShell branch=stable
 dms = "43255a46ea01e9d0de1fe8ce9897c0d71566b2a8"
