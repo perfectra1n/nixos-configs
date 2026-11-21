@@ -25,7 +25,7 @@ task.output = "quiet"
 [tools]
 lefthook = "2.2.2"
 gitleaks = "8.30.1"
-trufflehog = "3.99.8"
+trufflehog = "3.100.0"
 #
 # What's automatable vs not:
 #   - apply / verify / hardware / dirs / update     → fully scripted below.
