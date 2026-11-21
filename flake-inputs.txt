@@ -18,7 +18,7 @@ dank-greeter = "bca3cb6524f1a030803b8c795de9587273b8c0db"
 dms = "43255a46ea01e9d0de1fe8ce9897c0d71566b2a8"
 
 # renovate: datasource=git-refs depName=dms-plugin-registry packageName=https://github.com/AvengeMedia/dms-plugin-registry branch=master
-dms-plugin-registry = "e9b4bf341b770b2275ce7164ee56f509828a9475"
+dms-plugin-registry = "66e0bf722f1182fcb0ae573d596d3775467647d0"
 
 # renovate: datasource=git-refs depName=home-manager packageName=https://github.com/nix-community/home-manager branch=master
 home-manager = "9d7ba6bef3904a018d38b92f83132eaf01eb8ef3"
