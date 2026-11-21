@@ -21,7 +21,7 @@ dms = "43255a46ea01e9d0de1fe8ce9897c0d71566b2a8"
 dms-plugin-registry = "e9b4bf341b770b2275ce7164ee56f509828a9475"
 
 # renovate: datasource=git-refs depName=home-manager packageName=https://github.com/nix-community/home-manager branch=master
-home-manager = "9d7ba6bef3904a018d38b92f83132eaf01eb8ef3"
+home-manager = "6857c7f7c338ad181729c52071386b0d3afa24bc"
 
 # renovate: datasource=git-refs depName=hyprswitch packageName=https://github.com/h3rmt/hyprswitch branch=hyprshell-release
 hyprswitch = "3a874a61cd0f8e9318c56496fe5c21b30ceff799"
