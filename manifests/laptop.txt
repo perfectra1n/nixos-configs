@@ -3299,7 +3299,7 @@ initrd-bin-env
 initrd-fstab
 initrd-group
 initrd-hostname
-initrd-linux-7.3.4
+initrd-linux-7.3.5
 initrd-passwd
 initrd-release
 initrd-shadow
@@ -4092,9 +4092,9 @@ link
 link-cplusplus-1.0.12
 linked-hash-map-0.5.6
 linked_hash_set-0.1.6
-linux-7.3.4
-linux-7.3.4-modules
-linux-7.3.4-modules-shrunk
+linux-7.3.5
+linux-7.3.5-modules
+linux-7.3.5-modules-shrunk
 linux-cachyos-config
 linux-firmware-20261019
 linux-firmware-20261019-zstd
@@ -5419,7 +5419,7 @@ protobuf-java-3.19.6.jar
 protobuf-java-3.19.6.pom
 protobuf-parent-3.19.6.pom
 protoc-gen-dart-25.1.0
-proton-cachyos
+proton-cachyos-11.0.20261015
 proton-ge-bin-GE-Proton11-12
 protontricks-1.15.0
 protontricks-1.15.0_fish-completions
@@ -7706,7 +7706,7 @@ vlc-3.0.24
 vmware-bootstrap
 vmware-config
 vmware-modconfig
-vmware-modules-workstation-25h2-20251015-7.3.4
+vmware-modules-workstation-25h2-20251015-7.3.5
 vmware-unpack-env-25H2u1
 vmware-unpack-env-25H2u1-bwrap
 vmware-unpack-env-25H2u1-fhsenv-profile
