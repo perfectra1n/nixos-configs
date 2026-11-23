@@ -89,7 +89,7 @@ in
     # Network speed bar widget — the registry's `networkIndicator`, but sourced from our
     # fork's `reliability-hardening` branch (flake input, see flake.nix). mkForce because
     # the registry module also sets `src` (upstream gemb0-0) at normal priority.
-    # ⚠️ On a machine that dev-symlinked ~/.config/DankMaterialShell/plugins/networkIndicator
+    # ⚠️ On a machine that dev-symlinked ~/.config/dms/plugins/networkIndicator
     # to a local clone, remove that symlink after switching — the config-dir copy and this
     # /etc/xdg/quickshell/dms-plugins one are both discovered (duplicate plugin id).
     plugins.networkIndicator = {

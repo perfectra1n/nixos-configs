@@ -33,7 +33,7 @@
 # per host. Until then the microphone is a *reported* passthrough — it tells you — not a silent one.
 #
 # ⚠️ The denoised mic is now `cleanroom_mic`, NOT `deepfilter_source`. DMS pins a preferred input
-# in dotfiles/dot_config/DankMaterialShell/settings.json, which is chezmoi-owned — the flake must
+# in dotfiles/dot_config/dms/settings.json, which is chezmoi-owned — the flake must
 # never write it (a collision there fails home-manager-<user>.service and silently freezes ALL HM
 # file updates). Pick the new node in DMS, then `chezmoi add` to re-capture the snapshot.
 #

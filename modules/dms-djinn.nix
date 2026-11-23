@@ -15,22 +15,25 @@
 # makes that as strong as a flake.lock pin. Bump by hand: set tag + rev (`git ls-remote <repo>
 # refs/tags/<tag>^{}`, or the plain ref for a lightweight tag) and switch.
 #
-# INSTALL PATH: ~/.config/DankMaterialShell/plugins/djinn, a symlink to a per-rev copy under
+# INSTALL PATH: ~/.config/dms/plugins/djinn, a symlink to a per-rev copy under
 # ~/.local/share/dms-djinn — DMS's own user-plugin dir (where its plugin browser installs too),
-# not /etc/xdg/quickshell/dms-plugins, which the registry module owns as one store path. The
-# per-switch qmlcache wipe in modules/hyprland.nix keeps a bump from running stale QML; restart
-# DMS (or `dms ipc call plugins reload djinn`) to pick one up in a running session.
+# not /etc/xdg/quickshell/dms-plugins, which the registry module owns as one store path. DMS 2.1
+# renamed its config dir from ~/.config/DankMaterialShell; a link left at the old path makes its
+# startup migration collide, so activation removes it. The per-switch qmlcache wipe in
+# modules/hyprland.nix keeps a bump from running stale QML; pick one up in a running session with
+# `dms restart`. `dms ipc call plugins reload djinn` only suffices when no QML file was ADDED — a
+# hot reload doesn't rescan the dir, so a new component reads as "<Name> is not a type".
 #
 # SERVER URL: the plugin reads it only from plugin_settings.json, which on desktop is a chezmoi
 # snapshot of a PUBLIC repo — so the chezmoi source is a .tmpl that pulls it from the render
 # below (chezmoi refuses to silently de-template on `add`, `re-add` skips templates, and the
 # leak gate backstops both). Other hosts: set it once in DMS Settings → Plugins → Djinn.
-# Sign-in tokens land in ~/.local/state/DankMaterialShell, which nothing here manages.
+# Sign-in tokens land in ~/.local/state/dms, which nothing here manages.
 let
   djinn = {
     repo = "aaldebs99/Djinn"; # owner/repo only — the host is a secret
-    tag = "0.3.26";
-    rev = "935406769d2916c605928950ff76960543117d9d";
+    tag = "0.8.2";
+    rev = "ce6fe29a5536e017aa0afd6c7bbf808292e6bcf4";
   };
 
   # COUPLING: reuses the git/duck_forgejo_* placeholders git-credentials.nix declares, so it rides
@@ -70,7 +73,14 @@ lib.mkMerge [
       home.activation.djinnPlugin = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         store="$HOME/.local/share/dms-djinn"
         dest="$store/${djinn.rev}"
-        link="$HOME/.config/DankMaterialShell/plugins/djinn"
+        link="$HOME/.config/dms/plugins/djinn"
+
+        # Pre-2.1 install path (see INSTALL PATH). Only ever a link we made, so never touch a real dir.
+        legacy="$HOME/.config/DankMaterialShell"
+        if [ -L "$legacy/plugins/djinn" ]; then
+          run rm -f "$legacy/plugins/djinn" || true
+          run rmdir "$legacy/plugins" 2>/dev/null || true
+        fi
 
         # HM runs activation under `set -eu -o pipefail`, and one failed command would abort EVERY
         # later HM step — so each step returns explicitly and the call site swallows the status.

@@ -130,8 +130,8 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
   `owncloud-client`, `obs-studio`, `vlc` (audio default; no longer the video default),
   `plex-desktop`,
   `linux-wallpaperengine` (Steam WE workshop renderer; binary dep of the DMS `linuxWallpaperEngine`
-  plugin — launched by the plugin, not an exec-once), `prismlauncher`, `nomachine-client`, `anydesk`,
-  `zoom-us`, `playwright`, `playwright-test`, `playwright-mcp`.
+  plugin — launched by the plugin, not an exec-once), `prismlauncher`, `nomachine-client`, `rustdesk`,
+  `remmina` + `freerdp` (RDP: GUI profiles + FreeRDP 3 CLI), `zoom-us`, `playwright`, `playwright-test`, `playwright-mcp`.
 - Playwright env vars + `/opt/google/chrome/chrome` tmpfiles symlink.
 - Writes the `hypr/nix/autostart.lua` `hyprland.start` fragment (see architecture.md).
 
@@ -170,6 +170,9 @@ truth — this is a hand-maintained summary. "Hosts" uses: **D**=desktop, **L**=
 - `programs.wireshark` + `wireshark` group on `${username}`.
 - Packages: `burpsuite`, `nmap`, `wireshark`, `sqlmap`, `ffuf`, `gobuster`, `feroxbuster`,
   `nikto`, `hashcat`, `john`, `hydra`, `netcat-gnu`.
+- Windows remote execution: `powershell` (pwsh), `evil-winrm`, `netexec` (nxc),
+  `python3Packages.impacket` — run commands with RDP creds over WinRM/SSH/WMI instead of RDP's
+  pixel-only channel.
 
 ## Printing + scanning — `modules/printing.nix` (graphical: D L)
 

@@ -333,7 +333,12 @@ in
       nomachine-client    # NoMachine remote-desktop client (unfree)
       rustdesk            # RustDesk remote-desktop client (FOSS, AGPL) — replaced anydesk, whose
                           #   pinned tarball 404s once AnyDesk deletes old versions from their CDN
-      zoom-us             # Zoom video conferencing client (unfree)
+      remmina             # RDP/VNC/SSH client with saved connection profiles — the GUI front-end;
+                          #   its RDP plugin IS libfreerdp, so protocol support tracks freerdp below
+      freerdp             # FreeRDP 3 CLI (sdl-freerdp / xfreerdp) for one-off or scripted sessions —
+                          #   use sdl-freerdp on Hyprland (native Wayland; wlfreerdp is deprecated
+                          #   upstream). Already in the closure via remmina, so this only adds PATH.
+      zoom-us            # Zoom video conferencing client (unfree)
 
       # WireGuard GUI — nm-connection-editor (+ nm-applet) from networkmanagerapplet.
       # The `wg`/`wg-quick` CLI is already in home/common.nix; this is the graphical

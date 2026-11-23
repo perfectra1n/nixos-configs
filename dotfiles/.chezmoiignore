@@ -53,6 +53,8 @@ README.md
 .config/helm/repositories.lock
 
 # DankMaterialShell (DMS) state — app-owned and rewritten live by DMS (incl. matugen output).
+# ~/.config/dms since DMS 2.1 (was ~/.config/DankMaterialShell, which DMS no longer reads — a
+# snapshot left targeting it applies cleanly yet silently does nothing).
 # Ignore the whole dir EXCEPT settings.json + plugin_settings.json, which we snapshot via
 # chezmoi: DMS stays the live writer (0644), `chezmoi add` captures changes, `chezmoi apply`
 # reseeds a fresh box. NOT readonly_ — DMS must keep writing them.
@@ -63,11 +65,11 @@ README.md
 # another box would pin its bar/lock/wallpaper to displays it doesn't have. Other hosts keep
 # their own. To go multi-host, list every output in screenPreferences/monitorScenes and set
 # lockScreenActiveMonitor="all", then drop the hostname guard.
-.config/DankMaterialShell/**
+.config/dms/**
 {{- if eq .chezmoi.hostname "desktop" }}
-!.config/DankMaterialShell
-!.config/DankMaterialShell/settings.json
-!.config/DankMaterialShell/plugin_settings.json
+!.config/dms
+!.config/dms/settings.json
+!.config/dms/plugin_settings.json
 {{- end }}
 
 # ~/.kube is cache/state EXCEPT the kubeconfig itself, which we manage age-encrypted

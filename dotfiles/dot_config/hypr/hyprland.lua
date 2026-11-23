@@ -274,6 +274,38 @@ local function stack_all()
     hl.dispatch(hl.dsp.focus({ window = wins[1] }))
 end
 
+-- move_or_cross(dir) — Super+Shift+arrow that always crosses monitors at a screen edge. Stock
+-- directional move only crosses when another monitor sits beside the window's CENTRE, and the
+-- portrait panel is 2560 tall vs the landscape's 1440 — so any window in its lower ~third (Steam,
+-- Discord) hit the right edge and just stopped. At the edge we send it by monitor direction
+-- instead (same as Super+Shift+period, which never looks at the window's position).
+-- Monitor size comes back physical + unrotated, so swap for 90°/270° transforms and unscale.
+-- Floating windows / stacks / fullscreen keep the stock move (a stack must travel as one block).
+local EDGE_SLACK = 32 -- gaps_out + border, with headroom
+local function move_or_cross(dir)
+    local w = hl.get_active_window()
+    if not w or w.floating or w.group or w.fullscreen ~= 0 then
+        hl.dispatch(hl.dsp.window.move({ direction = dir }))
+        return
+    end
+    local m = w.monitor
+    local rotated = m.transform % 2 == 1
+    local mw = (rotated and m.height or m.width) / m.scale
+    local mh = (rotated and m.width or m.height) / m.scale
+    local r = m.reserved
+    local at_edge = (dir == "l" and w.at.x <= m.x + r.left + EDGE_SLACK)
+        or (dir == "r" and w.at.x + w.size.x >= m.x + mw - r.right - EDGE_SLACK)
+        or (dir == "u" and w.at.y <= m.y + r.top + EDGE_SLACK)
+        or (dir == "d" and w.at.y + w.size.y >= m.y + mh - r.bottom - EDGE_SLACK)
+    if at_edge then
+        -- pcall: at an OUTER edge there's no monitor in <dir> and the dispatcher raises
+        -- "Invalid monitor" — swallow it so the key is a silent no-op, like the stock move.
+        pcall(hl.dispatch, hl.dsp.window.move({ monitor = dir }))
+    else
+        hl.dispatch(hl.dsp.window.move({ direction = dir }))
+    end
+end
+
 -- toggle_hdr() — flip HDR/10-bit on the HDR panel(s). Why: the PipeWire screencast portal
 -- (Discord/OBS full-screen share) can't read the 10-bit HDR framebuffer — shares come out a
 -- black box. Flip HDR OFF to share, then back ON. (Everyday screenshots don't need this —
@@ -380,7 +412,8 @@ for key, dir in pairs(ARROWS) do
     -- Move windows / whole stacks. A stack is a single tile, so this relocates the ENTIRE stack
     -- as a block; it never merges (that's Super+Alt+arrow) — move vs. merge are split so the
     -- i3/sway muscle memory (Super+Shift+arrow = move) holds for stacks too.
-    bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ direction = dir }), "Move window / stack " .. key)
+    -- At a screen edge it hops to the next monitor (move_or_cross), whatever the panel heights.
+    bind(mainMod .. " + SHIFT + " .. key, function() move_or_cross(dir) end, "Move window / stack " .. key)
     bind(mainMod .. " + " .. key, hl.dsp.focus({ direction = dir }), "Focus " .. key)
     -- Swap the focused tile with its neighbour (i3 "move" between tiles, komorebi swap). All
     -- four arrow combos above are taken, so swap lives on Super+Ctrl+Shift+arrows.
