@@ -33,7 +33,7 @@ network-indicator = "d197967a2cda718ff7a883083b486b20dcc562c4"
 nixpkgs = "d5cc6833999746cffdfe0598f7bc801a57b887a9"
 
 # renovate: datasource=git-refs depName=sops-nix packageName=https://github.com/Mic92/sops-nix branch=master
-sops-nix = "7c637afdccdf9bcf35c4a2d67b58a77c1fd843a4"
+sops-nix = "d5abe5e53200ad48254e8e6bd95e6cef94e66577"
 
 # renovate: datasource=git-refs depName=trilium packageName=https://github.com/TriliumNext/Trilium branch=worker-processes
 trilium = "ceb43a9b21282decf12c2fdb5b883ad397848e80"
