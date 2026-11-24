@@ -142,6 +142,7 @@ attic-0-unstable-2026-07-06
 attic-0-unstable-2026-07-06-vendor
 attic-0-unstable-2026-07-06-vendor-staging
 attic-0-unstable-2026-07-06_fish-completions
+attic-watch-store
 attoparsec-0.14.4
 attoparsec-0.14.4-r6.cabal
 attoparsec-aeson-2.2.2.0

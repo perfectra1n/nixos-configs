@@ -460,6 +460,7 @@ attic-0-unstable-2026-07-06
 attic-0-unstable-2026-07-06-vendor
 attic-0-unstable-2026-07-06-vendor-staging
 attic-0-unstable-2026-07-06_fish-completions
+attic-watch-store
 attica-5.116.0
 attica-6.31.0
 attoparsec-0.14.4

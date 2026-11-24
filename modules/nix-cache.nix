@@ -45,6 +45,47 @@ let
   # $XDG_CONFIG_HOME/attic/config.toml, so the rendered file must sit in that shape.
   xdgDir = "/run/secrets/rendered/attic-xdg";
   atticConfig = "${xdgDir}/attic/config.toml";
+
+  # watch-store never exits, and its store connection (even via the daemon — the worker
+  # serving it holds the lock just the same) pins a SHARED flock on big-lock for life. A Nix
+  # newer than the running one must take that lock EXCLUSIVELY to migrate the DB schema, so
+  # a rebuild onto a Nix bump would hang forever in `nix-instantiate --find-file
+  # nixos-system`. Watch /proc/locks for a blocked exclusive request on big-lock, step aside
+  # until it has gone through, then come back. If attic exits on its own (dead endpoint,
+  # off-LAN) we exit with its status, so systemd's restart/start-limit policy applies as before.
+  watchStore = pkgs.writeShellApplication {
+    name = "attic-watch-store";
+    runtimeInputs = [ pkgs.attic-client pkgs.coreutils pkgs.gnugrep ];
+    text = ''
+      lock=/nix/var/nix/db/big-lock
+      # /proc/locks waiter line: "N: -> FLOCK  ADVISORY  WRITE <pid> <maj>:<min>:<inode> 0 EOF"
+      exclusive_waiter() {
+        local ino
+        ino=$(stat -c %i "$lock" 2>/dev/null) || return 1
+        grep -qE -- "-> FLOCK +ADVISORY +WRITE +[0-9]+ +[0-9a-f]+:[0-9a-f]+:$ino " /proc/locks
+      }
+
+      while true; do
+        attic watch-store main &
+        child=$!
+        while kill -0 "$child" 2>/dev/null && ! exclusive_waiter; do sleep 2; done
+
+        if ! kill -0 "$child" 2>/dev/null; then
+          status=0
+          wait "$child" || status=$?
+          exit "$status"
+        fi
+
+        echo "a Nix process is waiting for exclusive store access (schema migration?); pausing" >&2
+        kill "$child"
+        wait "$child" || true
+        while exclusive_waiter; do sleep 2; done
+        # Let the migrating process finish before re-attaching.
+        sleep 10
+        echo "store lock free again; resuming watch-store" >&2
+      done
+    '';
+  };
 in
 lib.mkIf declareSecret {
   sops.secrets = {
@@ -103,11 +144,18 @@ lib.mkIf declareSecret {
     wantedBy = [ "multi-user.target" ];
     # Secret not pulled yet -> unit SKIPPED (condition unmet), not failed.
     unitConfig.ConditionPathExists = atticConfig;
-    environment.XDG_CONFIG_HOME = xdgDir;
+    environment = {
+      XDG_CONFIG_HOME = xdgDir;
+      # Via nix-daemon, not in-process: as root, libnixstore defaults to opening the local
+      # store with attic's OWN bundled Nix, which refuses a DB migrated by a newer Nix
+      # ("schema is version X, but I only support Y") until attic itself is rebuilt. Through
+      # the daemon the schema is the daemon's problem, and a switch restarts it.
+      NIX_REMOTE = "daemon";
+    };
     serviceConfig = {
-      # Root on purpose: reads the root-0400 config, and as root talks to the local
-      # store directly. It only ever READS the store.
-      ExecStart = "${pkgs.attic-client}/bin/attic watch-store main";
+      # Root on purpose: reads the root-0400 config. It only ever READS the store.
+      # The wrapper yields big-lock to schema migrations — see watchStore above.
+      ExecStart = lib.getExe watchStore;
       Restart = "on-failure";
       RestartSec = "30s";
     };
