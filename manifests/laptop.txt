@@ -2364,7 +2364,7 @@ durian-io-1.2.0.pom
 durian-swt.os-4.2.2.jar
 durian-swt.os-4.2.2.module
 durian-swt.os-4.2.2.pom
-dux-qt-base-0.4.4
+dux-qt-base-0.4.73
 dyn-clone-1.0.20
 e2fsprogs-1.47.4
 e2fsprogs-1.47.4_fish-completions
