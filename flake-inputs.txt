@@ -6,7 +6,7 @@
 blender-bin = "32a73188c4026cea3f8ed97078ace45bf9f7f578"
 
 # renovate: datasource=git-refs depName=chaotic packageName=https://github.com/chaotic-cx/nyx branch=nyxpkgs-unstable
-chaotic = "2bf033423314149dcc0912d4770adbb1d1a03921"
+chaotic = "631a9a9088e79b6bce4a5f30b683a6fd30ba8bd0"
 
 # renovate: datasource=git-refs depName=cleanroom packageName=https://github.com/perfectra1n/cleanroom branch=main
 cleanroom = "3649b3acfe851599b84123179bb6a1bf5f4b6a54"
